@@ -1,0 +1,6 @@
+@ViaQuestInc.StepOne.WebAPI_HostAddress = http://localhost:5063
+
+GET {{ViaQuestInc.StepOne.WebAPI_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
