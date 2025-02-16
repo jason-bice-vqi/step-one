@@ -1,5 +1,4 @@
 ﻿using System.ComponentModel.DataAnnotations;
-using System.Diagnostics.CodeAnalysis;
 using ViaQuestInc.StepOne.Kernel.Entity;
 
 namespace ViaQuestInc.StepOne.Core.Candidates;
@@ -8,22 +7,23 @@ public class Candidate : EntityBase<int>, IEntityStatusAssignable
 {
     [MaxLength(100)]
     [Required]
-    public string FirstName { get; set; }
+    public required string FirstName { get; set; }
     
     [MaxLength(100)]
     [Required]
-    public string LastName { get; set; }
+    public required string LastName { get; set; }
+
+    public string FullName => $"{FirstName} {LastName}";
     
     [Required]
     [StringLength(10, MinimumLength = 10)]
-    public string MobilePhoneNumber { get; set; }
+    public required string MobilePhoneNumber { get; set; }
     
     /// <summary>
     /// The user's OTP if they're in the process of signing in. Once the user signs in, this is cleared.
     /// </summary>
-    [MaybeNull]
     [StringLength(6, MinimumLength = 6)]
-    public string OneTimePasscode { get; set; }
+    public string? OneTimePasscode { get; set; }
 
     /// <summary>
     /// When the last OTP was created.
@@ -35,10 +35,17 @@ public class Candidate : EntityBase<int>, IEntityStatusAssignable
     /// </summary>
     public DateTime? OneTimePasswordExpiresAt { get; set; }
     
+    /// <summary>
+    /// When the candidate was last authenticated (last logon).
+    /// </summary>
+    public DateTime? LastAuthenticatedAt { get; set; }
+    
     public int? CandidateWorkflowId { get; set; }
     
-    [MaybeNull]
-    public CandidateWorkflow CandidateWorkflow { get; set; }
+    /// <summary>
+    /// The workflow associated with this candidate.
+    /// </summary>
+    public CandidateWorkflow? CandidateWorkflow { get; set; }
 
-    public EntityStatuses EntityStatus { get; set; }
+    public required EntityStatuses EntityStatus { get; set; }
 }

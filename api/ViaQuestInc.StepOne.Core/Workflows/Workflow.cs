@@ -7,7 +7,7 @@ public class Workflow : EntityBase<int>
 {
     [MaxLength(100)]
     [Required]
-    public string Name { get; set; }
+    public required string Name { get; set; }
     
-    public ICollection<WorkflowStep> WorkflowSteps { get; set; }
+    public ICollection<WorkflowStep>? WorkflowSteps { get; set; }
 }

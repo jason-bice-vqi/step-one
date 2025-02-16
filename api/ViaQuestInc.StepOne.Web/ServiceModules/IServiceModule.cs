@@ -8,5 +8,5 @@ public interface IServiceModule
     /// <summary>
     /// Configures the provided services for this module.
     /// </summary>
-    void Configure(IServiceCollection services, IWebHostEnvironment env);
+    void Configure(IConfiguration configuration, IServiceCollection services, IWebHostEnvironment env);
 }

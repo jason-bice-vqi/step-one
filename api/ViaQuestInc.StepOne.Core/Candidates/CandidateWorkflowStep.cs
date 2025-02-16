@@ -5,11 +5,13 @@ namespace ViaQuestInc.StepOne.Core.Candidates;
 
 public class CandidateWorkflowStep : EntityBase<int>
 {
-    public int CandidateWorkflowId { get; set; }
+    public required int CandidateWorkflowId { get; set; }
     
-    public CandidateWorkflow CandidateWorkflow { get; set; }
+    public CandidateWorkflow? CandidateWorkflow { get; set; }
     
-    public int WorkflowStepId { get; set; }
+    public required int WorkflowStepId { get; set; }
     
-    public WorkflowStep WorkflowStep { get; set; }
+    public WorkflowStep? WorkflowStep { get; set; }
+    
+    public DateTime? CompletedAt { get; set; }
 }

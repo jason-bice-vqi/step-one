@@ -5,13 +5,13 @@ namespace ViaQuestInc.StepOne.Core.Workflows;
 
 public class WorkflowStep : EntityBase<int>
 {
-    public int WorkflowId { get; set; }
+    public required int WorkflowId { get; set; }
     
-    public Workflow Workflow { get; set; }
+    public Workflow? Workflow { get; set; }
     
     [MaxLength(100)]
     [Required]
-    public string Name { get; set; }
+    public required string Name { get; set; }
     
-    public int StepIndex { get; set; }
+    public required int StepIndex { get; set; }
 }

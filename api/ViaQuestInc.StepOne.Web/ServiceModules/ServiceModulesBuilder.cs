@@ -27,7 +27,7 @@ public class ServiceModulesBuilder(
             Configuration.GetSection(configSectionName).Bind(module);
         }
 
-        module.Configure(Services, Environment);
+        module.Configure(Configuration, Services, Environment);
 
         return this;
     }

@@ -10,8 +10,8 @@ public static class ServiceModuleExtensions
         IConfiguration configuration)
     {
         var builder = new ServiceModulesBuilder(services, env, configuration);
-        
-        builder.AddModule<DatabaseModule>("Database");
+
+        builder.AddModule<AuthModule>("Auth").AddModule<DatabaseModule>("Database");
 
         return services;
     }
