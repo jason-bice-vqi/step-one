@@ -1,15 +1,15 @@
-@import '@angular/material/theming';
-
-// Import the pre-built Material theme
-@import '@angular/material/theming';
-
-// Define your custom color palette
-$primary: mat-palette($mat-indigo);
-$accent: mat-palette($mat-pink, 500, 300, 700);
-$warn: mat-palette($mat-red);
-
-// Create your custom theme
-$vqi-theme: mat-light-theme($primary, $accent, $warn);
-
-// Include the Angular Material theme styles
-@include angular-material-theme($vqi-theme);
+//@import '~@angular/material/theming';
+//
+//$vqi-blue: #004772;
+//$vqi-blue-color: mat-color($vqi-blue);
+//
+//$vqi-blue-light: #477295;
+//$vqi-blue-light-color: mat-color($vqi-blue-light);
+//
+//$primary: mat-palette($vqi-blue-color);
+//$accent: mat-palette($vqi-blue-light-color, 500, 300, 700);
+//$warn: mat-palette($mat-red);
+//
+//$vqi-theme: mat-light-theme($primary, $accent, $warn);
+//
+//@include angular-material-theme($vqi-theme);
