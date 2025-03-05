@@ -55,7 +55,7 @@ public class Repository<TContext>(TContext context) : IRepository
         return await FilterWithChildren(expression, includes).SingleOrDefaultAsync(cancellationToken);
     }
 
-    public virtual async Task<T?> FindAsync<T>(
+    public async Task<T?> FindAsync<T>(
         CancellationToken cancellationToken,
         params object[] keyValues) where T : class
     {

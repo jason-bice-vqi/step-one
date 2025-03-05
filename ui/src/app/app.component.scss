@@ -1,0 +1,49 @@
+@import 'variables';
+
+.spacer {
+  flex: 1;
+}
+
+.toolbar {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  padding: 8px 12px 8px 0;
+  display: flex;
+  align-items: center;
+  background-color: #fff;
+  color: black;
+  font-weight: 600;
+  border-bottom: solid 1px $vqi-blue;
+}
+
+.toolbar img {
+  margin: 0 $margin;
+}
+
+.user-options {
+  margin-right: 20px;
+}
+
+.content {
+  /*display: flex;*/
+  margin: 140px auto 32px;
+  padding: 0 $padding;
+  max-width: 960px;
+  flex-direction: column;
+  align-items: center;
+}
+
+footer {
+  width: 100%;
+  border-top: solid 1px $vqi-blue;
+  padding-top: 20px;
+  margin-top: 40px;
+  text-align: center;
+  line-height: 20px;
+}
+
+.alpha {
+  color: lightgray;
+}

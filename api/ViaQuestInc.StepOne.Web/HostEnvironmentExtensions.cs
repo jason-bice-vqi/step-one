@@ -14,21 +14,19 @@ public static class HostEnvironmentExtensions
     /// <returns>True if the environment name is <see cref="Local"/>.</returns>
     public static bool IsLocal(this IHostEnvironment hostEnvironment)
     {
-        if (hostEnvironment == null) throw new ArgumentNullException(nameof(hostEnvironment));
+        ArgumentNullException.ThrowIfNull(hostEnvironment);
 
         return hostEnvironment.IsEnvironment(Local);
     }
 
     /// <summary>
-    /// Checks if the current host environment name is <see cref="Local"/>
-    /// or <see cref="EnvironmentName.Development"/>.
+    /// Checks if the current host environment name is Local or Development.
     /// </summary>
     /// <param name="hostEnvironment">An instance of <see cref="IHostEnvironment"/>.</param>
-    /// <returns>True if the environment name is <see cref="Local"/> or
-    /// <see cref="EnvironmentName.Development"/>, otherwise false.</returns>
+    /// <returns>True if the environment name is Local or Development, otherwise false.</returns>
     public static bool IsLocalOrDevelopment(this IHostEnvironment hostEnvironment)
     {
-        if (hostEnvironment == null) throw new ArgumentNullException(nameof(hostEnvironment));
+        ArgumentNullException.ThrowIfNull(hostEnvironment);
 
         return hostEnvironment.IsEnvironment(Local) || hostEnvironment.IsEnvironment(Environments.Development);
     }

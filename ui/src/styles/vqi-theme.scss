@@ -1,0 +1,15 @@
+@import '@angular/material/theming';
+
+// Import the pre-built Material theme
+@import '@angular/material/theming';
+
+// Define your custom color palette
+$primary: mat-palette($mat-indigo);
+$accent: mat-palette($mat-pink, 500, 300, 700);
+$warn: mat-palette($mat-red);
+
+// Create your custom theme
+$vqi-theme: mat-light-theme($primary, $accent, $warn);
+
+// Include the Angular Material theme styles
+@include angular-material-theme($vqi-theme);

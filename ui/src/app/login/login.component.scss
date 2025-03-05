@@ -1,0 +1,16 @@
+@import 'variables';
+
+.login-container {
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  gap: $gutter;
+  padding: 20px;
+  flex-wrap: wrap;
+}
+
+.login-card {
+  width: 400px;
+  max-width: 400px;
+  padding: 16px;
+}

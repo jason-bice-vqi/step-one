@@ -1,0 +1,9 @@
+<div class="otp-container">
+  <mat-form-field *ngFor="let digit of otpArray; let i = index">
+    <input matInput type="text"
+           maxlength="1"
+           [(ngModel)]="otp[i]"
+           (input)="moveToNext(i, $event)"
+           (keydown.backspace)="moveToPrev(i, $event)">
+  </mat-form-field>
+</div>

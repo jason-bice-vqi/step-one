@@ -1,0 +1,46 @@
+<div class="login-container">
+
+  <!-- OTP Request -->
+  <form [formGroup]="otpRequestForm" (ngSubmit)="onOtpRequest()" *ngIf="!oneTimePasswordRequested">
+    <mat-card class="login-card">
+      <h2>Pre-Employment Login</h2>
+      <mat-form-field class="full-width">
+        <mat-label>Mobile Phone Number</mat-label>
+        <input matInput formControlName="phone" [pattern]="phoneNumberRegex" placeholder="000-000-0000" required>
+        <mat-error *ngIf="phoneControl!.hasError('pattern')">
+          Please enter a valid phone number in the format 000-000-0000.
+        </mat-error>
+      </mat-form-field>
+      <button mat-raised-button color="primary" [disabled]="otpRequestForm.invalid">Request Passcode</button>
+    </mat-card>
+  </form>
+
+  <!-- OTP Submit -->
+  <form [formGroup]="otpLoginForm" (ngSubmit)="onOtpSubmit()" *ngIf="oneTimePasswordRequested">
+    <mat-card class="login-card">
+      <h2>Pre-Employment Login</h2>
+      <mat-form-field class="full-width">
+        <mat-label>One-Time Passcode</mat-label>
+        <input matInput formControlName="otp" maxlength="6" required>
+      </mat-form-field>
+      <button mat-raised-button color="primary" [disabled]="otpLoginForm.invalid">Submit Passcode</button>
+    </mat-card>
+  </form>
+
+  <!-- AD Login -->
+  <form [formGroup]="adLoginForm" (ngSubmit)="onAdSubmit()">
+    <mat-card class="login-card">
+      <h2>Administrator Login</h2>
+      <mat-form-field class="full-width">
+        <mat-label>Username</mat-label>
+        <input matInput formControlName="email" placeholder="Enter username">
+      </mat-form-field>
+      <mat-form-field class="full-width">
+        <mat-label>Password</mat-label>
+        <input matInput formControlName="password" type="password" placeholder="Enter password">
+      </mat-form-field>
+      <button mat-raised-button color="primary" [disabled]="adLoginForm.invalid">Login</button>
+    </mat-card>
+  </form>
+
+</div>
