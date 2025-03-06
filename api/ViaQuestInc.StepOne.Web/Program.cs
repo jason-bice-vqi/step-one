@@ -1,6 +1,8 @@
 using System.Diagnostics;
 using System.Reflection;
 using System.Text;
+using Microsoft.AspNetCore.Hosting.Server;
+using Microsoft.AspNetCore.Hosting.Server.Features;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Logging;
 using Serilog;
@@ -110,6 +112,19 @@ try
         "dotnet ef dbcontext info -- --migrations-mode"
     );
     
+    const string stepOneCorsPolicy = "StepOneCorsPolicy";
+
+    builder.Services.AddCors(options =>
+    {
+        options.AddPolicy(name: stepOneCorsPolicy,
+            policy =>
+            {
+                policy.WithOrigins("http://localhost:4200")
+                    .AllowAnyMethod()
+                    .AllowAnyHeader();
+            });
+    });
+    
     builder.Services.AddHttpContextAccessor()
         .AddHttpClient()
         .AddRouting(options => options.LowercaseUrls = true)
@@ -176,7 +191,7 @@ try
     }
     
     app.UseRouting();
-    app.UseCors("StepOnePolicy");
+    app.UseCors(stepOneCorsPolicy);
     app.UseAuthentication();
     app.UseAuthorization();
     app.MapControllers().RequireAuthorization();
@@ -194,6 +209,20 @@ try
             await startupAction.OnStartupAsync(app);
         }
     }
+    
+    app.Lifetime.ApplicationStarted.Register(() =>
+    {
+        var server = app.Services.GetRequiredService<IServer>();
+        var addressFeature = server.Features.Get<IServerAddressesFeature>();
+
+        if (addressFeature?.Addresses is not null)
+        {
+            foreach (var address in addressFeature.Addresses)
+            {
+                Log.Information("Application is listening on {Address}.", address);
+            }
+        }
+    });
 
     stopwatch.Stop();
     
