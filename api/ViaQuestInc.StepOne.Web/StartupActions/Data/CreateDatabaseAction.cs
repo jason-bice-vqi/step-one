@@ -1,5 +1,4 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Options;
 using Serilog;
 using ViaQuestInc.StepOne.Infrastructure.Data;
 using ViaQuestInc.StepOne.Kernel.Data;
@@ -10,8 +9,8 @@ namespace ViaQuestInc.StepOne.Web.StartupActions.Data;
 /// <summary>
 /// An action that creates a database with support for EF Migrations.
 /// </summary>
-public class CreateDatabaseAction(StepOneDbContext dbContext, IOptions<DatabaseConfig> databaseConfigOptions)
-    : DatabaseStartupActionBase(dbContext, databaseConfigOptions)
+public class CreateDatabaseAction(StepOneDbContext dbContext, DatabaseConfig databaseConfig)
+    : DatabaseStartupActionBase(dbContext, databaseConfig)
 {
     protected override IEnumerable<DatabaseStartupTypes> RequiredByStartupTypes => new[]
     {
@@ -41,7 +40,7 @@ public class CreateDatabaseAction(StepOneDbContext dbContext, IOptions<DatabaseC
     {
         await base.OnStartupAsync(app, cancellationToken);
 
-        if (databaseConfigOptions.Value.EnableMigrations)
+        if (databaseConfig.EnableMigrations)
         {
             var pendingMigrations = await DbContext.Database.GetPendingMigrationsAsync(cancellationToken);
 

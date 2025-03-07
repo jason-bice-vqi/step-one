@@ -1,16 +1,16 @@
-﻿using Microsoft.Extensions.Options;
-using Serilog;
+﻿using Serilog;
 using ViaQuestInc.StepOne.Infrastructure.Data;
 using ViaQuestInc.StepOne.Kernel.Data;
+using Environments = ViaQuestInc.StepOne.Kernel.Environments;
 
 namespace ViaQuestInc.StepOne.Web.StartupActions.Data;
-using Environments = Kernel.Environments;
+using Environments = Environments;
 
 /// <summary>
 /// An action that seeds the database with the required initial data.
 /// </summary>
-public class PopulateDatabaseAction(StepOneDbContext dbContext, IOptions<DatabaseConfig> databaseConfigOptions)
-    : DatabaseStartupActionBase(dbContext, databaseConfigOptions)
+public class PopulateDatabaseAction(StepOneDbContext dbContext, DatabaseConfig databaseConfig)
+    : DatabaseStartupActionBase(dbContext, databaseConfig)
 {
     protected override IEnumerable<DatabaseStartupTypes> RequiredByStartupTypes => new[]
     {

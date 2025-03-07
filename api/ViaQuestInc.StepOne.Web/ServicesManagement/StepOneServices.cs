@@ -1,4 +1,6 @@
-﻿namespace ViaQuestInc.StepOne.Web.ServicesManagement;
+﻿using ViaQuestInc.StepOne.Core.Candidates;
+
+namespace ViaQuestInc.StepOne.Web.ServicesManagement;
 
 /// <summary>
 /// Container for all custom/application service registrations.
@@ -7,6 +9,6 @@ public static class StepOneServices
 {
     public static IServiceCollection AddStepOneServices(this IServiceCollection services, IConfiguration configuration)
     {
-        return services;
+        return services.AddScoped<CandidateService>();
     }
 }

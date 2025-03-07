@@ -13,4 +13,8 @@
   width: 400px;
   max-width: 400px;
   padding: 16px;
+
+  button:first-of-type {
+    margin-bottom: $margin;
+  }
 }

@@ -17,23 +17,12 @@ public class Candidate : EntityBase<int>, IEntityStatusAssignable
     
     [Required]
     [StringLength(10, MinimumLength = 10)]
-    public required string MobilePhoneNumber { get; set; }
-    
-    /// <summary>
-    /// The user's OTP if they're in the process of signing in. Once the user signs in, this is cleared.
-    /// </summary>
-    [StringLength(6, MinimumLength = 6)]
-    public string? OneTimePasscode { get; set; }
+    public required string PhoneNumber { get; set; }
 
     /// <summary>
-    /// When the last OTP was created.
+    /// When the last OTP was requested.
     /// </summary>
-    public DateTime? OneTimePasswordCreatedAt { get; set; }
-    
-    /// <summary>
-    /// When the last OTP expired.
-    /// </summary>
-    public DateTime? OneTimePasswordExpiresAt { get; set; }
+    public DateTime? OtpLastRequestedAt { get; set; }
     
     /// <summary>
     /// When the candidate was last authenticated (last logon).

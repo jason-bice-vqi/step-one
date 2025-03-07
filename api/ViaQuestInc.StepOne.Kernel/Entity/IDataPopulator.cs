@@ -2,7 +2,7 @@
 
 namespace ViaQuestInc.StepOne.Kernel.Entity;
 
-public interface IDatabasePopulator
+public interface IDataPopulator
 {
     /// <summary>
     /// Determines whether the populator should execute.

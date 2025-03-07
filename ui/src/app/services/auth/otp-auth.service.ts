@@ -1,16 +1,17 @@
 import {Injectable} from '@angular/core';
 import {HttpClient, HttpHeaders} from "@angular/common/http";
-import {Observable, take} from "rxjs";
-import {environment} from "../../environments/environment";
+import {Observable, take, tap} from "rxjs";
+import {environment} from "../../../environments/environment";
+import {JwtService} from "./jwt.service";
 
 @Injectable({
   providedIn: 'root'
 })
-export class OtpService {
+export class OtpAuthService {
 
-  private endpoint = "otp";
+  private endpoint = "auth/otp";
 
-  constructor(private httpClient: HttpClient) {
+  constructor(private httpClient: HttpClient, private jwtService: JwtService) {
   }
 
   /**
@@ -24,26 +25,27 @@ export class OtpService {
 
     return this.httpClient
       .post(`${environment.apiUrl}/${this.endpoint}`, request, {
-        headers: new HttpHeaders({ 'Content-Type': 'application/json' })
+        headers: new HttpHeaders({'Content-Type': 'application/json'})
       })
       .pipe(take(1));
   }
 
   /**
-   * Verifies a One-Time Passcode (OTP).
+   * Verifies a One-Time Passcode (OTP) and establishes the JWT.
    * @param phoneNumber The phone number associated with the OTP.
    * @param otp The OTP to be verified.
+   * @return A JWT if authenticated.
    */
-  verifyOtp(phoneNumber: string, otp: string): Observable<boolean> {
+  verifyOtp(phoneNumber: string, otp: string): Observable<string> {
     const request = {
       phoneNumber: phoneNumber,
       otp: otp
     };
 
     return this.httpClient
-      .put<boolean>(`${environment.apiUrl}/${this.endpoint}`, request, {
-        headers: new HttpHeaders({ 'Content-Type': 'application/json' })
+      .put<string>(`${environment.apiUrl}/${this.endpoint}`, request, {
+        headers: new HttpHeaders({'Content-Type': 'application/json'})
       })
-      .pipe(take(1));
+      .pipe(take(1), tap((x: any) => this.jwtService.storeToken(x.token)));
   }
 }

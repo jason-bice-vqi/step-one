@@ -1,5 +1,4 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Options;
 using Serilog;
 using ViaQuestInc.StepOne.Infrastructure.Data;
 using ViaQuestInc.StepOne.Kernel.Data;
@@ -10,8 +9,8 @@ namespace ViaQuestInc.StepOne.Web.StartupActions.Data;
 /// <summary>
 /// An action that automatically applies EF Migrations to a database.
 /// </summary>
-public class ApplyMigrationsAction(StepOneDbContext dbContext, IOptions<DatabaseConfig> databaseConfigOptions)
-    : DatabaseStartupActionBase(dbContext, databaseConfigOptions)
+public class ApplyMigrationsAction(StepOneDbContext dbContext, DatabaseConfig databaseConfig)
+    : DatabaseStartupActionBase(dbContext, databaseConfig)
 {
     protected override IEnumerable<DatabaseStartupTypes> RequiredByStartupTypes => new[]
     {
@@ -27,7 +26,7 @@ public class ApplyMigrationsAction(StepOneDbContext dbContext, IOptions<Database
     {
         await base.OnStartupAsync(app, cancellationToken);
 
-        if (!databaseConfigOptions.Value.EnableMigrations)
+        if (!databaseConfig.EnableMigrations)
         {
             throw new Exception("Cannot apply migrations with migrations disabled.");
         }

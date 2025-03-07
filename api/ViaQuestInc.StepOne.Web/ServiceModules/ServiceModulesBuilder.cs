@@ -1,4 +1,6 @@
-﻿namespace ViaQuestInc.StepOne.Web.ServiceModules;
+﻿using Serilog;
+
+namespace ViaQuestInc.StepOne.Web.ServiceModules;
 
 public class ServiceModulesBuilder(
     IServiceCollection services,
@@ -26,9 +28,13 @@ public class ServiceModulesBuilder(
         {
             Configuration.GetSection(configSectionName).Bind(module);
         }
-
+        
+        Log.Information("Loading {Module} module:", module.GetType().Name);
+        
         module.Configure(Configuration, Services, Environment);
-
+        
+        Log.Information("");
+        
         return this;
     }
 }

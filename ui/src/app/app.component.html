@@ -1,7 +1,12 @@
 <div class="toolbar" role="banner">
   <img ngSrc="assets/images/VQI.svg" alt="Icon" height="107" width="234">
   <div class="spacer"></div>
-  <div class="user-options">Pre-Employment Checklist</div>
+  <div class="app-info">Pre-Employment Checklist
+    <div class="user-info" *ngIf="isAuthenticated">
+      Welcome, {{fullName}}<br>
+      <a (click)="logout()">Log Out</a>
+    </div>
+  </div>
 </div>
 <div class="content" role="main">
   <router-outlet></router-outlet>

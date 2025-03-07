@@ -11,15 +11,18 @@ import {MatListModule} from "@angular/material/list";
 import {MatButtonModule} from "@angular/material/button";
 import {FormsModule, ReactiveFormsModule} from "@angular/forms";
 import {NgOptimizedImage} from "@angular/common";
-import {OtpInputComponent} from './otp-input/otp-input.component';
-import {OtpService} from "./services/otp.service";
-import {HttpClientModule} from "@angular/common/http";
+import {OtpAuthService} from "./services/auth/otp-auth.service";
+import {HTTP_INTERCEPTORS, HttpClientModule} from "@angular/common/http";
+import {DashboardComponent} from './dashboard/dashboard.component';
+import {AuthInterceptor} from "./interceptors/auth.interceptor";
+import { FormatPhonePipe } from './pipes/format-phone.pipe';
 
 @NgModule({
   declarations: [
     AppComponent,
     LoginComponent,
-    OtpInputComponent
+    DashboardComponent,
+    FormatPhonePipe
   ],
   imports: [
     BrowserModule,
@@ -34,7 +37,10 @@ import {HttpClientModule} from "@angular/common/http";
     FormsModule,
     HttpClientModule,
   ],
-  providers: [OtpService],
+  providers: [
+    {provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true},
+    OtpAuthService
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule {

@@ -1,5 +1,4 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Options;
 using Serilog;
 using ViaQuestInc.StepOne.Infrastructure.Data;
 using ViaQuestInc.StepOne.Kernel.Data;
@@ -10,8 +9,8 @@ namespace ViaQuestInc.StepOne.Web.StartupActions.Data;
 /// <summary>
 /// An action that warns developers of pending migrations.
 /// </summary>
-public class WarnOfPendingMigrationsAction(StepOneDbContext dbContext, IOptions<DatabaseConfig> databaseConfigOptions)
-    : DatabaseStartupActionBase(dbContext, databaseConfigOptions)
+public class WarnOfPendingMigrationsAction(StepOneDbContext dbContext, DatabaseConfig databaseConfig)
+    : DatabaseStartupActionBase(dbContext, databaseConfig)
 {
     protected override IEnumerable<DatabaseStartupTypes> RequiredByStartupTypes =>
         new[] { DatabaseStartupTypes.NoAction };
@@ -28,7 +27,7 @@ public class WarnOfPendingMigrationsAction(StepOneDbContext dbContext, IOptions<
     {
         await base.OnStartupAsync(app, cancellationToken);
 
-        if (!databaseConfigOptions.Value.EnableMigrations)
+        if (!databaseConfig.EnableMigrations)
         {
             Log.Information("    Migrations are disabled; exiting action.");
             

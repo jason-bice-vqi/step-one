@@ -28,12 +28,13 @@ p {
 a,
 a:visited,
 a:hover {
-  //color: $vqi-blue;
-  text-decoration: none;
+  cursor: pointer;
+  color: $vqi-blue-light;
+  text-decoration: underline;
 }
 
 a:hover {
-  color: blue;
+  color: $vqi-blue;
 }
 
 .full-width {

@@ -19,6 +19,6 @@ public interface IOtpService
     /// <param name="phoneNumber">The candidate's mobile phone number, to which an OTP was sent.</param>
     /// <param name="otp">The OTP challenge.</param>
     /// <param name="cancellationToken">A cancellation token.</param>
-    /// <returns>An awaitable task containing the authenticated candidate.</returns>
-    Task<Candidate?> ValidateOtpTokenAsync(string phoneNumber, string otp, CancellationToken cancellationToken);
+    /// <returns>An awaitable task containing a JWT. If validation failed, this will be null.</returns>
+    Task<string?> ValidateOtpTokenAsync(string phoneNumber, string otp, CancellationToken cancellationToken);
 }

@@ -1,20 +1,21 @@
-﻿using Microsoft.Extensions.Options;
-using Serilog;
+﻿using Serilog;
 using Twilio.Exceptions;
 using Twilio.Rest.Verify.V2.Service;
+using ViaQuestInc.StepOne.Core.Auth.Services;
 using ViaQuestInc.StepOne.Core.Candidates;
-using ViaQuestInc.StepOne.Kernel.Data;
 
 namespace ViaQuestInc.StepOne.Core.Auth.Otp.Services.TwilioOtp;
 
-public class TwilioOtpService(IRepository repository, IOptions<TwilioOtpConfig> twilioConfigOptions) : IOtpService
+public class TwilioService(
+    CandidateService candidateService,
+    JwtService jwtService,
+    AuthConfig authConfig) : IOtpService
 {
     public async Task<bool> SendOtpAsync(string phoneNumber, CancellationToken cancellationToken)
     {
-        var candidate =
-            await repository.GetAsync<Candidate>(x => x.MobilePhoneNumber == phoneNumber, cancellationToken);
+        var candidate = await candidateService.GetByPhoneNumberAsync(phoneNumber, cancellationToken);
 
-        //if (candidate is null) return false;
+        if (candidate is null) return false;
 
         var fullPhoneNumber = $"+1{phoneNumber}";
 
@@ -23,15 +24,22 @@ public class TwilioOtpService(IRepository repository, IOptions<TwilioOtpConfig> 
         var verification = await VerificationResource.CreateAsync(
             to: fullPhoneNumber,
             channel: "sms",
-            pathServiceSid: twilioConfigOptions.Value.VerifyServiceSid
+            pathServiceSid: authConfig.Twilio.VerifyServiceSid
         );
 
         Log.Information("Twilio OTP Request Result: {Result}", verification.Status);
 
-        return verification.Status == "pending";
+        if (verification.Status == "pending")
+        {
+            await candidateService.RecordOtpRequestedAsync(candidate, cancellationToken);
+
+            return true;
+        }
+
+        return false;
     }
 
-    public async Task<Candidate?> ValidateOtpTokenAsync(string phoneNumber, string otp,
+    public async Task<string?> ValidateOtpTokenAsync(string phoneNumber, string otp,
         CancellationToken cancellationToken)
     {
         var fullPhoneNumber = $"+1{phoneNumber}";
@@ -43,15 +51,19 @@ public class TwilioOtpService(IRepository repository, IOptions<TwilioOtpConfig> 
             var verification = await VerificationCheckResource.CreateAsync(
                 to: fullPhoneNumber,
                 code: otp,
-                pathServiceSid: twilioConfigOptions.Value.VerifyServiceSid
+                pathServiceSid: authConfig.Twilio.VerifyServiceSid
             );
 
             Log.Information("Twilio OTP Verification Result for {Phone}: {Result}", fullPhoneNumber,
                 verification.Status);
 
             if (verification.Status != "approved") return null;
+            
+            var candidate = (await candidateService.GetByPhoneNumberAsync(phoneNumber, cancellationToken))!;
+
+            await candidateService.RecordAuthenticatedAsync(candidate, cancellationToken);
         }
-        catch (ApiException e)
+        catch (ApiException)
         {
             // This exception is thrown if a bad (invalid or reused) OTP is supplied by the user.
             // Would be better if an exception wasn't generated, and instead Status was used.
@@ -60,7 +72,8 @@ public class TwilioOtpService(IRepository repository, IOptions<TwilioOtpConfig> 
             return null;
         }
 
-        return await repository.GetAsync<Candidate>(x => x.OneTimePasscode == otp && x.MobilePhoneNumber == phoneNumber,
-            cancellationToken);
+        var tokenStr = await jwtService.GenerateTokenAsync("jason-bice", phoneNumber);
+
+        return tokenStr;
     }
 }

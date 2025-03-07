@@ -7,11 +7,11 @@ namespace ViaQuestInc.StepOne.Web.StartupActions.Data;
 
 public abstract class DatabaseStartupActionBase(
     StepOneDbContext dbContext,
-    IOptions<DatabaseConfig> databaseConfigOptions)
+    DatabaseConfig databaseConfig)
     : IStartupAction
 {
     protected readonly StepOneDbContext DbContext = dbContext;
-    protected readonly DatabaseConfig DatabaseConfig = databaseConfigOptions.Value;
+    protected readonly DatabaseConfig DatabaseConfig = databaseConfig;
 
     protected abstract IEnumerable<DatabaseStartupTypes> RequiredByStartupTypes { get; }
     protected abstract IEnumerable<string> SupportedEnvironmentNames { get; }

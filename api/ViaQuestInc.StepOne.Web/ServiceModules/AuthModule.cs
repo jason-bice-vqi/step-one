@@ -1,11 +1,10 @@
-﻿using Microsoft.AspNetCore.Authentication;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.Identity.Web;
-using Serilog;
+﻿using Serilog;
 using Twilio;
+using ViaQuestInc.StepOne.Core.Auth;
+using ViaQuestInc.StepOne.Core.Auth.AzureActiveDirectory.Services;
 using ViaQuestInc.StepOne.Core.Auth.Otp.Services;
 using ViaQuestInc.StepOne.Core.Auth.Otp.Services.TwilioOtp;
-using ViaQuestInc.StepOne.Web.Auth;
+using ViaQuestInc.StepOne.Core.Auth.Services;
 
 namespace ViaQuestInc.StepOne.Web.ServiceModules;
 
@@ -17,19 +16,19 @@ public class AuthModule : IServiceModule
 
     public void Configure(IConfiguration configuration, IServiceCollection services, IWebHostEnvironment env)
     {
-        const string twilioOtpConfigKey = "Twilio:Otp";
-        
-        services.Configure<TwilioOtpConfig>(configuration.GetSection(twilioOtpConfigKey));
+        Log.Information("  Registering auth config");
+        var authConfig = configuration.GetSection("Auth").Get<AuthConfig>() ??
+                         throw new InvalidOperationException("Auth configuration is missing");
 
-        var twilioConfig = configuration.GetSection(twilioOtpConfigKey)!;
+        services.AddSingleton(authConfig);
         
-        Log.Information("Initializing TwilioClient...");
+        Log.Information("  Registering auth services");
+        services.AddScoped<JwtService>();
+        services.AddScoped<AzureAdAuthService>();
+        services.AddScoped<IOtpService, TwilioService>();
         
-        TwilioClient.Init(twilioConfig["AccountSid"], twilioConfig["AuthToken"]);
-        
-        Log.Information("TwilioClient initialized.");
-        
-        services.AddScoped<IOtpService, TwilioOtpService>();
+        Log.Information("  Initializing TwilioClient");
+        TwilioClient.Init(authConfig.Twilio.AccountSid, authConfig.Twilio.AuthToken);
 
         // VQI users (Entra ID)
         // services.AddAuthentication(x =>

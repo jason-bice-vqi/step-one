@@ -8,7 +8,6 @@ public static class ConfigurationExtensions
         IWebHostEnvironment env,
         IConfiguration configuration)
     {
-        return services.Configure<DatabaseConfig>(configuration.GetSection("Database"))
-            .Configure<ServerConfig>(configuration.GetSection("Server"));
+        return services.Configure<ServerConfig>(configuration.GetSection("Server"));
     }
 }

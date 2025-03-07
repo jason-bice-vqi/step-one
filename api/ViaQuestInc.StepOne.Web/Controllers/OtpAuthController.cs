@@ -6,8 +6,8 @@ using ViaQuestInc.StepOne.Core.Auth.Otp.Services.TwilioOtp;
 namespace ViaQuestInc.StepOne.Web.Controllers;
 
 [AllowAnonymous]
-[Route("otp")]
-public class OtpController(IOtpService otpService) : ControllerBase
+[Route("auth/otp")]
+public class OtpAuthController(IOtpService otpService) : ControllerBase
 {
     [HttpPost]
     public async Task<IActionResult> SendOtp([FromBody] OtpRequest otpRequest, CancellationToken cancellationToken)
@@ -22,11 +22,10 @@ public class OtpController(IOtpService otpService) : ControllerBase
     [HttpPut]
     public async Task<IActionResult> VerifyOtp([FromBody] OtpRequest otpRequest, CancellationToken cancellationToken)
     {
-        var candidate =
-            await otpService.ValidateOtpTokenAsync(otpRequest.PhoneNumber, otpRequest.Otp!, cancellationToken);
+        var jwt = await otpService.ValidateOtpTokenAsync(otpRequest.PhoneNumber, otpRequest.Otp!, cancellationToken);
 
-        if (candidate is null) return BadRequest(new { Message = "Invalid OTP" });
+        if (jwt == null) return Unauthorized(new { Message = "Invalid OTP" });
 
-        return Ok(candidate);
+        return Ok(new { Token = jwt });
     }
 }

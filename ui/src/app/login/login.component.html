@@ -1,29 +1,44 @@
 <div class="login-container">
 
   <!-- OTP Request -->
-  <form [formGroup]="otpRequestForm" (ngSubmit)="onOtpRequest()" *ngIf="!oneTimePasswordRequested">
+  <form [formGroup]="otpRequestForm" *ngIf="!oneTimePasswordRequested">
     <mat-card class="login-card">
       <h2>Pre-Employment Login</h2>
       <mat-form-field class="full-width">
-        <mat-label>Mobile Phone Number</mat-label>
-        <input matInput formControlName="phone" [pattern]="phoneNumberRegex" placeholder="000-000-0000" required>
+        <mat-label>Phone Number</mat-label>
+        <input matInput formControlName="phone" [pattern]="phoneNumberRegex" placeholder="000-000-0000" required
+               #phoneNumberInput>
         <mat-error *ngIf="phoneControl!.hasError('pattern')">
-          Please enter a valid phone number in the format 000-000-0000.
+          Please enter a valid phone number.
+        </mat-error>
+        <mat-error *ngIf="phoneControl!.hasError('alwaysInvalid')">
+          There is no account associated with {{ phoneNumber | formatPhone }}.
         </mat-error>
       </mat-form-field>
-      <button mat-raised-button color="primary" [disabled]="otpRequestForm.invalid">Request Passcode</button>
+      <button mat-raised-button color="primary" [disabled]="otpRequestForm.invalid" (click)="onOtpRequest()">Request
+        Passcode
+      </button>
+      <button mat-raised-button color="primary" [disabled]="otpRequestForm.invalid" (click)="onOtpRequest(true)">I
+        Already Have a Code
+      </button>
     </mat-card>
   </form>
 
   <!-- OTP Submit -->
-  <form [formGroup]="otpLoginForm" (ngSubmit)="onOtpSubmit()" *ngIf="oneTimePasswordRequested">
+  <form [formGroup]="otpLoginForm" *ngIf="oneTimePasswordRequested">
     <mat-card class="login-card">
       <h2>Pre-Employment Login</h2>
       <mat-form-field class="full-width">
-        <mat-label>One-Time Passcode</mat-label>
-        <input matInput formControlName="otp" maxlength="6" required>
+        <mat-label>One-Time Passcode for {{phoneNumber | formatPhone}}</mat-label>
+        <input matInput formControlName="otp" maxlength="6" required #otpInput>
+        <mat-error *ngIf="otpControl!.hasError('alwaysInvalid')">
+          Invalid passcode.
+        </mat-error>
       </mat-form-field>
-      <button mat-raised-button color="primary" [disabled]="otpLoginForm.invalid">Submit Passcode</button>
+      <button mat-raised-button color="primary" [disabled]="otpLoginForm.invalid" (click)="onOtpSubmit()">Submit
+        Passcode
+      </button>
+      <button mat-raised-button color="accent" (click)="onResendOtp()">Resend Passcode</button>
     </mat-card>
   </form>
 

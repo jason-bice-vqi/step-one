@@ -6,6 +6,7 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Options;
 using Serilog;
 using ViaQuestInc.StepOne.Core.Candidates;
+using ViaQuestInc.StepOne.Core.Candidates.Populators;
 using ViaQuestInc.StepOne.Core.Workflows;
 using ViaQuestInc.StepOne.Kernel.Data;
 using ViaQuestInc.StepOne.Kernel.Entity;
@@ -64,7 +65,7 @@ public class StepOneDbContext(DbContextOptions<StepOneDbContext> options) : DbCo
 
         try
         {
-            var priorityDatabasePopulators = new IDatabasePopulator[]
+            var priorityDatabasePopulators = new IDataPopulator[]
             {
                 
             };
@@ -99,9 +100,9 @@ public class StepOneDbContext(DbContextOptions<StepOneDbContext> options) : DbCo
                 [
                     
                 ],
-                new IDatabasePopulator[]
+                new IDataPopulator[]
                 {
-                    
+                    new CandidatesPopulator()
                 }
             };
 
@@ -119,7 +120,7 @@ public class StepOneDbContext(DbContextOptions<StepOneDbContext> options) : DbCo
 
     private static void ParallelSeedDatabase(
         IServiceProvider serviceProvider,
-        IEnumerable<IDatabasePopulator> databasePopulators,
+        IEnumerable<IDataPopulator> databasePopulators,
         int tier)
     {
         Log.Information($"Beginning parallel seeding of database - Tier {tier}");
@@ -142,23 +143,23 @@ public class StepOneDbContext(DbContextOptions<StepOneDbContext> options) : DbCo
     }
 
     private static async Task PopulateEntity(
-        IDatabasePopulator databasePopulator,
+        IDataPopulator dataPopulator,
         IRepository repository,
         IServiceProvider serviceProvider,
         int batchSize)
     {
-        if (!await databasePopulator.ShouldExecuteAsync(CancellationToken.None))
+        if (!await dataPopulator.ShouldExecuteAsync(CancellationToken.None))
         {
-            Log.Information($"Skipping [{databasePopulator.GetType().Name}].");
+            Log.Information($"Skipping [{dataPopulator.GetType().Name}].");
 
             return;
         }
 
-        Log.Information($"Executing [{databasePopulator.GetType().Name}]...");
+        Log.Information($"Executing [{dataPopulator.GetType().Name}]...");
         var stopwatch = new Stopwatch();
         stopwatch.Start();
-        await databasePopulator.PopulateAsync(repository, serviceProvider, batchSize, default);
+        await dataPopulator.PopulateAsync(repository, serviceProvider, batchSize, default);
         stopwatch.Stop();
-        Log.Information($"[{databasePopulator.GetType().Name}] executed in {stopwatch.ElapsedMilliseconds}ms");
+        Log.Information($"[{dataPopulator.GetType().Name}] executed in {stopwatch.ElapsedMilliseconds}ms");
     }
 }

@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Diagnostics;
+using Serilog;
 using ViaQuestInc.StepOne.Infrastructure.Data;
 using ViaQuestInc.StepOne.Kernel.Data;
 using ViaQuestInc.StepOne.Web.StartupActions;
@@ -17,6 +18,13 @@ public class DatabaseModule : IServiceModule
 
     public void Configure(IConfiguration configuration, IServiceCollection services, IWebHostEnvironment env)
     {
+        Log.Information("  Registering database config");
+        var databaseConfig = configuration.GetSection("Database").Get<DatabaseConfig>() ??
+                         throw new InvalidOperationException("Database configuration is missing");
+        
+        services.AddSingleton(databaseConfig);
+        
+        Log.Information("  Registering database services");
         services.AddScoped<IRepository, Repository<StepOneDbContext>>()
             // Database start-up actions
             .AddTransient<IStartupAction, LogDatabaseStartupTypeAction>()
@@ -26,6 +34,7 @@ public class DatabaseModule : IServiceModule
             .AddTransient<IStartupAction, PopulateDatabaseAction>()
             .AddTransient<IStartupAction, WarnOfPendingMigrationsAction>(); // Must be last AcesDbContext action
         
+        Log.Information("  Registering database context");
         services.AddHealthChecks().Services.AddSqlServer<StepOneDbContext>(ConnectionString,
             o => o.MigrationsAssembly("ViaQuestInc.StepOne.Infrastructure").CommandTimeout(CommandTimeout),
             o => o

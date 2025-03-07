@@ -1,4 +1,6 @@
-﻿namespace ViaQuestInc.StepOne.Web.ServiceModules;
+﻿using Serilog;
+
+namespace ViaQuestInc.StepOne.Web.ServiceModules;
 
 /// <summary>
 /// Container for all custom/application module registrations.
@@ -11,7 +13,10 @@ public static class ServiceModuleExtensions
     {
         var builder = new ServiceModulesBuilder(services, env, configuration);
 
-        builder.AddModule<AuthModule>("Auth").AddModule<DatabaseModule>("Database");
+        Log.Information("");
+        
+        builder.AddModule<AuthModule>("Auth")
+            .AddModule<DatabaseModule>("Database");
 
         return services;
     }

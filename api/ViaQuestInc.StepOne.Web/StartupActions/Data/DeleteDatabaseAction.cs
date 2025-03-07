@@ -1,5 +1,4 @@
-﻿using Microsoft.Extensions.Options;
-using ViaQuestInc.StepOne.Infrastructure.Data;
+﻿using ViaQuestInc.StepOne.Infrastructure.Data;
 using ViaQuestInc.StepOne.Kernel.Data;
 using Environments = ViaQuestInc.StepOne.Kernel.Environments;
 
@@ -8,8 +7,8 @@ namespace ViaQuestInc.StepOne.Web.StartupActions.Data;
 /// <summary>
 /// An action that deletes a database.
 /// </summary>
-public class DeleteDatabaseAction(StepOneDbContext dbContext, IOptions<DatabaseConfig> databaseConfigOptions)
-    : DatabaseStartupActionBase(dbContext, databaseConfigOptions)
+public class DeleteDatabaseAction(StepOneDbContext dbContext, DatabaseConfig databaseConfig)
+    : DatabaseStartupActionBase(dbContext, databaseConfig)
 {
     protected override IEnumerable<DatabaseStartupTypes> RequiredByStartupTypes => new[]
     {
