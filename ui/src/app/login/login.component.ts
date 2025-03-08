@@ -5,6 +5,7 @@ import {Router} from "@angular/router";
 import {alwaysInvalidValidator} from "../validators/always-invalid.validator";
 import {JwtService} from "../services/auth/jwt.service";
 import {AdAuthService} from "../services/auth/ad-auth.service";
+import {take} from "rxjs";
 
 @Component({
   selector: 'app-login',
@@ -93,14 +94,14 @@ export class LoginComponent implements OnInit {
   }
 
   onAdLogin() {
-    this.adAuthService.authenticate().subscribe({
+    this.adAuthService.authenticate().pipe(take(1)).subscribe({
       next: (token) => {
         console.log('AD authentication succeeded.', token);
 
         this.router.navigate(['/dashboard']);
       },
       error: (err) => {
-        console.log('Invalid credentials.', err);
+        console.log('AD authentication failed.', err);
       }
     });
   }
