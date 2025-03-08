@@ -19,8 +19,8 @@ public class OtpAuthController(IOtpService otpService) : ControllerBase
         return NotFound();
     }
 
-    [HttpPut]
-    public async Task<IActionResult> VerifyOtp([FromBody] OtpRequest otpRequest, CancellationToken cancellationToken)
+    [HttpPost("challenge")]
+    public async Task<IActionResult> Authenticate([FromBody] OtpRequest otpRequest, CancellationToken cancellationToken)
     {
         var jwt = await otpService.ValidateOtpTokenAsync(otpRequest.PhoneNumber, otpRequest.Otp!, cancellationToken);
 

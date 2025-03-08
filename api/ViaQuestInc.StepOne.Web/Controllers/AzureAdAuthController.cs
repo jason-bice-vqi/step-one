@@ -9,10 +9,9 @@ namespace ViaQuestInc.StepOne.Web.Controllers;
 public class AzureAdAuthController(AzureAdAuthService azureAdAuthService) : ControllerBase
 {
     [HttpPost]
-    public async Task<IActionResult> Authenticate([FromBody] string username, [FromBody] string password,
-        CancellationToken cancellationToken)
+    public async Task<IActionResult> Authenticate(CancellationToken cancellationToken)
     {
-        var jwt = await azureAdAuthService.AuthenticateUserAsync(username, password, cancellationToken);
+        var jwt = await azureAdAuthService.AuthenticateUserAsync(cancellationToken);
 
         if (jwt == null) return Unauthorized(new { Message = "Invalid credentials" });
 

@@ -4,6 +4,7 @@ import {OtpAuthService} from "../services/auth/otp-auth.service";
 import {Router} from "@angular/router";
 import {alwaysInvalidValidator} from "../validators/always-invalid.validator";
 import {JwtService} from "../services/auth/jwt.service";
+import {AdAuthService} from "../services/auth/ad-auth.service";
 
 @Component({
   selector: 'app-login',
@@ -16,12 +17,12 @@ export class LoginComponent implements OnInit {
 
   otpRequestForm: FormGroup;
   otpLoginForm: FormGroup;
-  adLoginForm: FormGroup;
 
   phoneNumberRegex = /^\(\d{3}\) \d{3}-\d{4}$|^\d{10}$|^\d{3}-\d{3}-\d{4}$/;
   oneTimePasswordRequested = false;
 
-  constructor(private fb: FormBuilder,
+  constructor(private adAuthService: AdAuthService,
+              private fb: FormBuilder,
               private jwtService: JwtService,
               private otpService: OtpAuthService,
               private router: Router) {
@@ -33,27 +34,22 @@ export class LoginComponent implements OnInit {
     this.otpLoginForm = this.fb.group({
       otp: ['', [Validators.required, alwaysInvalidValidator]]
     });
-
-    this.adLoginForm = this.fb.group({
-      email: ['', [Validators.required]],
-      password: ['', [Validators.required]]
-    });
   }
 
   get phoneControl() {
-    return this.otpRequestForm.get('phone');
+    return this.otpRequestForm.get('phone')!;
   }
 
   get phoneNumber() {
-    return this.phoneControl?.value;
+    return this.phoneControl!.value;
   }
 
   get otpControl() {
-    return this.otpLoginForm.get('otp');
+    return this.otpLoginForm.get('otp')!;
   }
 
   onOtpRequest(isCodeSent: boolean = false) {
-    const phoneNumber = this.phoneControl?.value;
+    const phoneNumber = this.phoneControl.value;
 
     if (isCodeSent) {
       this.oneTimePasswordRequested = true;
@@ -71,38 +67,47 @@ export class LoginComponent implements OnInit {
       error: (err) => {
         console.log('Invalid OTP request (phone number).', err);
 
-        this.phoneControl?.setErrors({alwaysInvalid: true});
+        this.phoneControl.setErrors({alwaysInvalid: true});
         this.focusPhone();
       }
     });
   }
 
   onOtpSubmit() {
-    const phoneNumber = this.phoneControl!.value;
-    const otp = this.otpControl!.value;
+    const phoneNumber = this.phoneControl.value;
+    const otp = this.otpControl.value;
 
-    this.otpService.verifyOtp(phoneNumber, otp).subscribe({
+    this.otpService.authenticate(phoneNumber, otp).subscribe({
       next: (token) => {
-        console.log('OTP verification succeeded.', token);
+        console.log('OTP authentication succeeded.', token);
 
         this.router.navigate(['/dashboard']);
       },
       error: (err) => {
         console.log('Invalid OTP.', err);
 
-        this.otpControl?.setErrors({alwaysInvalid: true});
+        this.otpControl.setErrors({alwaysInvalid: true});
         this.focusOtp();
       }
     });
   }
 
-  onAdSubmit() {
+  onAdLogin() {
+    this.adAuthService.authenticate().subscribe({
+      next: (token) => {
+        console.log('AD authentication succeeded.', token);
 
+        this.router.navigate(['/dashboard']);
+      },
+      error: (err) => {
+        console.log('Invalid credentials.', err);
+      }
+    });
   }
 
   onResendOtp() {
-    this.phoneControl?.patchValue(null);
-    this.otpControl?.patchValue(null);
+    this.phoneControl.patchValue(null);
+    this.otpControl.patchValue(null);
 
     this.oneTimePasswordRequested = false;
     this.focusPhone();

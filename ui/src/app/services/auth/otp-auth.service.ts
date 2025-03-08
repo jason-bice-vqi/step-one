@@ -19,9 +19,7 @@ export class OtpAuthService {
    * @param phoneNumber The phone number to which the OTP should be sent.
    */
   requestOtp(phoneNumber: string): Observable<any> {
-    const request = {
-      phoneNumber: phoneNumber
-    };
+    const request = {phoneNumber};
 
     return this.httpClient
       .post(`${environment.apiUrl}/${this.endpoint}`, request, {
@@ -36,14 +34,11 @@ export class OtpAuthService {
    * @param otp The OTP to be verified.
    * @return A JWT if authenticated.
    */
-  verifyOtp(phoneNumber: string, otp: string): Observable<string> {
-    const request = {
-      phoneNumber: phoneNumber,
-      otp: otp
-    };
+  authenticate(phoneNumber: string, otp: string): Observable<string> {
+    const request = {phoneNumber, otp};
 
     return this.httpClient
-      .put<string>(`${environment.apiUrl}/${this.endpoint}`, request, {
+      .post<string>(`${environment.apiUrl}/${this.endpoint}/challenge`, request, {
         headers: new HttpHeaders({'Content-Type': 'application/json'})
       })
       .pipe(take(1), tap((x: any) => this.jwtService.storeToken(x.token)));

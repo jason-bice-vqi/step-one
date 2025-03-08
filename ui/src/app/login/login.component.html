@@ -21,6 +21,9 @@
       <button mat-raised-button color="primary" [disabled]="otpRequestForm.invalid" (click)="onOtpRequest(true)">I
         Already Have a Code
       </button>
+      <div class="admin-login">
+        <a (click)="onAdLogin()">Administrator Login</a>
+      </div>
     </mat-card>
   </form>
 
@@ -42,20 +45,20 @@
     </mat-card>
   </form>
 
-  <!-- AD Login -->
-  <form [formGroup]="adLoginForm" (ngSubmit)="onAdSubmit()">
-    <mat-card class="login-card">
-      <h2>Administrator Login</h2>
-      <mat-form-field class="full-width">
-        <mat-label>Username</mat-label>
-        <input matInput formControlName="email" placeholder="Enter username">
-      </mat-form-field>
-      <mat-form-field class="full-width">
-        <mat-label>Password</mat-label>
-        <input matInput formControlName="password" type="password" placeholder="Enter password">
-      </mat-form-field>
-      <button mat-raised-button color="primary" [disabled]="adLoginForm.invalid">Login</button>
-    </mat-card>
-  </form>
+<!--  &lt;!&ndash; AD Login &ndash;&gt;-->
+<!--  <form [formGroup]="adLoginForm" (ngSubmit)="onAdSubmit()">-->
+<!--    <mat-card class="login-card">-->
+<!--      <h2>Administrator Login</h2>-->
+<!--      <mat-form-field class="full-width">-->
+<!--        <mat-label>Username</mat-label>-->
+<!--        <input matInput formControlName="username" placeholder="Enter username">-->
+<!--      </mat-form-field>-->
+<!--      <mat-form-field class="full-width">-->
+<!--        <mat-label>Password</mat-label>-->
+<!--        <input matInput formControlName="password" type="password" placeholder="Enter password">-->
+<!--      </mat-form-field>-->
+<!--      <button mat-raised-button color="primary" [disabled]="adLoginForm.invalid">Login</button>-->
+<!--    </mat-card>-->
+<!--  </form>-->
 
 </div>

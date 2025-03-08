@@ -8,6 +8,7 @@ const routes: Routes = [
   {path: 'login', component: LoginComponent},
   {path: '', redirectTo: '/login', pathMatch: 'full'}, // Redirect root to login
   {path: 'dashboard', component: DashboardComponent, canActivate: [authGuard]},
+  {path: 'intermediate', redirectTo: '/dashboard'},
   // Must be last
   {path: '**', redirectTo: '/login'}, // Wildcard route for 404 handling
 ];
