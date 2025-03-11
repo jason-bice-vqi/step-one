@@ -1,4 +1,4 @@
-﻿namespace ViaQuestInc.StepOne.Core.Auth.Otp.Services;
+﻿namespace ViaQuestInc.StepOne.Core.Auth.Otp.Services.TwilioOtp;
 
 public class TwilioConfig
 {

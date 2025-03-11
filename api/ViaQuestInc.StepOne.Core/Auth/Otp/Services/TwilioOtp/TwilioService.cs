@@ -62,6 +62,10 @@ public class TwilioService(
             var candidate = (await candidateService.GetByPhoneNumberAsync(phoneNumber, cancellationToken))!;
 
             await candidateService.RecordAuthenticatedAsync(candidate, cancellationToken);
+            
+            var tokenStr = await jwtService.GenerateTokenAsync(candidate, cancellationToken);
+
+            return tokenStr;
         }
         catch (ApiException)
         {
@@ -71,9 +75,5 @@ public class TwilioService(
 
             return null;
         }
-
-        var tokenStr = await jwtService.GenerateTokenAsync("jason-bice", phoneNumber);
-
-        return tokenStr;
     }
 }

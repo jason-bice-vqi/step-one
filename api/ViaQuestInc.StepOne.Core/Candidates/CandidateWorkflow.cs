@@ -5,7 +5,7 @@ namespace ViaQuestInc.StepOne.Core.Candidates;
 
 public class CandidateWorkflow : EntityBase<int>, IEntityStatusAssignable
 {
-    public required int CandidateId { get; set; }
+    public required Guid CandidateId { get; set; }
     
     public Candidate? Candidate { get; set; }
     

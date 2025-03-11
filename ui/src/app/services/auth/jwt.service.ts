@@ -29,21 +29,34 @@ export class JwtService {
     }
   }
 
-  getClaimValue(claimName: string): string {
+  hasClaim(claimName: string): boolean {
     const decodedToken = this.decodeToken();
 
-    return decodedToken[`http://schemas.xmlsoap.org/ws/2005/05/identity/claims/${claimName}`];
+    return decodedToken[claimName] !== null;
+  }
+
+  getRole(): string {
+    const decodedToken = this.decodeToken();
+
+    return decodedToken['http://schemas.microsoft.com/ws/2008/06/identity/claims/role'];
+  }
+
+  hasRole(roleName: string): boolean {
+    const decodedToken = this.decodeToken();
+
+    const roles = decodedToken['http://schemas.microsoft.com/ws/2008/06/identity/claims/role'];
+
+    return roles.some((x:any) => x.value === roleName);
   }
 
   getFullName() : string | null {
-    return this.getClaimValue('name');
+    const decodedToken = this.decodeToken();
+
+    return decodedToken['name'];
   }
 
   storeToken(token: string) {
-    // Don't use decodeToken(); we want to log this as a proper JwtPayload.
-    const decodedToken = jwtDecode(token);
-
-    console.log('Storing JWT', decodedToken);
+    console.info('Storing JWT', jwtDecode(token));
 
     sessionStorage.setItem(this.tokenKey, token);
   }

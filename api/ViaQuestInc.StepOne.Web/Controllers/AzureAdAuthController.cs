@@ -1,29 +1,15 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Identity.Web.Resource;
-using ViaQuestInc.StepOne.Core.Auth.AzureActiveDirectory.Services;
+using ViaQuestInc.StepOne.Core.Auth.Services;
+using ViaQuestInc.StepOne.Web.ServiceModules.Auth;
 
 namespace ViaQuestInc.StepOne.Web.Controllers;
 
-[AllowAnonymous]
-[Route("auth/ad")]
-public class AzureAdAuthController(AzureAdAuthService azureAdAuthService) : ControllerBase
+[Route("auth/ad/exchange-token")]
+public class AzureAdAuthController(JwtService jwtService) : ControllerBase
 {
-    [HttpPost]
-    public async Task<IActionResult> Authenticate(CancellationToken cancellationToken)
-    {
-        var jwt = await azureAdAuthService.AuthenticateUserAsync(cancellationToken);
-
-        if (jwt == null) return Unauthorized(new { Message = "Invalid credentials" });
-
-        return Ok(new { Token = jwt });
-    }
-
-    private static readonly string[] ScopeRequiredByApi = new string[] {  };
-
-
-    [HttpPost("v")]
-    public IActionResult AuthV()
+    [Authorize(Policy = AuthPolicies.InitialAzureAdJwtAuthPolicy)]
+    public async Task<IActionResult> ExchangeAdJwtForStepOneJwt(CancellationToken cancellationToken)
     {
         if (User.Identity is not { IsAuthenticated: true })
         {
@@ -31,9 +17,8 @@ public class AzureAdAuthController(AzureAdAuthService azureAdAuthService) : Cont
                 { Message = "User is not authenticated.", Claims = User.Claims.Select(c => new { c.Type, c.Value }) });
         }
 
-        var cp = User;
-        HttpContext.VerifyUserHasAnyAcceptedScope(ScopeRequiredByApi);
+        var jwt = await jwtService.GenerateTokenAsync(User, cancellationToken);
 
-        return Ok(new { Message = "User authenticated successfully", User = User.Identity?.Name });
+        return Ok(new { Token = jwt });
     }
 }

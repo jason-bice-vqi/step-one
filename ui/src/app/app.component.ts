@@ -19,6 +19,10 @@ export class AppComponent implements OnInit {
     return this.jwtService.getFullName();
   }
 
+  get role() {
+    return this.jwtService.getRole();
+  }
+
   ngOnInit(): void {
     if (!this.jwtService.isAuthenticated()) {
       this.jwtService.logout();

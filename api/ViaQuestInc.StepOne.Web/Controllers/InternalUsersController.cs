@@ -2,11 +2,12 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using ViaQuestInc.StepOne.Web.ServiceModules;
+using ViaQuestInc.StepOne.Web.ServiceModules.Auth;
 
 namespace ViaQuestInc.StepOne.Web.Controllers;
 
 [ApiController]
-[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = AuthModule.InternalUserPolicy)]
+[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = AuthPolicies.InternalUserPolicy)]
 [Route("users/internal")]
 public class InternalUsersController : ControllerBase
 {

@@ -11,36 +11,32 @@ import {MsalService} from "@azure/msal-angular";
 })
 export class AdAuthService {
 
-  private endpoint = "auth/ad";
+  private endpoint = "auth/ad/exchange-token";
 
   constructor(private httpClient: HttpClient, private jwtService: JwtService, private msalService: MsalService) {
   }
 
   authenticate(): Observable<string> {
-    const initMsalService$ = () => from(this.msalService.instance.initialize())
-      .pipe(take(1), tap(() => console.log('MSAL initialized.')));
+    const initMsalService$ = () => from(this.msalService.instance.initialize()).pipe(take(1));
 
     const loginPopup$ = () => from(this.msalService.loginPopup()).pipe(
       take(1),
-      tap(response => {
-        console.log('MSAL Response', response);
-
-        this.msalService.instance.setActiveAccount(response.account);
-      })
+      tap(response => this.msalService.instance.setActiveAccount(response.account))
     );
 
     const acquireToken$ = (response: AuthenticationResult) =>
-      from(this.msalService.instance.acquireTokenSilent({scopes: []}))
-        .pipe(take(1), tap(() => console.log('MSAL Auth Response', response)));
+      from(this.msalService.instance.acquireTokenSilent({
+        scopes: [`api://${environment.clientId}/access_as_user`],
+        account: this.msalService.instance.getAllAccounts()[0],
+        authority: environment.authority,
+      })).pipe(take(1));
 
     const apiAuthRequest$ = (tokenResponse: AuthenticationResult) =>
-      this.httpClient.post(`${environment.apiUrl}/${this.endpoint}/v`, {}, {
-        headers: {Authorization: `Bearer ${tokenResponse.accessToken}`}
+      this.httpClient.post(`${environment.apiUrl}/${this.endpoint}`, {}, {
+        headers: {Authorization: `Bearer ${tokenResponse.idToken}`}
       }).pipe(
         take(1),
         tap((x: any) => {
-          console.log('API Auth Response', x);
-
           this.jwtService.storeToken(x.token);
         })
       );

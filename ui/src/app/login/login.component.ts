@@ -60,13 +60,13 @@ export class LoginComponent implements OnInit {
 
     this.otpService.requestOtp(phoneNumber).subscribe({
       next: () => {
-        console.log('OTP request succeeded.');
+        console.info('OTP request succeeded.');
 
         this.oneTimePasswordRequested = true;
         this.focusOtp();
       },
       error: (err) => {
-        console.log('Invalid OTP request (phone number).', err);
+        console.error('Invalid OTP request (phone number).', err);
 
         this.phoneControl.setErrors({alwaysInvalid: true});
         this.focusPhone();
@@ -80,12 +80,12 @@ export class LoginComponent implements OnInit {
 
     this.otpService.authenticate(phoneNumber, otp).subscribe({
       next: (token) => {
-        console.log('OTP authentication succeeded.', token);
+        console.info('OTP authentication succeeded.');
 
         this.router.navigate(['/dashboard']);
       },
       error: (err) => {
-        console.log('Invalid OTP.', err);
+        console.error('Invalid OTP.', err);
 
         this.otpControl.setErrors({alwaysInvalid: true});
         this.focusOtp();
@@ -96,12 +96,12 @@ export class LoginComponent implements OnInit {
   onAdLogin() {
     this.adAuthService.authenticate().pipe(take(1)).subscribe({
       next: (token) => {
-        console.log('AD authentication succeeded.', token);
+        console.info('AD authentication succeeded.');
 
         this.router.navigate(['/dashboard']);
       },
       error: (err) => {
-        console.log('AD authentication failed.', err);
+        console.error('AD authentication failed.', err);
       }
     });
   }
