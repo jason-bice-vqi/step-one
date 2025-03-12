@@ -8,9 +8,6 @@ namespace ViaQuestInc.StepOne.Core.Auth.Services;
 
 public class JwtService(AuthConfig authConfig)
 {
-    private readonly string secret = authConfig.Jwt.Key;
-    private readonly string issuer = authConfig.Jwt.Issuer;
-
     private static readonly string[] CopyAzureAdClaimNames = [
         JwtRegisteredClaimNames.GivenName,
         JwtRegisteredClaimNames.Name,
@@ -44,12 +41,12 @@ public class JwtService(AuthConfig authConfig)
     
     private Task<string> GenerateTokenAsync(IEnumerable<Claim> withClaims, CancellationToken cancellationToken)
     {
-        var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(secret));
+        var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(authConfig.Jwt.Key));
         var signingCredentials = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
         
         var token = new JwtSecurityToken(
-            issuer,
-            issuer,
+            authConfig.Jwt.Issuer,
+            authConfig.Jwt.Audience,
             withClaims,
             expires: DateTime.UtcNow.AddHours(2),
             signingCredentials: signingCredentials

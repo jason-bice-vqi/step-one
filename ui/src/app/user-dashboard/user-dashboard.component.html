@@ -1,0 +1,33 @@
+<div class="dashboard-container">
+  <div class="job-title"><h1>PBS with Credentialing</h1></div>
+  <div class="progress-bar">
+    <app-progress-bar [totalSteps]="4" [completedSteps]="1"></app-progress-bar>
+  </div>
+  <div
+    class="step-wrapper"
+    *ngFor="let step of steps; let i = index"
+  >
+    <div class="timeline-line" *ngIf="i !== 0"></div>
+    <div
+      class="step-card"
+      [ngClass]="{
+        'complete': step.status === 'complete',
+        'pending': step.status === 'pending',
+        'blocked': step.status === 'blocked'
+      }"
+    >
+      <div class="step-header">
+        <h3>{{ step.title }}</h3>
+        <span *ngIf="step.status === 'complete'" class="checkmark">✔</span>
+      </div>
+      <p>{{ step.description }}</p>
+      <button
+        mat-raised-button color="accent"
+        [disabled]="step.status !== 'pending'"
+        (click)="onAction(step)"
+      >
+        {{ step.buttonText }}
+      </button>
+    </div>
+  </div>
+</div>

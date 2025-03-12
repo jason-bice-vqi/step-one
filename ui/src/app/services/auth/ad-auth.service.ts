@@ -11,7 +11,7 @@ import {MsalService} from "@azure/msal-angular";
 })
 export class AdAuthService {
 
-  private endpoint = "auth/ad/exchange-token";
+  private endpoint = "auth/ad/exchange";
 
   constructor(private httpClient: HttpClient, private jwtService: JwtService, private msalService: MsalService) {
   }

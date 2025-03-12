@@ -1,7 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using ViaQuestInc.StepOne.Core.Auth.Otp.Services;
-using ViaQuestInc.StepOne.Core.Auth.Otp.Services.TwilioOtp;
 
 namespace ViaQuestInc.StepOne.Web.Controllers;
 
@@ -19,7 +18,7 @@ public class OtpAuthController(IOtpService otpService) : ControllerBase
         return NotFound();
     }
 
-    [HttpPost("challenge")]
+    [HttpPost("exchange")]
     public async Task<IActionResult> Authenticate([FromBody] OtpRequest otpRequest, CancellationToken cancellationToken)
     {
         var jwt = await otpService.ValidateOtpTokenAsync(otpRequest.PhoneNumber, otpRequest.Otp!, cancellationToken);

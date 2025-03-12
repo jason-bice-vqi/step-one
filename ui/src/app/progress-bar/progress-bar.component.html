@@ -1,0 +1,7 @@
+<div class="progress-container">
+  <div
+    *ngFor="let step of stepsArray; let i = index"
+    class="progress-step"
+    [class.completed]="i < completedSteps"
+  ></div>
+</div>

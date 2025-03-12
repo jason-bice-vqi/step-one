@@ -5,10 +5,10 @@ using ViaQuestInc.StepOne.Web.ServiceModules.Auth;
 
 namespace ViaQuestInc.StepOne.Web.Controllers;
 
-[Route("auth/ad/exchange-token")]
+[Authorize(Policy = AuthPolicies.InitialAzureAdJwtAuthPolicy)]
+[Route("auth/ad/exchange")]
 public class AzureAdAuthController(JwtService jwtService) : ControllerBase
 {
-    [Authorize(Policy = AuthPolicies.InitialAzureAdJwtAuthPolicy)]
     public async Task<IActionResult> ExchangeAdJwtForStepOneJwt(CancellationToken cancellationToken)
     {
         if (User.Identity is not { IsAuthenticated: true })

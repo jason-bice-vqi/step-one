@@ -13,12 +13,14 @@ import {FormsModule, ReactiveFormsModule} from "@angular/forms";
 import {NgOptimizedImage} from "@angular/common";
 import {OtpAuthService} from "./services/auth/otp-auth.service";
 import {HTTP_INTERCEPTORS, HttpClientModule} from "@angular/common/http";
-import {DashboardComponent} from './dashboard/dashboard.component';
+import {UserDashboardComponent} from './user-dashboard/user-dashboard.component';
 import {AuthInterceptor} from "./interceptors/auth.interceptor";
 import {FormatPhonePipe} from './pipes/format-phone.pipe';
 import {MSAL_INSTANCE, MsalBroadcastService, MsalGuard, MsalService} from "@azure/msal-angular";
 import {BrowserCacheLocation, LogLevel, PublicClientApplication} from "@azure/msal-browser";
 import {environment} from "../environments/environment";
+import {AdminDashboardComponent} from "./admin/admin-dashboard/admin-dashboard.component";
+import { ProgressBarComponent } from './progress-bar/progress-bar.component';
 
 export function MSALInstanceFactory(): PublicClientApplication {
   return new PublicClientApplication({
@@ -58,8 +60,10 @@ export function MSALInstanceFactory(): PublicClientApplication {
   declarations: [
     AppComponent,
     LoginComponent,
-    DashboardComponent,
-    FormatPhonePipe
+    UserDashboardComponent,
+    FormatPhonePipe,
+    AdminDashboardComponent,
+    ProgressBarComponent
   ],
   imports: [
     BrowserModule,

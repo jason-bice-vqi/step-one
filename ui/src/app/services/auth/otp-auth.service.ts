@@ -38,7 +38,7 @@ export class OtpAuthService {
     const request = {phoneNumber, otp};
 
     return this.httpClient
-      .post<string>(`${environment.apiUrl}/${this.endpoint}/challenge`, request, {
+      .post<string>(`${environment.apiUrl}/${this.endpoint}/exchange`, request, {
         headers: new HttpHeaders({'Content-Type': 'application/json'})
       })
       .pipe(take(1), tap((x: any) => this.jwtService.storeToken(x.token)));

@@ -44,9 +44,13 @@ export class JwtService {
   hasRole(roleName: string): boolean {
     const decodedToken = this.decodeToken();
 
-    const roles = decodedToken['http://schemas.microsoft.com/ws/2008/06/identity/claims/role'];
+    const role = decodedToken['http://schemas.microsoft.com/ws/2008/06/identity/claims/role'];
 
-    return roles.some((x:any) => x.value === roleName);
+    return role === roleName;
+  }
+
+  isAdministrator(): boolean {
+    return this.hasRole('Administrator');
   }
 
   getFullName() : string | null {
@@ -56,7 +60,7 @@ export class JwtService {
   }
 
   storeToken(token: string) {
-    console.info('Storing JWT', jwtDecode(token));
+    console.info('Storing Exchanged JWT', jwtDecode(token));
 
     sessionStorage.setItem(this.tokenKey, token);
   }
