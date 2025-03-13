@@ -21,6 +21,11 @@ import {BrowserCacheLocation, LogLevel, PublicClientApplication} from "@azure/ms
 import {environment} from "../environments/environment";
 import {AdminDashboardComponent} from "./admin/admin-dashboard/admin-dashboard.component";
 import { ProgressBarComponent } from './progress-bar/progress-bar.component';
+import {MatTableModule} from "@angular/material/table";
+import {MatProgressBarModule} from "@angular/material/progress-bar";
+import {MatIconModule} from "@angular/material/icon";
+import {MatPaginatorModule} from "@angular/material/paginator";
+import {MatTooltipModule} from "@angular/material/tooltip";
 
 export function MSALInstanceFactory(): PublicClientApplication {
   return new PublicClientApplication({
@@ -76,7 +81,12 @@ export function MSALInstanceFactory(): PublicClientApplication {
     ReactiveFormsModule,
     NgOptimizedImage,
     FormsModule,
-    HttpClientModule
+    HttpClientModule,
+    MatTableModule,
+    MatProgressBarModule,
+    MatIconModule,
+    MatPaginatorModule,
+    MatTooltipModule
   ],
   providers: [
     {provide: MSAL_INSTANCE, useFactory: MSALInstanceFactory},

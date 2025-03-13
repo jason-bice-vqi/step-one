@@ -1,5 +1,6 @@
 import {Component, OnInit} from '@angular/core';
 import {JwtService} from "./services/auth/jwt.service";
+import {NavigationEnd, Router} from "@angular/router";
 
 @Component({
   selector: 'app-root',
@@ -8,7 +9,7 @@ import {JwtService} from "./services/auth/jwt.service";
 })
 export class AppComponent implements OnInit {
 
-  constructor(private jwtService: JwtService) {
+  constructor(private jwtService: JwtService, private router: Router) {
   }
 
   get isAuthenticated() {
@@ -27,6 +28,16 @@ export class AppComponent implements OnInit {
     if (!this.jwtService.isAuthenticated()) {
       this.jwtService.logout();
     }
+
+    this.router.events.subscribe(event => {
+      if (event instanceof NavigationEnd) {
+        if (event.url.startsWith('/admin')) {
+          document.body.classList.add('admin-area');
+        } else {
+          document.body.classList.remove('admin-area');
+        }
+      }
+    });
   }
 
   logout() {

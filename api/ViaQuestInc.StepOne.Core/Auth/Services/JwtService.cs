@@ -8,7 +8,8 @@ namespace ViaQuestInc.StepOne.Core.Auth.Services;
 
 public class JwtService(AuthConfig authConfig)
 {
-    private static readonly string[] CopyAzureAdClaimNames = [
+    private static readonly string[] CopyAzureAdClaimNames =
+    [
         JwtRegisteredClaimNames.GivenName,
         JwtRegisteredClaimNames.Name,
         JwtRegisteredClaimNames.Sub,
@@ -17,12 +18,12 @@ public class JwtService(AuthConfig authConfig)
 
     public Task<string> GenerateTokenAsync(ClaimsPrincipal fromAdClaimsPrincipal, CancellationToken cancellationToken)
     {
-        var claims = fromAdClaimsPrincipal.Claims.Where(x => CopyAzureAdClaimNames.Contains(x.Type)).ToList(); 
-        
+        var claims = fromAdClaimsPrincipal.Claims.Where(x => CopyAzureAdClaimNames.Contains(x.Type)).ToList();
+
         // TODO - flesh out roles/claims
         claims.Add(new Claim(ClaimTypes.Role, "Administrator"));
 
-        return GenerateTokenAsync(claims, cancellationToken);
+        return GenerateTokenAsync(claims, authConfig.Jwt.LifetimeHoursInternal, cancellationToken);
     }
 
     public Task<string> GenerateTokenAsync(Candidate candidate, CancellationToken cancellationToken)
@@ -36,19 +37,20 @@ public class JwtService(AuthConfig authConfig)
             new(ClaimTypes.Role, "New Employee")
         };
 
-        return GenerateTokenAsync(claims, cancellationToken);
+        return GenerateTokenAsync(claims, authConfig.Jwt.LifetimeHoursInternal, cancellationToken);
     }
-    
-    private Task<string> GenerateTokenAsync(IEnumerable<Claim> withClaims, CancellationToken cancellationToken)
+
+    private Task<string> GenerateTokenAsync(IEnumerable<Claim> withClaims, int lifetimeHours,
+        CancellationToken cancellationToken)
     {
         var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(authConfig.Jwt.Key));
         var signingCredentials = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
-        
+
         var token = new JwtSecurityToken(
             authConfig.Jwt.Issuer,
             authConfig.Jwt.Audience,
             withClaims,
-            expires: DateTime.UtcNow.AddHours(2),
+            expires: DateTime.UtcNow.AddHours(lifetimeHours),
             signingCredentials: signingCredentials
         );
 
