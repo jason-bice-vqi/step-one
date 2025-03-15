@@ -26,6 +26,7 @@ import {MatProgressBarModule} from "@angular/material/progress-bar";
 import {MatIconModule} from "@angular/material/icon";
 import {MatPaginatorModule} from "@angular/material/paginator";
 import {MatTooltipModule} from "@angular/material/tooltip";
+import {MatSelectModule} from "@angular/material/select";
 
 export function MSALInstanceFactory(): PublicClientApplication {
   return new PublicClientApplication({
@@ -70,24 +71,25 @@ export function MSALInstanceFactory(): PublicClientApplication {
     AdminDashboardComponent,
     ProgressBarComponent
   ],
-  imports: [
-    BrowserModule,
-    AppRoutingModule,
-    BrowserAnimationsModule,
-    MatCardModule,
-    MatInputModule,
-    MatListModule,
-    MatButtonModule,
-    ReactiveFormsModule,
-    NgOptimizedImage,
-    FormsModule,
-    HttpClientModule,
-    MatTableModule,
-    MatProgressBarModule,
-    MatIconModule,
-    MatPaginatorModule,
-    MatTooltipModule
-  ],
+    imports: [
+        BrowserModule,
+        AppRoutingModule,
+        BrowserAnimationsModule,
+        MatCardModule,
+        MatInputModule,
+        MatListModule,
+        MatButtonModule,
+        ReactiveFormsModule,
+        NgOptimizedImage,
+        FormsModule,
+        HttpClientModule,
+        MatTableModule,
+        MatProgressBarModule,
+        MatIconModule,
+        MatPaginatorModule,
+        MatTooltipModule,
+        MatSelectModule
+    ],
   providers: [
     {provide: MSAL_INSTANCE, useFactory: MSALInstanceFactory},
     MsalService,

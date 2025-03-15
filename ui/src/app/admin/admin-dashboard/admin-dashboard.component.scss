@@ -1,5 +1,29 @@
 @import "variables";
 
+.search-bar {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  width: 100%;
+
+  .search-field {
+    flex: 1;
+    min-width: 150px;
+  }
+
+  .button-container {
+    display: flex;
+    align-items: center;
+    height: 56px; // Match the height of mat-form-field
+    margin-bottom: 24px; // Small tweak to align with input fields if needed
+
+    button {
+      height: 100%; // Take the full height of container
+      white-space: nowrap;
+    }
+  }
+}
+
 .table-container {
   padding: $padding;
   border-radius: 12px;
@@ -17,6 +41,10 @@ table {
     vertical-align: middle;
   }
 
+  td small {
+    color: gray;
+  }
+
   mat-progress-bar {
     height: 10px;
     border-radius: 5px;
@@ -24,5 +52,9 @@ table {
 
   tr:hover {
     background-color: #ebebeb;
+  }
+
+  .text-center {
+    text-align: center;
   }
 }
