@@ -44,7 +44,7 @@ public class Repository<TContext>(TContext context) : IRepository
     public async Task<T?> GetAsync<T>(Expression<Func<T, bool>> expression, CancellationToken cancellationToken)
         where T : class
     {
-        return await GetWithChildrenAsync(expression, cancellationToken);
+        return await GetWithChildrenAsync(expression, cancellationToken, Array.Empty<string>());
     }
 
     public async Task<T?> GetWithChildrenAsync<T>(
@@ -55,11 +55,16 @@ public class Repository<TContext>(TContext context) : IRepository
         return await FilterWithChildren(expression, includes).SingleOrDefaultAsync(cancellationToken);
     }
 
-    public async Task<T?> FindAsync<T>(
+    public async Task<T?> GetWithChildrenAsync<T>(Expression<Func<T, bool>> expression,
         CancellationToken cancellationToken,
-        params object[] keyValues) where T : class
+        params Expression<Func<T, object>>[]? includes) where T : class
     {
-        var entity = await context.FindAsync<T>(keyValues, cancellationToken);
+        return await All(includes).SingleOrDefaultAsync(expression, cancellationToken);
+    }
+
+    public async Task<T?> FindAsync<T>(object key, CancellationToken cancellationToken) where T : class
+    {
+        var entity = await context.FindAsync<T>([key], cancellationToken);
 
         if (entity != null && context.ChangeTracker.QueryTrackingBehavior == QueryTrackingBehavior.NoTracking)
         {

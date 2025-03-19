@@ -41,13 +41,20 @@ public class AuthModule : IServiceModule
                     ValidateLifetime = true,
                     ValidateIssuerSigningKey = true
                 };
-                options.Events = new()
+                options.Events = new JwtBearerEvents
                 {
-                    OnTokenValidated = async v => { Log.Information("Azure AD token validation PASSED."); },
-                    OnAuthenticationFailed = async v =>
+                    OnTokenValidated = _ =>
+                    {
+                        Log.Information("Azure AD token validation PASSED.");
+                        
+                        return Task.CompletedTask;
+                    },
+                    OnAuthenticationFailed = v =>
                     {
                         Log.Error("Azure AD token validation FAILED: {Message} {Stack}", v.Exception.Message,
                             v.Exception.StackTrace);
+                        
+                        return Task.CompletedTask;
                     }
                 };
             });

@@ -3,6 +3,7 @@ using System.Security.Claims;
 using System.Text;
 using Microsoft.IdentityModel.Tokens;
 using ViaQuestInc.StepOne.Core.Candidates;
+using ViaQuestInc.StepOne.Kernel.Auth;
 
 namespace ViaQuestInc.StepOne.Core.Auth.Services;
 
@@ -30,6 +31,7 @@ public class JwtService(AuthConfig authConfig)
     {
         var claims = new Claim[]
         {
+            new(Claims.CandidateId, candidate.Id.ToString()),
             new(JwtRegisteredClaimNames.GivenName, candidate.FirstName),
             new(JwtRegisteredClaimNames.Name, candidate.FullName),
             new(JwtRegisteredClaimNames.Sub, candidate.Id.ToString()),

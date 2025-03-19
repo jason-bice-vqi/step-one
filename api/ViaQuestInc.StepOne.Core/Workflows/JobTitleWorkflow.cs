@@ -1,0 +1,25 @@
+﻿using ViaQuestInc.StepOne.Core.Organization;
+using ViaQuestInc.StepOne.Core.Workflows.Steps;
+using ViaQuestInc.StepOne.Kernel.Entity;
+
+namespace ViaQuestInc.StepOne.Core.Workflows;
+
+/// <summary>
+/// Relates a <see cref="JobTitle"/> and <see cref="Workflow"/>.
+/// </summary>
+public class JobTitleWorkflow : EntityBase<int>
+{
+    public required int JobTitleId { get; set; }
+    
+    /// <summary>
+    /// The job title to which this relationship belongs.
+    /// </summary>
+    public JobTitle JobTitle { get; set; }
+    
+    public required int WorkflowId { get; set; }
+    
+    /// <summary>
+    /// The workflow to which this relationship belongs.
+    /// </summary>
+    public Workflow Workflow { get; set; }
+}

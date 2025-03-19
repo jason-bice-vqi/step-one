@@ -1,6 +1,4 @@
-﻿using ViaQuestInc.StepOne.Kernel.Data;
-
-namespace ViaQuestInc.StepOne.Web.Configuration;
+﻿namespace ViaQuestInc.StepOne.Web.Configuration;
 
 public static class ConfigurationExtensions
 {

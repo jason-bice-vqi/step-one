@@ -1,7 +1,7 @@
-﻿using ViaQuestInc.StepOne.Core.Workflows;
+﻿using ViaQuestInc.StepOne.Core.Workflows.Steps;
 using ViaQuestInc.StepOne.Kernel.Entity;
 
-namespace ViaQuestInc.StepOne.Core.Candidates;
+namespace ViaQuestInc.StepOne.Core.Candidates.Workflows;
 
 public class CandidateWorkflowStep : EntityBase<int>
 {
@@ -14,4 +14,8 @@ public class CandidateWorkflowStep : EntityBase<int>
     public WorkflowStep? WorkflowStep { get; set; }
     
     public DateTime? CompletedAt { get; set; }
+    
+    public bool IsConfirmedByAdmin { get; set; }
+    
+    public CandidateWorkflowStepStatuses CandidateWorkflowStepStatus { get; set; }
 }

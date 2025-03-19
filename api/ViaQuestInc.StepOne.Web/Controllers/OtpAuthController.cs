@@ -21,9 +21,12 @@ public class OtpAuthController(IOtpService otpService) : ControllerBase
     [HttpPost("exchange")]
     public async Task<IActionResult> Authenticate([FromBody] OtpRequest otpRequest, CancellationToken cancellationToken)
     {
-        var jwt = await otpService.ValidateOtpTokenAsync(otpRequest.PhoneNumber, otpRequest.Otp!, cancellationToken);
+        if (!await otpService.ValidateOtpTokenAsync(otpRequest.PhoneNumber, otpRequest.Otp!, cancellationToken))
+        {
+            return Unauthorized(new { Message = "Invalid OTP" });
+        }
 
-        if (jwt == null) return Unauthorized(new { Message = "Invalid OTP" });
+        var jwt = await otpService.GetNativeTokenAsync(otpRequest.PhoneNumber, cancellationToken);
 
         return Ok(new { Token = jwt });
     }

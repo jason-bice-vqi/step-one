@@ -9,8 +9,8 @@ public interface IRepository
     /// <summary>
     /// Used to retrieve all entities of type <typeparamref name="T"/>.
     /// </summary>
-    /// <typeparam name="T">Entity Type</typeparam>
-    /// <param name="includes">Linked entity to include</param>
+    /// <typeparam name="T">The entity type.</typeparam>
+    /// <param name="includes">Navigation properties to include.</param>
     /// <returns>IQueryable of all entities</returns>
     IQueryable<T> All<T>(params Expression<Func<T, object>>[]? includes) where T : class;
 
@@ -18,7 +18,7 @@ public interface IRepository
     /// Used to retrieve all entities of type <typeparamref name="T"/>, including a property that is a collection
     /// and you need to include the collection's children.
     /// </summary>
-    /// <typeparam name="T">Entity Type</typeparam>
+    /// <typeparam name="T">The entity type.</typeparam>
     /// <param name="includes">Array of linked entities to include, using namespace (dot) notation</param>
     /// <returns>IQueryable of all entities</returns>
     IQueryable<T> AllWithChildren<T>(params string[]? includes) where T : class;
@@ -27,9 +27,9 @@ public interface IRepository
     /// Used to retrieve a single (first) entity of type <typeparamref name="T"/>, for which the Expression
     /// parameter "<paramref name="expression"/>" evaluates true.
     /// </summary>
-    /// <typeparam name="T">Entity Type</typeparam>
+    /// <typeparam name="T">The entity type.</typeparam>
     /// <param name="expression">Expression to specify which entity to get</param>
-    /// <param name="cancellationToken">Async cancellation token</param>
+    /// <param name="cancellationToken">A cancellation token.</param>
     /// <returns>Single entity of type <typeparamref name="T"/> for which "<paramref name="expression"/>" evaluates
     /// true.</returns>
     Task<T?> GetAsync<T>(
@@ -40,35 +40,49 @@ public interface IRepository
     /// Used to retrieve a single (first) entity of type <typeparamref name="T"/>, for which the Expression
     /// parameter "<paramref name="expression"/>" evaluates true.
     /// </summary>
-    /// <typeparam name="T">Entity Type</typeparam>
+    /// <typeparam name="T">The entity type.</typeparam>
     /// <param name="expression">Expression to specify which entity to get</param>
-    /// <param name="cancellationToken">Async cancellation token</param>
-    /// <param name="includes">Linked entity to include</param>
+    /// <param name="cancellationToken">A cancellation token.</param>
+    /// <param name="includes">Navigation properties to include.</param>
     /// <returns>Single entity of type <typeparamref name="T"/> for which "<paramref name="expression"/>" evaluates
     /// true, including linked entities specified by "<paramref name="includes"/>"</returns>
     Task<T?> GetWithChildrenAsync<T>(
         Expression<Func<T, bool>> expression,
         CancellationToken cancellationToken,
         params string[]? includes) where T : class;
+    
+    /// <summary>
+    /// Used to retrieve a single (first) entity of type <typeparamref name="T"/>, for which the Expression
+    /// parameter "<paramref name="expression"/>" evaluates true.
+    /// </summary>
+    /// <typeparam name="T">The entity type.</typeparam>
+    /// <param name="expression">Expression to specify which entity to get</param>
+    /// <param name="cancellationToken">A cancellation token.</param>
+    /// <param name="includes">Navigation properties to include.</param>
+    /// <returns>Single entity of type <typeparamref name="T"/> for which "<paramref name="expression"/>" evaluates
+    /// true, including linked entities specified by "<paramref name="includes"/>"</returns>
+    Task<T?> GetWithChildrenAsync<T>(
+        Expression<Func<T, bool>> expression,
+        CancellationToken cancellationToken,
+        params Expression<Func<T, object>>[]? includes) where T : class;
 
     /// <summary>
     /// Used to retrieve a single (first) entity of type <typeparamref name="T"/> with primary key value(s)
     /// matching <paramref name="keyValues"/>.
     /// </summary>
-    /// <typeparam name="T">Entity Type</typeparam>
-    /// <param name="cancellationToken">Async cancellation token</param>
-    /// <param name="keyValues">Array of primary keys/values used to locate entity</param>
-    /// <returns>Single entity of type <typeparamref name="T"/> which matches the primary key value(s)
-    /// <paramref name="keyValues"/></returns>
-    Task<T?> FindAsync<T>(CancellationToken cancellationToken = default, params object[] keyValues) where T : class;
+    /// <typeparam name="T">The entity type.</typeparam>
+    /// /// <param name="key">Primary key used to locate entity</param>
+    /// <param name="cancellationToken">A cancellation token.</param>
+    /// <returns>Single entity of type <typeparamref name="T"/> which matches the primary key value.</returns>
+    Task<T?> FindAsync<T>(object key, CancellationToken cancellationToken) where T : class;
 
     /// <summary>
     /// Used to retrieve any entities of type <typeparamref name="T"/> for which the Expression
     /// "<paramref name="expression"/>" evaluates true.
     /// </summary>
-    /// <typeparam name="T">Entity Type</typeparam>
-    /// <param name="expression">Expression to filter entities</param>
-    /// <param name="includes">Linked entity to include</param>
+    /// <typeparam name="T">The entity type.</typeparam>
+    /// <param name="expression">An expression to use to filter entities.</param>
+    /// <param name="includes">Navigation properties to include.</param>
     /// <returns>List&lt;<typeparamref name="T"/>&gt; of all entities for which the Expression
     /// "<paramref name="expression"/>" evaluates true</returns>
     IQueryable<T> Filter<T>(
@@ -80,8 +94,8 @@ public interface IRepository
     /// "<paramref name="predicate"/>" evaluates true, including a property that is a collection and you need to
     /// include the collection's children.
     /// </summary>
-    /// <typeparam name="T">Entity Type</typeparam>
-    /// <param name="predicate">Expression to filter entities</param>
+    /// <typeparam name="T">The entity type.</typeparam>
+    /// <param name="predicate">An expression to use to filter entities.</param>
     /// <param name="includes">Array of linked entities to include, using namespace (dot) notation</param>
     /// <returns>IQueryable of all entities for which the Expression "<paramref name="predicate"/>"
     /// evaluates true</returns>
@@ -93,9 +107,9 @@ public interface IRepository
     /// Used to determine if the database contains any entities of type <typeparamref name="T"/> for which the
     /// Expression "<paramref name="predicate"/>" evaluates true.
     /// </summary>
-    /// <typeparam name="T">Entity Type</typeparam>
+    /// <typeparam name="T">The entity type.</typeparam>
     /// <param name="predicate">Expression to search entities</param>
-    /// <param name="cancellationToken">Async cancellation token</param>
+    /// <param name="cancellationToken">A cancellation token.</param>
     /// <returns>True if "<paramref name="predicate"/>" evaluates true for any entity of type
     /// <typeparamref name="T"/> in the database</returns>
     Task<bool> ContainsAsync<T>(
@@ -105,7 +119,7 @@ public interface IRepository
     /// <summary>
     /// Begins tracking a new entity of type <typeparamref name="T"/> without persisting to the database.
     /// </summary>
-    /// <typeparam name="T">Entity Type</typeparam>
+    /// <typeparam name="T">The entity type.</typeparam>
     /// <param name="t">New Entity</param>
     /// <returns>The entity as it exists in the database (will include Id)</returns>
     T CreateNoSave<T>(T t) where T : class;
@@ -113,27 +127,27 @@ public interface IRepository
     /// <summary>
     /// Adds a new entity of type <typeparamref name="T"/> to the database.
     /// </summary>
-    /// <typeparam name="T">Entity Type</typeparam>
+    /// <typeparam name="T">The entity type.</typeparam>
     /// <param name="entity">New Entity</param>
-    /// <param name="cancellationToken">Async cancellation token</param>
+    /// <param name="cancellationToken">A cancellation token.</param>
     /// <returns>The entity as it exists in the database (will include Id)</returns>
     Task<T> CreateAsync<T>(T entity, CancellationToken cancellationToken) where T : class;
 
     /// <summary>
     /// Adds the entities in <paramref name="entities"/> to the database.
     /// </summary>
-    /// <typeparam name="T">Entity Type</typeparam>
+    /// <typeparam name="T">The entity type.</typeparam>
     /// <param name="entities">The list of objects</param>
-    /// <param name="cancellationToken">Async cancellation token</param>
+    /// <param name="cancellationToken">A cancellation token.</param>
     /// <returns>Void Task</returns>
     Task CreateRangeAsync<T>(IList<T> entities, CancellationToken cancellationToken) where T : class;
 
     /// <summary>
     /// Deletes entity <paramref name="entity"/> from the database.
     /// </summary>
-    /// <typeparam name="T">Entity Type</typeparam>
+    /// <typeparam name="T">The entity type.</typeparam>
     /// <param name="entity">Entity to delete</param>
-    /// <param name="cancellationToken">Async cancellation token</param>
+    /// <param name="cancellationToken">A cancellation token.</param>
     /// <returns>Number of rows deleted (includes rows deleted by linked entities, SQL triggers, etc...)</returns>
     Task<int> DeleteAsync<T>(T? entity, CancellationToken cancellationToken) where T : class;
 
@@ -141,9 +155,9 @@ public interface IRepository
     /// Deletes all entities of type <typeparam name="T"></typeparam> from the database for which the Expression
     /// "<paramref name="predicate"/>" evaluates true.
     /// </summary>
-    /// <typeparam name="T">Entity Type</typeparam>
+    /// <typeparam name="T">The entity type.</typeparam>
     /// <param name="predicate">Expression to search entities</param>
-    /// <param name="cancellationToken">Async cancellation token</param>
+    /// <param name="cancellationToken">A cancellation token.</param>
     /// <returns>Number of rows deleted (includes entities, rows deleted by linked entities, SQL triggers, etc...)
     /// </returns>
     Task<int> DeleteAsync<T>(
@@ -153,25 +167,25 @@ public interface IRepository
     /// <summary>
     /// Bulk deletes the supplied entities.
     /// </summary>
-    /// <typeparam name="T">Entity Type</typeparam>
+    /// <typeparam name="T">The entity type.</typeparam>
     /// <param name="entities">The entities to be deleted</param>
-    /// <param name="cancellationToken">Async cancellation token</param>
+    /// <param name="cancellationToken">A cancellation token.</param>
     Task DeleteRangeAsync<T>(IList<T> entities, CancellationToken cancellationToken) where T : class;
 
     /// <summary>
     /// Deletes all records from the table which corresponds to <typeparam name="T"></typeparam>.
     /// </summary>
     /// <typeparam name="T">Entity type for the table to clear</typeparam>
-    /// <param name="cancellationToken">Async cancellation token</param>
+    /// <param name="cancellationToken">A cancellation token.</param>
     /// <returns>Void Task</returns>
     Task ClearAsync<T>(CancellationToken cancellationToken) where T : class;
 
     /// <summary>
     /// Updates an existing entity of type <typeparamref name="T"/> in the database.
     /// </summary>
-    /// <typeparam name="T">Entity Type</typeparam>
+    /// <typeparam name="T">The entity type.</typeparam>
     /// <param name="entity">New Entity</param>
-    /// <param name="cancellationToken">Async cancellation token</param>
+    /// <param name="cancellationToken">A cancellation token.</param>
     /// <returns>Number of rows updated (includes entities, rows updated by linked entities, SQL triggers, etc...)
     /// </returns>
     Task<int> UpdateAsync<T>(T entity, CancellationToken cancellationToken) where T : class;
@@ -179,9 +193,9 @@ public interface IRepository
     /// <summary>
     /// Bulk updates a list of objects.
     /// </summary>
-    /// <typeparam name="T">Entity Type</typeparam>
+    /// <typeparam name="T">The entity type.</typeparam>
     /// <param name="entities">The list of entities</param>
-    /// <param name="cancellationToken">Async cancellation token</param>
+    /// <param name="cancellationToken">A cancellation token.</param>
     /// <returns>Number of rows updated</returns>
     Task<int> UpdateRangeAsync<T>(IList<T> entities, CancellationToken cancellationToken) where T : class;
 
@@ -189,7 +203,7 @@ public interface IRepository
     /// Executes a SQL stored procedure with parameters <paramref name="sqlParams"/>.
     /// </summary>
     /// <param name="procedureCommand">Name of the SQL stored procedure to execute</param>
-    /// <param name="cancellationToken">Async cancellation token</param>
+    /// <param name="cancellationToken">A cancellation token.</param>
     /// <param name="sqlParams">SQL Parameter to pass to the stored procedure</param>
     /// <returns>Void Task</returns>
     Task ExecuteProcedureAsync(
@@ -202,7 +216,7 @@ public interface IRepository
     /// </summary>
     /// <typeparam name="T">Type to map each query result to</typeparam>
     /// <param name="query">Raw SQL query string</param>
-    /// <param name="cancellationToken">Async cancellation token</param>
+    /// <param name="cancellationToken">A cancellation token.</param>
     /// <returns>List&lt;<typeparamref name="T"/>&gt; of mapped objects</returns>
     Task<List<T>> RawSqlQueryAsync<T>(string query, CancellationToken cancellationToken) where T : class;
 
@@ -217,7 +231,7 @@ public interface IRepository
     /// <summary>
     /// Saves all changes to any entities into underlying database.
     /// </summary>
-    /// <param name="cancellationToken">Async cancellation token</param>
+    /// <param name="cancellationToken">A cancellation token.</param>
     /// <returns>Void Task</returns>
     Task SaveChangesAsync(CancellationToken cancellationToken);
 

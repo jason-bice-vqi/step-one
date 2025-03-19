@@ -3,6 +3,7 @@ using Twilio.Exceptions;
 using Twilio.Rest.Verify.V2.Service;
 using ViaQuestInc.StepOne.Core.Auth.Services;
 using ViaQuestInc.StepOne.Core.Candidates;
+using ViaQuestInc.StepOne.Core.Candidates.Services;
 
 namespace ViaQuestInc.StepOne.Core.Auth.Otp.Services.TwilioOtp;
 
@@ -39,7 +40,7 @@ public class TwilioService(
         return false;
     }
 
-    public async Task<string?> ValidateOtpTokenAsync(string phoneNumber, string otp,
+    public async Task<bool> ValidateOtpTokenAsync(string phoneNumber, string otp,
         CancellationToken cancellationToken)
     {
         var fullPhoneNumber = $"+1{phoneNumber}";
@@ -57,15 +58,7 @@ public class TwilioService(
             Log.Information("Twilio OTP Verification Result for {Phone}: {Result}", fullPhoneNumber,
                 verification.Status);
 
-            if (verification.Status != "approved") return null;
-            
-            var candidate = (await candidateService.GetByPhoneNumberAsync(phoneNumber, cancellationToken))!;
-
-            await candidateService.RecordAuthenticatedAsync(candidate, cancellationToken);
-            
-            var tokenStr = await jwtService.GenerateTokenAsync(candidate, cancellationToken);
-
-            return tokenStr;
+            return verification.Status == "approved";
         }
         catch (ApiException)
         {
@@ -73,7 +66,18 @@ public class TwilioService(
             // Would be better if an exception wasn't generated, and instead Status was used.
             Log.Information("Verification failed for {Phone}.", fullPhoneNumber);
 
-            return null;
+            return false;
         }
+    }
+
+    public async Task<string> GetNativeTokenAsync(string phoneNumber, CancellationToken cancellationToken)
+    {
+        var candidate = (await candidateService.GetByPhoneNumberAsync(phoneNumber, cancellationToken))!;
+
+        await candidateService.RecordAuthenticatedAsync(candidate, cancellationToken);
+            
+        var tokenStr = await jwtService.GenerateTokenAsync(candidate, cancellationToken);
+
+        return tokenStr;
     }
 }

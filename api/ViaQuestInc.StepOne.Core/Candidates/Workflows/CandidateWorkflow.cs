@@ -1,7 +1,7 @@
 ﻿using ViaQuestInc.StepOne.Core.Workflows;
 using ViaQuestInc.StepOne.Kernel.Entity;
 
-namespace ViaQuestInc.StepOne.Core.Candidates;
+namespace ViaQuestInc.StepOne.Core.Candidates.Workflows;
 
 public class CandidateWorkflow : EntityBase<int>, IEntityStatusAssignable
 {

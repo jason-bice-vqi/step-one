@@ -1,4 +1,5 @@
 ﻿using ViaQuestInc.StepOne.Core.Candidates;
+using ViaQuestInc.StepOne.Core.Candidates.Services;
 
 namespace ViaQuestInc.StepOne.Web.ServicesManagement;
 
