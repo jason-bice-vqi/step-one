@@ -2,11 +2,11 @@
 using Microsoft.AspNetCore.Mvc;
 using ViaQuestInc.StepOne.Core.Auth.Otp.Services;
 
-namespace ViaQuestInc.StepOne.Web.Controllers;
+namespace ViaQuestInc.StepOne.Web.Controllers.Auth;
 
 [AllowAnonymous]
 [Route("auth/otp")]
-public class OtpAuthController(IOtpService otpService) : ControllerBase
+public class OtpAuthController(IOtpService otpService) : ApiControllerBase
 {
     [HttpPost]
     public async Task<IActionResult> SendOtp([FromBody] OtpRequest otpRequest, CancellationToken cancellationToken)

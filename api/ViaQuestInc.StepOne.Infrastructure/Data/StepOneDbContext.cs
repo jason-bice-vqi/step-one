@@ -8,6 +8,7 @@ using Serilog;
 using ViaQuestInc.StepOne.Core.Candidates;
 using ViaQuestInc.StepOne.Core.Candidates.Populators;
 using ViaQuestInc.StepOne.Core.Candidates.Workflows;
+using ViaQuestInc.StepOne.Core.Candidates.Workflows.Populators;
 using ViaQuestInc.StepOne.Core.Organization;
 using ViaQuestInc.StepOne.Core.Workflows;
 using ViaQuestInc.StepOne.Core.Workflows.Populators;
@@ -78,7 +79,8 @@ public class StepOneDbContext(DbContextOptions<StepOneDbContext> options) : DbCo
         {
             var priorityDatabasePopulators = new IDataPopulator[]
             {
-                new StepPopulator()
+                new StepPopulator(),
+                new WorkflowPopulator()
             };
 
             Log.Information("Beginning priority seeding of database");
@@ -100,10 +102,10 @@ public class StepOneDbContext(DbContextOptions<StepOneDbContext> options) : DbCo
             var parallelSeedingGroups = new[]
             {
                 [
-                    new WorkflowPopulator()
+                    new CandidatesPopulator()
                 ],
                 [
-                    
+                    new CandidateWorkflowPopulator()
                 ],
                 [
                     
@@ -113,7 +115,7 @@ public class StepOneDbContext(DbContextOptions<StepOneDbContext> options) : DbCo
                 ],
                 new IDataPopulator[]
                 {
-                    new CandidatesPopulator()
+                    
                 }
             };
 

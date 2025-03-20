@@ -1,11 +1,15 @@
-import { Component } from '@angular/core';
+import {Component, OnInit} from '@angular/core';
+import {CandidateWorkflowService} from "../services/workflows/candidate-workflow.service";
+import {CandidateWorkflowInterface} from "../../models/candidate-workflow.interface";
+import {take} from "rxjs";
+import {JwtService} from "../services/auth/jwt.service";
 
 @Component({
   selector: 'app-admin-user-dashboard',
   templateUrl: './user-dashboard.component.html',
   styleUrls: ['./user-dashboard.component.scss']
 })
-export class UserDashboardComponent {
+export class UserDashboardComponent implements OnInit {
   steps = [
     {
       title: 'Step 1: Offer Letter',
@@ -36,5 +40,16 @@ export class UserDashboardComponent {
   onAction(step: any) {
     // Handle action (e.g., route to form, call API, etc.)
     console.log(`Action for: ${step.title}`);
+  }
+
+  candidateWorkflow?: CandidateWorkflowInterface;
+
+  constructor(private jwtService: JwtService, private candidateWorkflowService: CandidateWorkflowService) {
+  }
+
+  ngOnInit(): void {
+    const candidateId = this.jwtService.getCandidateId()!;
+
+    this.candidateWorkflowService.get(candidateId).pipe(take(1)).subscribe(x => this.candidateWorkflow = x);
   }
 }

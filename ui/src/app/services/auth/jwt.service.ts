@@ -7,6 +7,10 @@ import {Router} from "@angular/router";
 })
 export class JwtService {
 
+  private applicationClaimSchema = 'https://step-one.viaquestinc.com/schemas/claims';
+
+  private candidateIdClaim = `${this.applicationClaimSchema}/candidate-id`;
+
   private tokenKey = 'jwt';
 
   constructor(private router: Router) {
@@ -27,6 +31,12 @@ export class JwtService {
 
       return null;
     }
+  }
+
+  getCandidateId(): string | null {
+    const decodedToken = this.decodeToken();
+
+    return decodedToken[this.candidateIdClaim];
   }
 
   hasClaim(claimName: string): boolean {

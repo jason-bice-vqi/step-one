@@ -28,7 +28,7 @@ public class ApplyMigrationsAction(StepOneDbContext dbContext, DatabaseConfig da
 
         if (!databaseConfig.EnableMigrations)
         {
-            throw new Exception("Cannot apply migrations with migrations disabled.");
+            throw new("Cannot apply migrations with migrations disabled.");
         }
 
         var pendingMigrations = await DbContext.Database.GetPendingMigrationsAsync(cancellationToken);

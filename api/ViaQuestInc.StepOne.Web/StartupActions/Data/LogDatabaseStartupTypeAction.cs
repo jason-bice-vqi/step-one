@@ -9,10 +9,8 @@ namespace ViaQuestInc.StepOne.Web.StartupActions.Data;
 /// </summary>
 /// <remarks>This should not inherit from <see cref="DatabaseStartupActionBase"/>, as it applies to all environments
 /// and all startup types.</remarks>
-public class LogDatabaseStartupTypeAction(IOptions<DatabaseConfig> databaseConfigOptions) : IStartupAction
+public class LogDatabaseStartupTypeAction(DatabaseConfig databaseConfig) : IStartupAction
 {
-    private readonly DatabaseConfig databaseConfig = databaseConfigOptions.Value;
-
     public Task OnStartupAsync(WebApplication app, CancellationToken cancellationToken = default)
     {
         Log.Information("Database.DatabaseStartupType: {StartupType}", databaseConfig.DatabaseStartupType);

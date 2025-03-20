@@ -10,7 +10,7 @@ public static class AssemblyExtensions
     {
         await using var stream = assembly.GetManifestResourceStream(resource);
 
-        if (stream == null) throw new Exception($"The specified fixture file {resource} could not be found.");
+        if (stream == null) throw new($"The specified fixture file {resource} could not be found.");
 
         using var streamReader = new StreamReader(stream, encoding);
         

@@ -112,15 +112,14 @@ try
         "dotnet ef dbcontext info -- --migrations-mode"
     );
     
-    const string stepOneCorsPolicy = "StepOneCorsPolicy";
+    const string stepOneCorsPolicy = nameof(stepOneCorsPolicy);
 
     builder.Services.AddCors(options =>
     {
-        options.AddPolicy(name: stepOneCorsPolicy,
+        options.AddPolicy(stepOneCorsPolicy,
             policy =>
             {
-                //policy.WithOrigins("http://localhost:4200")
-                policy.WithOrigins("*") // TODO
+                policy.WithOrigins("http://localhost:4200") // TODO
                     .AllowAnyMethod()
                     .AllowAnyHeader();
             });

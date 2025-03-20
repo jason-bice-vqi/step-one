@@ -6,7 +6,7 @@ import {EntityStatusesEnum} from "./entity-statuses.enum";
  */
 export interface CandidateInterface {
   /** The candidate's unique identifier. */
-  id: string;
+  id: number;
 
   /** The candidate's first name. */
   firstName: string;

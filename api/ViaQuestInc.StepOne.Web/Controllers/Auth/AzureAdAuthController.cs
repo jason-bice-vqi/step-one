@@ -3,11 +3,11 @@ using Microsoft.AspNetCore.Mvc;
 using ViaQuestInc.StepOne.Core.Auth.Services;
 using ViaQuestInc.StepOne.Web.ServiceModules.Auth;
 
-namespace ViaQuestInc.StepOne.Web.Controllers;
+namespace ViaQuestInc.StepOne.Web.Controllers.Auth;
 
 [Authorize(Policy = AuthPolicies.InitialAzureAdJwtAuthPolicy)]
 [Route("auth/ad/exchange")]
-public class AzureAdAuthController(JwtService jwtService) : ControllerBase
+public class AzureAdAuthController(JwtService jwtService) : ApiControllerBase
 {
     public async Task<IActionResult> ExchangeAdJwtForStepOneJwt(CancellationToken cancellationToken)
     {

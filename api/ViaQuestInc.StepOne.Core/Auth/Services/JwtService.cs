@@ -22,7 +22,7 @@ public class JwtService(AuthConfig authConfig)
         var claims = fromAdClaimsPrincipal.Claims.Where(x => CopyAzureAdClaimNames.Contains(x.Type)).ToList();
 
         // TODO - flesh out roles/claims
-        claims.Add(new Claim(ClaimTypes.Role, "Administrator"));
+        claims.Add(new(ClaimTypes.Role, Claims.Roles.Administrator));
 
         return GenerateTokenAsync(claims, authConfig.Jwt.LifetimeHoursInternal, cancellationToken);
     }

@@ -4,7 +4,7 @@ using ViaQuestInc.StepOne.Kernel.Entity;
 
 namespace ViaQuestInc.StepOne.Core.Candidates;
 
-public class Candidate : EntityBase<Guid>, IEntityStatusAssignable
+public class Candidate : EntityBase<int>, IEntityStatusAssignable
 {
     [MaxLength(100)]
     [Required]
