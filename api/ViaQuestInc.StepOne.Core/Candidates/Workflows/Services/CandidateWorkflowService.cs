@@ -9,7 +9,8 @@ public class CandidateWorkflowService(IRepository repository)
 {
     private static readonly string[] CandidateWorkflowIncludes =
     [
-        $"{nameof(CandidateWorkflow)}.{nameof(CandidateWorkflow.CandidateWorkflowSteps)}.{nameof(CandidateWorkflowStep.WorkflowStep)}.{nameof(WorkflowStep.Step)}"
+        $"{nameof(CandidateWorkflow)}.{nameof(CandidateWorkflow.CandidateWorkflowSteps)}.{nameof(CandidateWorkflowStep.WorkflowStep)}.{nameof(WorkflowStep.Step)}",
+        $"{nameof(CandidateWorkflow)}.{nameof(CandidateWorkflow.Workflow)}"
     ];
 
     public async Task<CandidateWorkflow> CreateAsync(Candidate candidate, Workflow workflow,

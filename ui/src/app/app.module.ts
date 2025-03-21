@@ -27,6 +27,9 @@ import {MatIconModule} from "@angular/material/icon";
 import {MatPaginatorModule} from "@angular/material/paginator";
 import {MatTooltipModule} from "@angular/material/tooltip";
 import {MatSelectModule} from "@angular/material/select";
+import { FileUploadComponent } from './file-upload/file-upload.component';
+import { CandidateWorkflowStepComponent } from './candidate-workflow-step/candidate-workflow-step.component';
+import {MatCheckboxModule} from "@angular/material/checkbox";
 
 export function MSALInstanceFactory(): PublicClientApplication {
   return new PublicClientApplication({
@@ -69,7 +72,9 @@ export function MSALInstanceFactory(): PublicClientApplication {
     UserDashboardComponent,
     FormatPhonePipe,
     AdminDashboardComponent,
-    ProgressBarComponent
+    ProgressBarComponent,
+    FileUploadComponent,
+    CandidateWorkflowStepComponent
   ],
     imports: [
         BrowserModule,
@@ -88,7 +93,8 @@ export function MSALInstanceFactory(): PublicClientApplication {
         MatIconModule,
         MatPaginatorModule,
         MatTooltipModule,
-        MatSelectModule
+        MatSelectModule,
+        MatCheckboxModule
     ],
   providers: [
     {provide: MSAL_INSTANCE, useFactory: MSALInstanceFactory},

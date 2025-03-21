@@ -1,0 +1,139 @@
+@import "variables";
+
+.step-wrapper {
+  position: relative;
+  display: flex;
+  align-items: flex-start;
+}
+
+.timeline-line {
+  width: 4px;
+  background: lightgray;
+  position: absolute;
+  top: -8px;
+  bottom: 0;
+  left: 20px;
+  z-index: 0;
+}
+
+.step-card {
+  border: 2px solid lightgray;
+  border-radius: 12px;
+  padding: 16px 16px 16px 48px;
+  margin-bottom: 16px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+  transition: all 0.3s ease;
+  position: relative;
+  background: white;
+  width: 100%;
+}
+
+.step-card::before {
+  content: '';
+  position: absolute;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: lightgray;
+  left: 12px;
+  top: 20px;
+  z-index: 1;
+}
+
+.step-card.complete::before {
+  background: green;
+}
+
+.step-card.pending::before {
+  background: $vqi-blue;
+  animation: pulse 2s infinite;
+}
+
+.step-card.blocked::before {
+  background: $vqi-blue-light;
+}
+
+.step-card.complete {
+  border-color: green;
+  background-color: #e8f5e9;
+}
+
+.step-card.complete .checkmark {
+  color: darkgreen;
+  font-size: 5.5em;
+  position: absolute;
+  top: 8px;
+  rotate: 5deg;
+  right: 8px;
+  z-index: 99;
+}
+
+.step-card.pending {
+  border-color: $vqi-blue;
+  color: $text-color-light;
+  background-color: $vqi-blue-light;
+  animation: pulse 2s infinite;
+}
+
+.step-card.blocked {
+  border-color: $vqi-blue-light;
+  color: $vqi-blue-light;
+  opacity: 0.5;
+  pointer-events: none;
+}
+
+button {
+  padding: 8px 16px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+button:disabled {
+  background-color: gray;
+  cursor: not-allowed;
+}
+
+@keyframes pulse {
+  0% {
+    box-shadow: 0 0 0 0 rgba(0, 100, 200, 0.4);
+  }
+  70% {
+    box-shadow: 0 0 0 20px rgba(0, 100, 200, 0);
+  }
+  100% {
+    box-shadow: 0 0 0 0 rgba(0, 100, 200, 0);
+  }
+}
+
+.task-container {
+  margin-top: $margin;
+  font-size: $font-size;
+  border: 2px dotted $vqi-blue;
+  border-radius: 12px;
+  text-align: center;
+  background-color: white;
+  transition: background-color 0.2s, border-color 0.2s;
+  padding: $padding;
+
+  a {
+    text-decoration: none;
+
+    .mat-icon {
+      height: $font-size;
+      width: $font-size;
+      font-size: $font-size;
+    }
+  }
+
+  .external-http-task {
+
+    button {
+      display: block;
+      margin: 0 auto;
+      //margin-top: $margin;
+    }
+  }
+}
+

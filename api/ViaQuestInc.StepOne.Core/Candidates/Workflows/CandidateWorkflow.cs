@@ -22,4 +22,6 @@ public class CandidateWorkflow : EntityBase<int>, IEntityStatusAssignable
     public required EntityStatuses EntityStatus { get; set; }
     
     public ICollection<CandidateWorkflowStep> CandidateWorkflowSteps { get; set; }
+
+    public int? CompletedSteps => CandidateWorkflowSteps.Count(x => x.IsCompleted);
 }

@@ -16,6 +16,8 @@ public class CandidateWorkflowStep : EntityBase<int>
     public WorkflowStep? WorkflowStep { get; set; }
     
     public DateTime? CompletedAt { get; set; }
+
+    public bool IsCompleted => CandidateWorkflowStepStatus == CandidateWorkflowStepStatuses.Completed;
     
     public bool IsConfirmedByAdmin { get; set; }
     

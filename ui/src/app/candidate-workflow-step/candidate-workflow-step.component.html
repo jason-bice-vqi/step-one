@@ -1,0 +1,59 @@
+<div
+  class="step-wrapper"
+>
+  <div class="timeline-line"></div>
+  <div
+    class="step-card"
+    [ngClass]="{
+        'complete': cws.candidateWorkflowStepStatus === CandidateWorkflowStepStatusesEnum.Completed,
+        'pending': cws.candidateWorkflowStepStatus === CandidateWorkflowStepStatusesEnum.PendingCandidate,
+        'review': cws.candidateWorkflowStepStatus === CandidateWorkflowStepStatusesEnum.PendingAdministratorReview,
+        'blocked': cws.candidateWorkflowStepStatus === CandidateWorkflowStepStatusesEnum.Blocked,
+      }"
+  >
+    <div class="step-header">
+      <h3>{{ cws.workflowStep?.stepName }}</h3>
+      <span *ngIf="cws.isCompleted" class="checkmark">✔</span>
+    </div>
+    <!--      <p>A description can be added to steps if needed.</p>-->
+    <div>
+      <button
+        *ngIf="!taskStarted"
+        mat-raised-button color="accent"
+        (click)="onStartTask()"
+      >
+        <mat-icon>rocket_launch</mat-icon>
+        Start Task
+      </button>
+      <button
+        *ngIf="taskStarted"
+        mat-raised-button color="accent"
+        (click)="onStartTask()"
+      >
+        <mat-icon>cancel</mat-icon>
+        Cancel Task
+      </button>
+    </div>
+    <div class="task-container" *ngIf="taskStarted" @revealAnimation>
+      <div class="external-http-task" *ngIf="cws.workflowStep!.step!.stepType === StepTypesEnum.ExternalHttpTask">
+        <mat-checkbox [(ngModel)]="isConfirmed">I certify that I have completed the
+          <strong><a [href]="cws.workflowStep?.step!.externalHttpTaskLink" target="_blank">
+            {{ cws.workflowStep!.step!.descriptor }}
+            <mat-icon matTooltip="Opens in a new tab or window.">open_in_new</mat-icon>
+          </a></strong>.
+        </mat-checkbox>
+        <button mat-raised-button color="primary" [disabled]="!isConfirmed">
+          <mat-icon>check</mat-icon>
+          Confirm
+        </button>
+      </div>
+      <div *ngIf="cws.workflowStep!.step!.stepType === StepTypesEnum.FileSubmission">
+        <app-file-upload
+          [fileDescriptor]="cws.workflowStep!.step!.descriptor!"
+          [fileDetails]="{ allowedTypes: ['image/png', 'application/pdf'], maxSizeMB: 5 }"
+          (fileUploaded)="handleFile($event)"
+        ></app-file-upload>
+      </div>
+    </div>
+  </div>
+</div>

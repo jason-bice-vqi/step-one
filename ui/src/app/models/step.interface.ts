@@ -21,4 +21,7 @@ export interface StepInterface {
 
   /** The link to an external site if stepType is StepTypes.ExternalHttpTask; null otherwise. */
   externalHttpTaskLink?: string | null;
+
+  /** The file descriptor, if applicable; null otherwise. */
+  descriptor?: string | null;
 }

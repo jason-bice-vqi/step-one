@@ -25,6 +25,9 @@ export interface WorkflowStepInterface {
   /** An override, if desired, of Step.NameDefault. */
   stepNameOverride?: string | null;
 
+  /** The step name, with stepNameOverride considered. */
+  stepName: string;
+
   /** The display order of this step within the workflow. */
   stepIndex: number;
 }

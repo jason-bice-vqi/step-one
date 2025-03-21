@@ -37,4 +37,11 @@ public class Step : EntityBase<int>
     /// </summary>
     [MaxLength(255)]
     public string? ExternalHttpTaskLink { get; set; }
+    
+    /// <summary>
+    /// A descriptor to help add context for this step.
+    /// </summary>
+    [MaxLength(50)]
+    [Required]
+    public required string Descriptor { get; set; }
 }

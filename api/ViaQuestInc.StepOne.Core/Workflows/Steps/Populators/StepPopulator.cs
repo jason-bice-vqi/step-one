@@ -13,6 +13,7 @@ public class StepPopulator : IDataPopulator
             // File Submissions
             new Step
             {
+                Descriptor = "Pre-Employment Form",
                 IsAdminConfirmationRequiredDefault = true,
                 NameDefault = "Complete Pre-Employment Form",
                 StepType = StepTypes.FileSubmission,
@@ -20,6 +21,7 @@ public class StepPopulator : IDataPopulator
             },
             new Step
             {
+                Descriptor = "Driver's License",
                 IsAdminConfirmationRequiredDefault = true,
                 NameDefault = "Submit Driver's License",
                 StepType = StepTypes.FileSubmission,
@@ -27,6 +29,7 @@ public class StepPopulator : IDataPopulator
             },
             new Step
             {
+                Descriptor = "Transcripts or Diploma",
                 IsAdminConfirmationRequiredDefault = true,
                 NameDefault = "Submit Proof of Highest Form of Education",
                 StepType = StepTypes.FileSubmission,
@@ -34,6 +37,7 @@ public class StepPopulator : IDataPopulator
             },
             new Step
             {
+                Descriptor = "Offer Letter",
                 IsAdminConfirmationRequiredDefault = true,
                 NameDefault = "Submit Signed Offer Letter",
                 StepType = StepTypes.FileSubmission,
@@ -41,6 +45,7 @@ public class StepPopulator : IDataPopulator
             },
             new Step
             {
+                Descriptor = "Verification of Compliance Form",
                 IsAdminConfirmationRequiredDefault = true,
                 NameDefault = "Submit Signed Verification of Compliance Form",
                 StepType = StepTypes.FileSubmission,
@@ -48,6 +53,7 @@ public class StepPopulator : IDataPopulator
             },
             new Step
             {
+                Descriptor = "W9",
                 IsAdminConfirmationRequiredDefault = true,
                 NameDefault = "Submit Signed W9",
                 StepType = StepTypes.FileSubmission,
@@ -55,6 +61,7 @@ public class StepPopulator : IDataPopulator
             },
             new Step
             {
+                Descriptor = "Social Security Card",
                 IsAdminConfirmationRequiredDefault = true,
                 NameDefault = "Submit Social Security Card",
                 StepType = StepTypes.FileSubmission,
@@ -64,6 +71,7 @@ public class StepPopulator : IDataPopulator
             // External Tasks
             new Step
             {
+                Descriptor = "Employment Application",
                 IsAdminConfirmationRequiredDefault = true,
                 NameDefault = "Complete Employment Application",
                 StepType = StepTypes.ExternalHttpTask,

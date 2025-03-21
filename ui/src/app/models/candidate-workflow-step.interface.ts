@@ -23,6 +23,9 @@ export interface CandidateWorkflowStepInterface {
   /** The timestamp when this step was completed, if applicable. */
   completedAt?: Date | null;
 
+  /** Whether this step has been completed. */
+  isCompleted: boolean;
+
   /** Indicates whether an administrator has confirmed this step. */
   isConfirmedByAdmin: boolean;
 

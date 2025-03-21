@@ -31,5 +31,8 @@ export interface CandidateWorkflowInterface {
   entityStatus: EntityStatusesEnum;
 
   /** The collection of candidate workflow steps associated with this workflow. */
-  candidateWorkflowSteps?: CandidateWorkflowStepInterface[] | null;
+  candidateWorkflowSteps: CandidateWorkflowStepInterface[];
+
+  /** The number of steps completed. */
+  completedSteps: number;
 }

@@ -33,6 +33,11 @@ public class WorkflowStep : EntityBase<int>
     /// </summary>
     [MaxLength(100)]
     public string? StepNameOverride { get; set; }
+
+    /// <summary>
+    /// The step name, with <see cref="StepNameOverride"/> considered.
+    /// </summary>
+    public string StepName => StepNameOverride ?? Step.NameDefault;
     
     /// <summary>
     /// The display order of this step within the workflow.
