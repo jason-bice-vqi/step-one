@@ -19,7 +19,7 @@ import {FormatPhonePipe} from './pipes/format-phone.pipe';
 import {MSAL_INSTANCE, MsalBroadcastService, MsalGuard, MsalService} from "@azure/msal-angular";
 import {BrowserCacheLocation, LogLevel, PublicClientApplication} from "@azure/msal-browser";
 import {environment} from "../environments/environment";
-import {AdminDashboardComponent} from "./admin/admin-dashboard/admin-dashboard.component";
+import {InternalDashboardComponent} from "./internal/internal-dashboard/internal-dashboard.component";
 import { ProgressBarComponent } from './progress-bar/progress-bar.component';
 import {MatTableModule} from "@angular/material/table";
 import {MatProgressBarModule} from "@angular/material/progress-bar";
@@ -71,7 +71,7 @@ export function MSALInstanceFactory(): PublicClientApplication {
     LoginComponent,
     UserDashboardComponent,
     FormatPhonePipe,
-    AdminDashboardComponent,
+    InternalDashboardComponent,
     ProgressBarComponent,
     FileUploadComponent,
     CandidateWorkflowStepComponent

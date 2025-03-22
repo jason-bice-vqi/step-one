@@ -68,8 +68,8 @@ a:hover {
   align-items: center;
 }
 
-/* Admin-specific override */
-body.admin-area .content {
+/* Internal-specific override */
+body.internal-area .content {
   max-width: 1600px;
 }
 

@@ -98,7 +98,7 @@ export class LoginComponent implements OnInit {
       next: (token) => {
         console.info('AD authentication succeeded.');
 
-        this.router.navigate(['/admin/dashboard']);
+        this.router.navigate(['/internal/dashboard']);
       },
       error: (err) => {
         console.error('AD authentication failed.', err);
@@ -128,9 +128,9 @@ export class LoginComponent implements OnInit {
 
   ngOnInit(): void {
     if (this.jwtService.isAuthenticated()) {
-      console.log('User is already authenticated. Redirecting to admin-user-dashboard.', this.jwtService.decodeToken());
+      console.info('User is already authenticated. Redirecting to internal-user-dashboard.', this.jwtService.decodeToken());
 
-      this.router.navigate(['/admin-user-dashboard']);
+      this.router.navigate(['/internal-user-dashboard']);
     }
   }
 }

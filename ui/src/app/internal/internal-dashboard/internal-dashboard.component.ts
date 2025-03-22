@@ -2,11 +2,11 @@ import {Component} from '@angular/core';
 import {MatTableDataSource} from "@angular/material/table";
 
 @Component({
-  selector: 'app-admin-user-dashboard',
-  templateUrl: './admin-dashboard.component.html',
-  styleUrls: ['./admin-dashboard.component.scss']
+  selector: 'app-internal-user-dashboard',
+  templateUrl: './internal-dashboard.component.html',
+  styleUrls: ['./internal-dashboard.component.scss']
 })
-export class AdminDashboardComponent {
+export class InternalDashboardComponent {
   statusOptions: string[] = ['Pending Invitation', 'Active', 'Pending Review'];
   companyOptions: string[] = ['ViaQuest Day & Employment Services LLC'];
   jobTitleOptions: string[] = [];

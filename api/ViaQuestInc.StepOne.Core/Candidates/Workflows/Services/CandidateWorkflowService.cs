@@ -13,7 +13,7 @@ public class CandidateWorkflowService(IRepository repository)
         $"{nameof(CandidateWorkflow)}.{nameof(CandidateWorkflow.Workflow)}"
     ];
 
-    public async Task<CandidateWorkflow> CreateAsync(Candidate candidate, Workflow workflow,
+    public async Task CreateAsync(Candidate candidate, Workflow workflow,
         CancellationToken cancellationToken)
     {
         ArgumentNullException.ThrowIfNull(workflow.WorkflowSteps);
@@ -41,8 +41,6 @@ public class CandidateWorkflowService(IRepository repository)
         candidate.CandidateWorkflowId = candidateWorkflow.Id;
 
         await repository.UpdateAsync(candidate, cancellationToken);
-
-        return (await GetAsync(candidate.Id, cancellationToken))!;
     }
 
     public async Task<CandidateWorkflow?> GetAsync(int candidateId, CancellationToken cancellationToken)

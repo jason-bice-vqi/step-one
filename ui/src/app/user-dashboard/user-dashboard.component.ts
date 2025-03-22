@@ -8,7 +8,7 @@ import {CandidateWorkflowStepInterface} from "../models/candidate-workflow-step.
 import {StepTypesEnum} from "../models/step-types.enum";
 
 @Component({
-  selector: 'app-admin-user-dashboard',
+  selector: 'app-internal-user-dashboard',
   templateUrl: './user-dashboard.component.html',
   styleUrls: ['./user-dashboard.component.scss']
 })

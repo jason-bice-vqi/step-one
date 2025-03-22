@@ -31,10 +31,10 @@ export class AppComponent implements OnInit {
 
     this.router.events.subscribe(event => {
       if (event instanceof NavigationEnd) {
-        if (event.url.startsWith('/admin')) {
-          document.body.classList.add('admin-area');
+        if (event.url.startsWith('/internal')) {
+          document.body.classList.add('internal-area');
         } else {
-          document.body.classList.remove('admin-area');
+          document.body.classList.remove('internal-area');
         }
       }
     });
