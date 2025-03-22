@@ -59,8 +59,12 @@ export class JwtService {
     return role === roleName;
   }
 
-  isAdministrator(): boolean {
-    return this.hasRole('Administrator');
+  isExternal(): boolean {
+    return this.hasRole('External');
+  }
+
+  isInternal(): boolean {
+    return this.hasRole('Internal');
   }
 
   getFullName() : string | null {

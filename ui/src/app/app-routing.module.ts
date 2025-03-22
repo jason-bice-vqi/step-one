@@ -4,7 +4,7 @@ import {LoginComponent} from "./login/login.component";
 import {UserDashboardComponent} from "./user-dashboard/user-dashboard.component";
 import {authGuard} from "./guards/auth.guard";
 import {AdminDashboardComponent} from "./admin/admin-dashboard/admin-dashboard.component";
-import {adminAuthGuard} from "./admin/guards/admin-auth.guard";
+import {internalUserAuthGuard} from "./admin/guards/internal-user-auth.guard";
 
 const routes: Routes = [
   {path: 'login', component: LoginComponent},
@@ -12,7 +12,7 @@ const routes: Routes = [
   {path: 'dashboard', component: UserDashboardComponent, canActivate: [authGuard]},
   {
     path: 'admin',
-    canActivate: [adminAuthGuard],
+    canActivate: [internalUserAuthGuard],
     children: [
       { path: 'dashboard', component: AdminDashboardComponent }
     ]

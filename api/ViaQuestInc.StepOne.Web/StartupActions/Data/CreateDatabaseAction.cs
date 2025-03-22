@@ -44,7 +44,7 @@ public class CreateDatabaseAction(StepOneDbContext dbContext, DatabaseConfig dat
         {
             var pendingMigrations = await DbContext.Database.GetPendingMigrationsAsync(cancellationToken);
 
-            Log.Information("    Applying {Migrations} pending EF Migration(s).", pendingMigrations.Count());
+            Log.Information("  Applying {Migrations} pending EF Migration(s).", pendingMigrations.Count());
 
             await DbContext.Database.MigrateAsync(cancellationToken);
 
@@ -52,7 +52,7 @@ public class CreateDatabaseAction(StepOneDbContext dbContext, DatabaseConfig dat
         }
         
         // Migrations disabled; just recreate from scratch.
-        Log.Information("    Migrations disabled; recreating from context schema.");
+        Log.Information("  Migrations disabled; recreating from context schema.");
         await DbContext.Database.EnsureCreatedAsync(cancellationToken);
     }
 }

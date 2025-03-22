@@ -2,7 +2,6 @@
 using Twilio.Exceptions;
 using Twilio.Rest.Verify.V2.Service;
 using ViaQuestInc.StepOne.Core.Auth.Services;
-using ViaQuestInc.StepOne.Core.Candidates;
 using ViaQuestInc.StepOne.Core.Candidates.Services;
 
 namespace ViaQuestInc.StepOne.Core.Auth.Otp.Services.TwilioOtp;
@@ -76,7 +75,7 @@ public class TwilioService(
 
         await candidateService.RecordAuthenticatedAsync(candidate, cancellationToken);
             
-        var tokenStr = await jwtService.GenerateTokenAsync(candidate, cancellationToken);
+        var tokenStr = jwtService.GenerateToken(candidate);
 
         return tokenStr;
     }

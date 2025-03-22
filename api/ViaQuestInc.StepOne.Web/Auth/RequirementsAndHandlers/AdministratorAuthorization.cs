@@ -24,7 +24,7 @@ public class AdministratorHandler : AuthorizationHandler<AdministratorRequiremen
         // This requirement needs to be succeeded regardless so that non-admins don't fail on this requirement.
         context.Succeed(requirement);
         
-        if (!context.User.IsAdmin()) return Task.CompletedTask;
+        if (!context.User.IsInternal()) return Task.CompletedTask;
         
         Log.Verbose("  {User} is administrator. Succeeding all requirements:", context.User.GetNameIdentifierId());
 

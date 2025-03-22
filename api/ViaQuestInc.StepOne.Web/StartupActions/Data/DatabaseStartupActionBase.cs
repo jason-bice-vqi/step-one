@@ -27,7 +27,7 @@ public abstract class DatabaseStartupActionBase(
         if (SupportedEnvironmentNames.Contains(environmentName)) return Task.CompletedTask;
 
         Log.Fatal(
-            "Invalid {StartupType}: {StartupTypeValue} is prohibited in the {Environment} environment. See {DatabaseManagementReference}",
+            "  Invalid {StartupType}: {StartupTypeValue} is prohibited in the {Environment} environment. See {DatabaseManagementReference}",
             startupTypeName,
             startupType,
             environmentName,

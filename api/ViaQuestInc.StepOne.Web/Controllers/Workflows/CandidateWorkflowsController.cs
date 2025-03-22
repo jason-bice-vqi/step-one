@@ -1,9 +1,7 @@
-﻿using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.AspNetCore.Authorization;
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using ViaQuestInc.StepOne.Core.Candidates.Workflows.Services;
 using ViaQuestInc.StepOne.Web.Auth;
-using ViaQuestInc.StepOne.Web.ServiceModules.Auth;
 
 namespace ViaQuestInc.StepOne.Web.Controllers.Workflows;
 
@@ -13,7 +11,7 @@ public class CandidateWorkflowsController(
     IAuthorizationService authorizationService)
     : ApiControllerBase
 {
-    [Authorize(Policy = AuthPolicies.DefaultJwtAuthPolicy)]
+    [Authorize(Policy = Policies.NativeJwtAuthPolicy)]
     public async Task<IActionResult> Get([FromRoute] int candidateId, CancellationToken cancellationToken)
     {
         var candidateWithWorkflow = await candidateWorkflowService.GetWithWorkflowAsync(candidateId, cancellationToken);

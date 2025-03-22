@@ -1,11 +1,11 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using ViaQuestInc.StepOne.Web.ServiceModules.Auth;
+using ViaQuestInc.StepOne.Web.Auth;
 
 namespace ViaQuestInc.StepOne.Web.Controllers.Users;
 
 [ApiController]
-[Authorize(AuthenticationSchemes = AuthModule.OtpScheme, Policy = AuthPolicies.ExternalUserPolicy)]
+[Authorize(Policies.ExternalUserPolicy)]
 [Route("users/external")]
 public class ExternalUsersController : ApiControllerBase
 {

@@ -1,5 +1,4 @@
 ﻿using Serilog;
-using ViaQuestInc.StepOne.Web.ServiceModules.Auth;
 
 namespace ViaQuestInc.StepOne.Web.ServiceModules;
 

@@ -1,5 +1,4 @@
-﻿using ViaQuestInc.StepOne.Core.Candidates;
-using ViaQuestInc.StepOne.Core.Candidates.Services;
+﻿using ViaQuestInc.StepOne.Core.Candidates.Services;
 using ViaQuestInc.StepOne.Core.Candidates.Workflows.Services;
 using ViaQuestInc.StepOne.Core.Workflows.Services;
 

@@ -1,15 +1,15 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using ViaQuestInc.StepOne.Core.Auth.Services;
-using ViaQuestInc.StepOne.Web.ServiceModules.Auth;
+using ViaQuestInc.StepOne.Web.Auth;
 
 namespace ViaQuestInc.StepOne.Web.Controllers.Auth;
 
-[Authorize(Policy = AuthPolicies.InitialAzureAdJwtAuthPolicy)]
+[Authorize(Policies.AzureAdJwtAuthPolicy)]
 [Route("auth/ad/exchange")]
 public class AzureAdAuthController(JwtService jwtService) : ApiControllerBase
 {
-    public async Task<IActionResult> ExchangeAdJwtForStepOneJwt(CancellationToken cancellationToken)
+    public IActionResult ExchangeAdJwtForStepOneJwt()
     {
         if (User.Identity is not { IsAuthenticated: true })
         {
@@ -17,7 +17,7 @@ public class AzureAdAuthController(JwtService jwtService) : ApiControllerBase
                 { Message = "User is not authenticated.", Claims = User.Claims.Select(c => new { c.Type, c.Value }) });
         }
 
-        var jwt = await jwtService.GenerateTokenAsync(User, cancellationToken);
+        var jwt = jwtService.GenerateToken(User);
 
         return Ok(new { Token = jwt });
     }

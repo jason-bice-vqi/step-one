@@ -1,6 +1,6 @@
-﻿namespace ViaQuestInc.StepOne.Web.ServiceModules.Auth;
+﻿namespace ViaQuestInc.StepOne.Kernel.Auth;
 
-public static class AuthRoles
+public static class Roles
 {
     public const string Internal = nameof(Internal);
     

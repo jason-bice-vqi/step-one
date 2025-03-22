@@ -19,7 +19,7 @@ public class ServiceModulesBuilder(
     /// <param name="configSectionName">The name of the configuration section to bind to or null if the module does
     /// not have configuration.</param>
     /// <typeparam name="TModule">The type of the module.</typeparam>
-    public ServiceModulesBuilder AddModule<TModule>(string configSectionName = null)
+    public ServiceModulesBuilder AddModule<TModule>(string? configSectionName = null)
         where TModule : class, IServiceModule, new()
     {
         var module = new TModule();

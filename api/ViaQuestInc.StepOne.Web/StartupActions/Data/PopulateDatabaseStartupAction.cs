@@ -37,14 +37,14 @@ public class PopulateDatabaseAction(StepOneDbContext dbContext, DatabaseConfig d
         if (DatabaseStartupStatus.IsNew && DatabaseConfig.DatabaseStartupType != DatabaseStartupTypes.Recreate)
         {
             Log.Warning(
-                "Database startup type is {startupType}, but database is new. Running populators.",
+                "  Database startup type is {startupType}, but database is new. Running populators.",
                 DatabaseConfig.DatabaseStartupType
             );
         }
 
         if (DatabaseConfig.DisablePopulators)
         {
-            Log.Warning("Database populators disabled");
+            Log.Warning("  Database populators disabled");
 
             return;
         }

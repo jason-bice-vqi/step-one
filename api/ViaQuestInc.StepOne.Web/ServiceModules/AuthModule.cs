@@ -1,5 +1,4 @@
 ﻿using System.Text;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.IdentityModel.Tokens;
 using Serilog;
@@ -8,15 +7,14 @@ using ViaQuestInc.StepOne.Core.Auth;
 using ViaQuestInc.StepOne.Core.Auth.Otp.Services;
 using ViaQuestInc.StepOne.Core.Auth.Otp.Services.TwilioOtp;
 using ViaQuestInc.StepOne.Core.Auth.Services;
+using ViaQuestInc.StepOne.Kernel.Auth;
 using ViaQuestInc.StepOne.Web.Auth;
 using ViaQuestInc.StepOne.Web.Auth.RequirementsAndHandlers;
 
-namespace ViaQuestInc.StepOne.Web.ServiceModules.Auth;
+namespace ViaQuestInc.StepOne.Web.ServiceModules;
 
 public class AuthModule : IServiceModule
 {
-    public const string OtpScheme = nameof(OtpScheme);
-
     public void Configure(IConfiguration configuration, IServiceCollection services, IWebHostEnvironment env)
     {
         Log.Information("  Registering authentication services");
@@ -30,8 +28,8 @@ public class AuthModule : IServiceModule
         services.AddSingleton(authConfig);
 
         Log.Information("  Registering JWT authentication schemes");
-        services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
-            .AddJwtBearer(AuthSchemes.InitialAzureAdJwtAuthScheme, options =>
+        services.AddAuthentication()
+            .AddJwtBearer(Schemes.InitialAzureAdJwtAuthScheme, options =>
             {
                 options.Authority = authConfig.AzureAd.Authority;
                 options.Audience = authConfig.AzureAd.Audience;
@@ -45,28 +43,37 @@ public class AuthModule : IServiceModule
                     ValidateLifetime = true,
                     ValidateIssuerSigningKey = true
                 };
-                
+
                 options.Events = new()
                 {
-                    OnTokenValidated = _ =>
+                    OnForbidden = v =>
                     {
-                        Log.Information("Azure AD token validation PASSED.");
+                        var nameIdentifier = v.HttpContext.User.GetNameIdentifier();
                         
+                        Log.Warning($"403 FORBIDDEN: {nameIdentifier} with IP {v.HttpContext.Connection.RemoteIpAddress} - [{v.Request.Method} {v.Request.Path}]");
+                        
+                        return Task.CompletedTask;
+                    },
+                    OnTokenValidated = v =>
+                    {
+                        Log.Information("Azure AD token validation PASSED for scheme {Scheme}.", v.Scheme);
+
                         return Task.CompletedTask;
                     },
                     OnAuthenticationFailed = v =>
                     {
-                        Log.Error("Azure AD token validation FAILED: {Message} {Stack}", v.Exception.Message,
+                        Log.Error("Azure AD token validation FAILED for scheme {Scheme}: {Message} {Stack}", v.Scheme,
+                            v.Exception.Message,
                             v.Exception.StackTrace);
-                        
+
                         return Task.CompletedTask;
                     }
                 };
             })
-            .AddJwtBearer(JwtBearerDefaults.AuthenticationScheme, options =>
+            .AddJwtBearer(Schemes.NativeJwtAuthScheme, options =>
             {
                 var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(authConfig.Jwt.Key));
-                
+
                 options.Authority = authConfig.Jwt.Issuer;
                 options.Audience = authConfig.Jwt.Audience;
                 options.TokenValidationParameters = new()
@@ -79,22 +86,31 @@ public class AuthModule : IServiceModule
                     ValidateLifetime = true,
                     ValidateIssuerSigningKey = true
                 };
-                
+
                 options.IncludeErrorDetails = true;
-                
+
                 options.Events = new()
                 {
-                    OnTokenValidated = _ =>
+                    OnForbidden = v =>
                     {
-                        Log.Information("StepOne token validation PASSED.");
+                        var nameIdentifier = v.HttpContext.User.GetNameIdentifier();
                         
+                        Log.Warning($"403 FORBIDDEN: {nameIdentifier} with IP {v.HttpContext.Connection.RemoteIpAddress} - [{v.Request.Method} {v.Request.Path}]");
+                        
+                        return Task.CompletedTask;
+                    },
+                    OnTokenValidated = v =>
+                    {
+                        Log.Information("Native JWT validation PASSED for scheme {Scheme}.", v.Scheme);
+
                         return Task.CompletedTask;
                     },
                     OnAuthenticationFailed = v =>
                     {
-                        Log.Error("StepOne token validation FAILED: {Message} {Stack}", v.Exception.Message,
+                        Log.Error("Native JWT validation FAILED for scheme {Scheme}: {Message} {Stack}", v.Scheme,
+                            v.Exception.Message,
                             v.Exception.StackTrace);
-                        
+
                         switch (v.Exception)
                         {
                             case SecurityTokenExpiredException:
@@ -114,22 +130,23 @@ public class AuthModule : IServiceModule
                         return Task.CompletedTask;
                     }
                 };
-            });;
+            });
+        ;
 
         Log.Information("  Registering JWT authentication policies");
         services.AddAuthorizationBuilder()
-            .AddPolicy(AuthPolicies.InitialAzureAdJwtAuthPolicy, policy =>
-                policy.RequireAuthenticatedUser().AddAuthenticationSchemes(AuthSchemes.InitialAzureAdJwtAuthScheme))
-            .AddPolicy(AuthPolicies.DefaultJwtAuthPolicy, policy =>
-                policy.RequireAuthenticatedUser().AddAuthenticationSchemes(JwtBearerDefaults.AuthenticationScheme));
+            .AddPolicy(Policies.AzureAdJwtAuthPolicy, policy =>
+                policy.RequireAuthenticatedUser().AddAuthenticationSchemes(Schemes.InitialAzureAdJwtAuthScheme))
+            .AddPolicy(Policies.NativeJwtAuthPolicy, policy =>
+                policy.RequireAuthenticatedUser().AddAuthenticationSchemes(Schemes.NativeJwtAuthScheme));
 
         Log.Information("  Registering role authorization policies");
         services.AddAuthorizationBuilder()
-            .AddPolicy(AuthPolicies.InternalUserPolicy,
-                x => x.RequireAuthenticatedUser().RequireRole(AuthRoles.Internal))
-            .AddPolicy(AuthPolicies.ExternalUserPolicy,
-                x => x.RequireAuthenticatedUser().RequireRole(AuthRoles.External));
-        
+            .AddPolicy(Policies.InternalUserPolicy,
+                x => x.RequireAuthenticatedUser().RequireRole(Roles.Internal))
+            .AddPolicy(Policies.ExternalUserPolicy,
+                x => x.RequireAuthenticatedUser().RequireRole(Roles.External));
+
         Log.Information("  Registering custom authorization handler-requirement policies");
         services.AddTransient<IAuthorizationHandler, AdministratorHandler>();
         services.AddTransient<IAuthorizationHandler, CandidateWorkflowBelongsToRequesterHandler>();

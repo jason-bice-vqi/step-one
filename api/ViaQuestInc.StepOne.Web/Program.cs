@@ -67,8 +67,8 @@ try
     var banner = await Assembly.GetExecutingAssembly()
         .GetManifestResourceString("ViaQuestInc.StepOne.Web.banner.txt", Encoding.UTF8);
 
-    Log.Warning(
-        "Starting VQI StepOne web host {MigrationsMode}\n\n{Banner}\n\n",
+    Log.Information(
+        "\n\nStarting VQI StepOne REST API {MigrationsMode}\n{Banner}\n",
         args.Contains(migrationsModeSwitch)
             ? "(Migrations Mode)"
             : string.Empty,

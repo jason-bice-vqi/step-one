@@ -33,7 +33,7 @@ public class ApplyMigrationsAction(StepOneDbContext dbContext, DatabaseConfig da
 
         var pendingMigrations = await DbContext.Database.GetPendingMigrationsAsync(cancellationToken);
 
-        Log.Information("    Applying {Migrations} pending EF Migration(s)", pendingMigrations.Count());
+        Log.Information("  Applying {Migrations} pending EF Migration(s)", pendingMigrations.Count());
 
         await DbContext.Database.MigrateAsync(cancellationToken);
     }

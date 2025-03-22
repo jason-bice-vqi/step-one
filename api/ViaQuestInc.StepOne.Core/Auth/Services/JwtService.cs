@@ -11,53 +11,57 @@ public class JwtService(AuthConfig authConfig)
 {
     private static readonly string[] CopyAzureAdClaimNames =
     [
+        ClaimTypes.NameIdentifier,
+        JwtRegisteredClaimNames.FamilyName,
         JwtRegisteredClaimNames.GivenName,
         JwtRegisteredClaimNames.Name,
-        JwtRegisteredClaimNames.Sub,
-        JwtRegisteredClaimNames.FamilyName
+        JwtRegisteredClaimNames.Sub
     ];
 
-    public Task<string> GenerateTokenAsync(ClaimsPrincipal fromAdClaimsPrincipal, CancellationToken cancellationToken)
+    public string GenerateToken(ClaimsPrincipal fromAdClaimsPrincipal)
     {
         var claims = fromAdClaimsPrincipal.Claims.Where(x => CopyAzureAdClaimNames.Contains(x.Type)).ToList();
+        
+        claims.Add(new(ClaimTypes.Role, Roles.Internal));
 
-        // TODO - flesh out roles/claims
-        claims.Add(new(ClaimTypes.Role, Claims.Roles.Administrator));
-
-        return GenerateTokenAsync(claims, authConfig.Jwt.LifetimeHoursInternal, cancellationToken);
+        return GenerateToken(claims, authConfig.Jwt.LifetimeHoursInternal);
     }
 
-    public Task<string> GenerateTokenAsync(Candidate candidate, CancellationToken cancellationToken)
+    public string GenerateToken(Candidate candidate)
     {
-        var claims = new Claim[]
+        var claims = new List<Claim>
         {
             new(Claims.CandidateId, candidate.Id.ToString()),
+            new(ClaimTypes.NameIdentifier, candidate.Id.ToString()),
             new(JwtRegisteredClaimNames.GivenName, candidate.FirstName),
             new(JwtRegisteredClaimNames.Name, candidate.FullName),
             new(JwtRegisteredClaimNames.Sub, candidate.Id.ToString()),
             new(JwtRegisteredClaimNames.FamilyName, candidate.LastName),
-            new(ClaimTypes.Role, "New Employee")
+            new(ClaimTypes.Role, Roles.External)
         };
 
-        return GenerateTokenAsync(claims, authConfig.Jwt.LifetimeHoursInternal, cancellationToken);
+        if (candidate.CandidateWorkflowId != null)
+        {
+            claims.Add(new(Claims.CandidateWorkflowId, candidate.CandidateWorkflowId.ToString()!));
+        }
+
+        return GenerateToken(claims, authConfig.Jwt.LifetimeHoursInternal);
     }
 
-    private Task<string> GenerateTokenAsync(IEnumerable<Claim> withClaims, int lifetimeHours,
-        CancellationToken cancellationToken)
+    private string GenerateToken(IEnumerable<Claim> withClaims, int lifetimeHours)
     {
         var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(authConfig.Jwt.Key));
-        var signingCredentials = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
 
         var token = new JwtSecurityToken(
             authConfig.Jwt.Issuer,
             authConfig.Jwt.Audience,
             withClaims,
             expires: DateTime.UtcNow.AddHours(lifetimeHours),
-            signingCredentials: signingCredentials
+            signingCredentials: new(key, SecurityAlgorithms.HmacSha256)
         );
 
         var tokenStr = new JwtSecurityTokenHandler().WriteToken(token);
 
-        return Task.FromResult(tokenStr);
+        return tokenStr;
     }
 }

@@ -1,6 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using ViaQuestInc.StepOne.Core.Workflows;
-using ViaQuestInc.StepOne.Core.Workflows.Steps;
 using ViaQuestInc.StepOne.Kernel.Entity;
 
 namespace ViaQuestInc.StepOne.Core.Organization;

@@ -1,5 +1,4 @@
-﻿using Microsoft.Extensions.Options;
-using Serilog;
+﻿using Serilog;
 using ViaQuestInc.StepOne.Kernel.Data;
 
 namespace ViaQuestInc.StepOne.Web.StartupActions.Data;
@@ -13,23 +12,23 @@ public class LogDatabaseStartupTypeAction(DatabaseConfig databaseConfig) : IStar
 {
     public Task OnStartupAsync(WebApplication app, CancellationToken cancellationToken = default)
     {
-        Log.Information("Database.DatabaseStartupType: {StartupType}", databaseConfig.DatabaseStartupType);
+        Log.Information("  Database.DatabaseStartupType: {StartupType}", databaseConfig.DatabaseStartupType);
 
         switch (databaseConfig.DatabaseStartupType)
         {
             case DatabaseStartupTypes.NoAction:
-                Log.Information("{Message}", "The database will not be modified during startup.");
+                Log.Information("  {Message}", "The database will not be modified during startup.");
 
                 break;
             case DatabaseStartupTypes.Recreate:
                 Log.Information(
-                    "{Message}",
+                    "  {Message}",
                     "The database will be deleted, created (with EF Migrations support), and seeded."
                 );
 
                 break;
             case DatabaseStartupTypes.ApplyMigrations:
-                Log.Information("{Message}", "The database will have any pending EF Migrations applied.");
+                Log.Information("  {Message}", "The database will have any pending EF Migrations applied.");
 
                 break;
             default:

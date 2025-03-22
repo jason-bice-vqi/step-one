@@ -29,7 +29,7 @@ public class WarnOfPendingMigrationsAction(StepOneDbContext dbContext, DatabaseC
 
         if (!databaseConfig.EnableMigrations)
         {
-            Log.Information("    Migrations are disabled; exiting action.");
+            Log.Information("  Migrations are disabled; exiting action.");
             
             return;
         }
@@ -39,13 +39,13 @@ public class WarnOfPendingMigrationsAction(StepOneDbContext dbContext, DatabaseC
         if (pendingMigrations.Length != 0)
         {
             Log.Warning(
-                "    There are {PendingMigrationsCount} pending migrations that should be applied.",
+                "  There are {PendingMigrationsCount} pending migrations that should be applied.",
                 pendingMigrations.Length
             );
         }
         else
         {
-            Log.Information("    {NoPendingMigrations} pending migrations", "0");
+            Log.Information("  {NoPendingMigrations} pending migrations", "0");
         }
     }
 }
