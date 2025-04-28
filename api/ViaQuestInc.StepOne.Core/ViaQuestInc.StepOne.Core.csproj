@@ -21,6 +21,7 @@
     </ItemGroup>
 
     <ItemGroup>
+      <ProjectReference Include="..\ViaQuestInc.StepOne.Infrastructure\ViaQuestInc.StepOne.Infrastructure.csproj" />
       <ProjectReference Include="..\ViaQuestInc.StepOne.Kernel\ViaQuestInc.StepOne.Kernel.csproj" />
     </ItemGroup>
 

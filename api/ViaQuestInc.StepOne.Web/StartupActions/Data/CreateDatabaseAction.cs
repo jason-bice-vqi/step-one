@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Serilog;
+using ViaQuestInc.StepOne.Core.Data;
 using ViaQuestInc.StepOne.Infrastructure.Data;
 using ViaQuestInc.StepOne.Kernel.Data;
 using Environments = ViaQuestInc.StepOne.Kernel.Environments;

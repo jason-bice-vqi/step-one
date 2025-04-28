@@ -17,7 +17,7 @@ using ViaQuestInc.StepOne.Core.Workflows.Steps.Populators;
 using ViaQuestInc.StepOne.Kernel.Data;
 using ViaQuestInc.StepOne.Kernel.Entity;
 
-namespace ViaQuestInc.StepOne.Infrastructure.Data;
+namespace ViaQuestInc.StepOne.Core.Data;
 
 public class StepOneDbContext(DbContextOptions<StepOneDbContext> options) : DbContext(options)
 {
@@ -48,6 +48,9 @@ public class StepOneDbContext(DbContextOptions<StepOneDbContext> options) : DbCo
             .WithOne(cw => cw.Candidate)
             .HasForeignKey<CandidateWorkflow>(cw => cw.CandidateId)
             .OnDelete(DeleteBehavior.Cascade); // Deleting Candidate deletes CandidateWorkflow
+
+        modelBuilder.Entity<Candidate>().HasIndex(x => x.PaycorCandidateId);
+        modelBuilder.Entity<Candidate>().HasIndex(x => x.PhoneNumber);
 
         // CandidateWorkflow to Workflow (Many-to-One)
         modelBuilder.Entity<CandidateWorkflow>()

@@ -16,9 +16,19 @@ public class Candidate : EntityBase<int>, IEntityStatusAssignable
 
     public string FullName => $"{FirstName} {LastName}";
     
+    public required DateTime HireDate { get; set; }
+    
+    public DateTime? StartDate { get; set; }
+    
     [Required]
     [StringLength(10, MinimumLength = 10)]
     public required string PhoneNumber { get; set; }
+    
+    public required string PaycorCandidateId { get; set; }
+    
+    public required string JobTitle { get; set; }
+    
+    public required int JobId { get; set; }
 
     /// <summary>
     /// When the last OTP was requested.
