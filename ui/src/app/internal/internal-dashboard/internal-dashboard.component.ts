@@ -1,12 +1,27 @@
-import {Component} from '@angular/core';
-import {MatTableDataSource} from "@angular/material/table";
+import {Component, OnInit} from '@angular/core';
+import {CandidateService} from "../../services/candidates/candidate.service";
+import {take} from "rxjs";
+import {CandidateInterface} from "../../models/candidates/candidate.interface";
+import {SearchResponseInterface} from "../../models/search/search-response.interface";
+import {PageEvent} from "@angular/material/paginator";
+import {SearchRequestInterface} from "../../models/search/search-request.interface";
 
 @Component({
   selector: 'app-internal-user-dashboard',
   templateUrl: './internal-dashboard.component.html',
   styleUrls: ['./internal-dashboard.component.scss']
 })
-export class InternalDashboardComponent {
+export class InternalDashboardComponent implements OnInit {
+  searchRequest: SearchRequestInterface<CandidateInterface> = {page: 0, limit: 10};
+  searchResponse?: SearchResponseInterface<CandidateInterface>;
+
+  constructor(private candidateService: CandidateService) {
+  }
+
+  ngOnInit(): void {
+    this.onSearchChange();
+  }
+
   statusOptions: string[] = ['Pending Invitation', 'Active', 'Pending Review'];
   companyOptions: string[] = ['ViaQuest Day & Employment Services LLC'];
   jobTitleOptions: string[] = [];
@@ -22,7 +37,7 @@ export class InternalDashboardComponent {
     'name',
     'jobTitle',
     'status',
-    'importedOn',
+    'importedAt',
     'lastUpdatedCandidate',
     'lastUpdatedVQI',
     'percentComplete',
@@ -32,68 +47,8 @@ export class InternalDashboardComponent {
     'invite'
   ];
 
-  dataSource = new MatTableDataSource([
-    {
-      name: 'Susie Queue',
-      phoneNumber: '5555555555',
-      status: 'Pending Invitation',
-      importedOn: '2024-03-15',
-      lastUpdatedCandidate: null,
-      lastUpdatedVQI: null,
-      lastUpdatedBy: null,
-      percentComplete: 0,
-      totalSteps: 8,
-      stepsCompleted: 0,
-      jobTitle: 'Clinical Supervisor',
-      company: 'ViaQuest Day & Employment Services LLC'
-    },
-    {
-      name: 'John Doe',
-      phoneNumber: '5555555555',
-      status: 'Active',
-      importedOn: '2024-03-10',
-      lastUpdatedCandidate: '2024-03-12',
-      lastUpdatedVQI: '2024-03-13',
-      lastUpdatedBy: 'Lindsay Crowe',
-      percentComplete: 25,
-      totalSteps: 4,
-      stepsCompleted: 1,
-      jobTitle: 'Youth Support Specialist',
-      company: 'ViaQuest Psychiatric & Behavioral Solutions LLC'
-    },
-    {
-      name: 'Jane Smith',
-      phoneNumber: '5555555555',
-      status: 'Pending Review',
-      importedOn: '2024-03-09',
-      lastUpdatedCandidate: '2024-03-10',
-      lastUpdatedVQI: '2024-03-11',
-      lastUpdatedBy: 'Lindsay Crowe',
-      percentComplete: 100,
-      totalSteps: 6,
-      stepsCompleted: 6,
-      jobTitle: 'Behavior Consultant',
-      company: 'ViaQuest Psychiatric & Behavioral Solutions LLC'
-    },
-    {
-      name: 'Other Guy',
-      phoneNumber: '5555555555',
-      status: 'Active',
-      importedOn: '2024-03-09',
-      lastUpdatedCandidate: '2024-03-10',
-      lastUpdatedVQI: '2024-03-11',
-      lastUpdatedBy: 'Lindsay Crowe',
-      percentComplete: 85,
-      totalSteps: 20,
-      stepsCompleted: 17,
-      jobTitle: 'Medical Social Worker',
-      company: 'ViaQuest Psychiatric & Behavioral Solutions LLC'
-    }
-    // Add more data as needed
-  ]);
-
   onSearchChange() {
-
+    this.candidateService.search(this.searchRequest).pipe(take(1)).subscribe((x) => this.searchResponse = x);
   }
 
   searchReset() {
@@ -103,6 +58,13 @@ export class InternalDashboardComponent {
       company: '',
       jobTitle: ''
     };
+
+    this.onSearchChange();
+  }
+
+  onPageChange($event: PageEvent) {
+    this.searchRequest.limit = $event.pageSize;
+    this.searchRequest.page = $event.pageIndex;
 
     this.onSearchChange();
   }

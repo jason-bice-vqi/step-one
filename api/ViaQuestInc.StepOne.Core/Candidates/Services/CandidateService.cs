@@ -1,4 +1,5 @@
 ﻿using System.Data;
+using Microsoft.EntityFrameworkCore;
 using ViaQuestInc.StepOne.Core.Candidates.Import;
 using ViaQuestInc.StepOne.Infrastructure.Services;
 using ViaQuestInc.StepOne.Kernel.Data;
@@ -11,7 +12,7 @@ public class CandidateService(
     IRepository repository)
 {
     private const int HeaderRow = 7;
-    
+
     public async Task<Candidate?> GetByPhoneNumberAsync(string phoneNumber, CancellationToken cancellationToken)
     {
         return await repository.GetAsync<Candidate>(x => x.PhoneNumber == phoneNumber, cancellationToken);
@@ -22,7 +23,10 @@ public class CandidateService(
     {
         using var dataSet = await excelService.ToDataSetAsync(candidatesMemoryStream, HeaderRow, cancellationToken);
 
-        var rawCandidateDataRows = dataSet.Tables[0].AsEnumerable();
+        var hireDateBegin = new DateTime(2025, 3, 1);
+
+        var rawCandidateDataRows = dataSet.Tables[0].AsEnumerable()
+            .Where(x => DateTime.Parse(x["Date Hired"].ToString()!) >= hireDateBegin);
 
         await candidateImportEngine.ImportAsync(rawCandidateDataRows, cancellationToken);
 
@@ -41,5 +45,13 @@ public class CandidateService(
         candidate.OtpLastRequestedAt = DateTime.UtcNow;
 
         await repository.UpdateAsync(candidate, cancellationToken);
+    }
+
+    public async Task<SearchResponse<Candidate>> SearchAsync(CandidateSearchRequest searchRequest,
+        CancellationToken cancellationToken)
+    {
+        var candidates = await repository.All<Candidate>().ToArrayAsync(cancellationToken);
+
+        return new(candidates, searchRequest);
     }
 }

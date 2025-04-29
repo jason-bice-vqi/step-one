@@ -1,7 +1,7 @@
 import {Component, Input} from '@angular/core';
-import {CandidateWorkflowStepStatusesEnum} from "../models/candidate-workflow-step-statuses.enum";
-import {CandidateWorkflowStepInterface} from "../models/candidate-workflow-step.interface";
-import {StepTypesEnum} from "../models/step-types.enum";
+import {CandidateWorkflowStepStatusesEnum} from "../models/workflows/candidate-workflow-step-statuses.enum";
+import {CandidateWorkflowStepInterface} from "../models/workflows/candidate-workflow-step.interface";
+import {StepTypesEnum} from "../models/workflows/step-types.enum";
 import {animate, keyframes, style, transition, trigger} from "@angular/animations";
 
 @Component({

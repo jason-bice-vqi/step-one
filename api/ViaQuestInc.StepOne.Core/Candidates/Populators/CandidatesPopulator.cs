@@ -8,17 +8,23 @@ public class CandidatesPopulator : IDataPopulator
     public async Task PopulateAsync(IRepository repository, IServiceProvider serviceProvider, int batchSize,
         CancellationToken cancellationToken)
     {
-        var testCandidates = new List<Candidate>
-        {
-            new()
-            {
-                FirstName = "Jason",
-                LastName = "Bice",
-                PhoneNumber = "6144588078",
-                EntityStatus = EntityStatuses.Active
-            }
-        };
-
-        await repository.CreateRangeAsync(testCandidates, cancellationToken);
+        // var testCandidates = new List<Candidate>
+        // {
+        //     new()
+        //     {
+        //         EntityStatus = EntityStatuses.Active,
+        //         FirstName = "Jason",
+        //         HireDate = new(2012, 04, 29),
+        //         ImportedAt = DateTime.UtcNow,
+        //         JobId = 1,
+        //         JobTitle = "Software Architect",
+        //         LastName = "Bice",
+        //         PaycorCandidateId = Guid.NewGuid().ToString().Replace("-", string.Empty),
+        //         PhoneNumber = "6144588078",
+        //         StartDate = null
+        //     }
+        // };
+        //
+        // await repository.CreateRangeAsync(testCandidates, cancellationToken);
     }
 }

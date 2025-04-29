@@ -13,14 +13,10 @@ public class CandidateImportEngine(IEnumerable<ICandidateImportOperation> candid
 
         foreach (var rawCandidateDataRow in rawCandidateDataRows)
         {
+            options.Abort = false;
             options.CurrentRawCandidateDataRow = rawCandidateDataRow;
-            
-            if (options.Abort)
-            {
-                options.Abort = false;
 
-                continue;
-            }
+            if (options.Abort) continue;
 
             foreach (var candidateImportOperation in candidateImportOperations)
             {

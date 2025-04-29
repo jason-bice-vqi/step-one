@@ -1,11 +1,11 @@
 import {Component, OnInit} from '@angular/core';
 import {CandidateWorkflowService} from "../services/workflows/candidate-workflow.service";
-import {CandidateWorkflowInterface} from "../models/candidate-workflow.interface";
+import {CandidateWorkflowInterface} from "../models/workflows/candidate-workflow.interface";
 import {take} from "rxjs";
 import {JwtService} from "../services/auth/jwt.service";
-import {CandidateWorkflowStepStatusesEnum} from "../models/candidate-workflow-step-statuses.enum";
-import {CandidateWorkflowStepInterface} from "../models/candidate-workflow-step.interface";
-import {StepTypesEnum} from "../models/step-types.enum";
+import {CandidateWorkflowStepStatusesEnum} from "../models/workflows/candidate-workflow-step-statuses.enum";
+import {CandidateWorkflowStepInterface} from "../models/workflows/candidate-workflow-step.interface";
+import {StepTypesEnum} from "../models/workflows/step-types.enum";
 
 @Component({
   selector: 'app-internal-user-dashboard',

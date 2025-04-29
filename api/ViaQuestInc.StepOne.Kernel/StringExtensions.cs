@@ -1,4 +1,5 @@
-﻿using System.Text.RegularExpressions;
+﻿using System.Text;
+using System.Text.RegularExpressions;
 
 namespace ViaQuestInc.StepOne.Kernel;
 
@@ -26,6 +27,25 @@ public static partial class StringExtensions
         if (match.Success) return match.Groups[2].Value + match.Groups[3].Value + match.Groups[4].Value;
 
         return null;
+    }
+
+    public static string? NullifyEmptyOrWhitespace(this string? input)
+    {
+        return string.IsNullOrWhiteSpace(input) ? null : input;
+    }
+    
+    public static string? OnlyLetters(this string? input)
+    {
+        if (string.IsNullOrEmpty(input)) return null;
+
+        var result = new StringBuilder(input.Length);
+        
+        foreach (var c in input.Where(char.IsLetter))
+        {
+            result.Append(c);
+        }
+
+        return result.ToString();
     }
 
     [GeneratedRegex(@"^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$", RegexOptions.Compiled)]

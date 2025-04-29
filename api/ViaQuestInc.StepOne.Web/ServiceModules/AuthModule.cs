@@ -49,9 +49,10 @@ public class AuthModule : IServiceModule
                     OnForbidden = v =>
                     {
                         var nameIdentifier = v.HttpContext.User.GetNameIdentifier();
-                        
-                        Log.Warning($"403 FORBIDDEN: {nameIdentifier} with IP {v.HttpContext.Connection.RemoteIpAddress} - [{v.Request.Method} {v.Request.Path}]");
-                        
+
+                        Log.Warning(
+                            $"403 FORBIDDEN: {nameIdentifier} with IP {v.HttpContext.Connection.RemoteIpAddress} - [{v.Request.Method} {v.Request.Path}]");
+
                         return Task.CompletedTask;
                     },
                     OnTokenValidated = v =>
@@ -94,9 +95,10 @@ public class AuthModule : IServiceModule
                     OnForbidden = v =>
                     {
                         var nameIdentifier = v.HttpContext.User.GetNameIdentifier();
-                        
-                        Log.Warning($"403 FORBIDDEN: {nameIdentifier} with IP {v.HttpContext.Connection.RemoteIpAddress} - [{v.Request.Method} {v.Request.Path}]");
-                        
+
+                        Log.Warning(
+                            $"403 FORBIDDEN: {nameIdentifier} with IP {v.HttpContext.Connection.RemoteIpAddress} - [{v.Request.Method} {v.Request.Path}]");
+
                         return Task.CompletedTask;
                     },
                     OnTokenValidated = v =>
@@ -133,19 +135,18 @@ public class AuthModule : IServiceModule
             });
         ;
 
-        Log.Information("  Registering JWT authentication policies");
+        Log.Information("  Registering authentication policies");
         services.AddAuthorizationBuilder()
-            .AddPolicy(Policies.AzureAdJwtAuthPolicy, policy =>
-                policy.RequireAuthenticatedUser().AddAuthenticationSchemes(Schemes.InitialAzureAdJwtAuthScheme))
-            .AddPolicy(Policies.NativeJwtAuthPolicy, policy =>
-                policy.RequireAuthenticatedUser().AddAuthenticationSchemes(Schemes.NativeJwtAuthScheme));
-
-        Log.Information("  Registering role authorization policies");
-        services.AddAuthorizationBuilder()
-            .AddPolicy(Policies.InternalUserPolicy,
-                x => x.RequireAuthenticatedUser().RequireRole(Roles.Internal))
-            .AddPolicy(Policies.ExternalUserPolicy,
-                x => x.RequireAuthenticatedUser().RequireRole(Roles.External));
+            .AddPolicy(Policies.AzureAdJwtAuthPolicy, x =>
+                x.RequireAuthenticatedUser().AddAuthenticationSchemes(Schemes.InitialAzureAdJwtAuthScheme))
+            .AddPolicy(Policies.NativeJwtAuthPolicy, x =>
+                x.RequireAuthenticatedUser().AddAuthenticationSchemes(Schemes.NativeJwtAuthScheme))
+            .AddPolicy(Policies.InternalUserPolicy, x =>
+                x.RequireAuthenticatedUser().RequireRole(Roles.Internal)
+                    .AddAuthenticationSchemes(Schemes.NativeJwtAuthScheme))
+            .AddPolicy(Policies.ExternalUserPolicy, x =>
+                x.RequireAuthenticatedUser().RequireRole(Roles.External)
+                    .AddAuthenticationSchemes(Schemes.NativeJwtAuthScheme));
 
         Log.Information("  Registering custom authorization handler-requirement policies");
         services.AddTransient<IAuthorizationHandler, AdministratorHandler>();

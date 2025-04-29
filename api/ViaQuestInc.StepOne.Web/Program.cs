@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Hosting.Server;
 using Microsoft.AspNetCore.Hosting.Server.Features;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Logging;
+using OfficeOpenXml;
 using Serilog;
 using ViaQuestInc.StepOne.Kernel;
 using ViaQuestInc.StepOne.Web;
@@ -12,6 +13,7 @@ using ViaQuestInc.StepOne.Web.Configuration;
 using ViaQuestInc.StepOne.Web.ServiceModules;
 using ViaQuestInc.StepOne.Web.ServicesManagement;
 using ViaQuestInc.StepOne.Web.StartupActions;
+using OfficeOpenXml;
 
 const string migrationsModeSwitch = "--migrations-mode";
 const string envVarsPrefix = "STEPONE_";
@@ -223,6 +225,8 @@ try
             }
         }
     });
+    
+    ExcelPackage.LicenseContext = LicenseContext.Commercial;
 
     stopwatch.Stop();
     

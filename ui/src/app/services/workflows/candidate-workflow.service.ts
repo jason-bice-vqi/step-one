@@ -1,9 +1,9 @@
 import {Injectable} from '@angular/core';
 import {HttpClient} from "@angular/common/http";
-import {CandidateWorkflowInterface} from "../../models/candidate-workflow.interface";
+import {CandidateWorkflowInterface} from "../../models/workflows/candidate-workflow.interface";
 import {Observable, tap} from "rxjs";
 import {environment} from "../../../environments/environment";
-import {CandidateInterface} from "../../models/candidate.interface";
+import {CandidateInterface} from "../../models/candidates/candidate.interface";
 
 @Injectable({
   providedIn: 'root'

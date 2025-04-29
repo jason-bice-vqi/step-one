@@ -1,7 +1,7 @@
 import {WorkflowInterface} from "./workflow.interface";
-import {CandidateInterface} from "./candidate.interface";
+import {CandidateInterface} from "../candidates/candidate.interface";
 import {CandidateWorkflowStepInterface} from "./candidate-workflow-step.interface";
-import {EntityStatusesEnum} from "./entity-statuses.enum";
+import {EntityStatusesEnum} from "../entity-statuses.enum";
 
 /**
  * Represents a candidate's progress through a workflow.

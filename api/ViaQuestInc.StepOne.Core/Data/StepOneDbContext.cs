@@ -49,7 +49,7 @@ public class StepOneDbContext(DbContextOptions<StepOneDbContext> options) : DbCo
             .HasForeignKey<CandidateWorkflow>(cw => cw.CandidateId)
             .OnDelete(DeleteBehavior.Cascade); // Deleting Candidate deletes CandidateWorkflow
 
-        modelBuilder.Entity<Candidate>().HasIndex(x => x.PaycorCandidateId);
+        modelBuilder.Entity<Candidate>().HasIndex(x => x.PaycorCandidateId).IsUnique();
         modelBuilder.Entity<Candidate>().HasIndex(x => x.PhoneNumber);
 
         // CandidateWorkflow to Workflow (Many-to-One)

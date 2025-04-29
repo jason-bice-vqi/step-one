@@ -1,5 +1,5 @@
-import {CandidateWorkflowInterface} from "./candidate-workflow.interface";
-import {EntityStatusesEnum} from "./entity-statuses.enum";
+import {CandidateWorkflowInterface} from "../workflows/candidate-workflow.interface";
+import {EntityStatusesEnum} from "../entity-statuses.enum";
 
 /**
  * Represents a candidate in the system.

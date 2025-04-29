@@ -1,4 +1,5 @@
-﻿using ViaQuestInc.StepOne.Kernel;
+﻿using Humanizer;
+using ViaQuestInc.StepOne.Kernel;
 using ViaQuestInc.StepOne.Kernel.Entity;
 
 namespace ViaQuestInc.StepOne.Core.Candidates.Import.Operations;
@@ -14,25 +15,42 @@ public class InitializeCandidateEntityOperation : ICandidateImportOperation
     {
         if (options.CurrentRawCandidateDataRow == null)
         {
-            throw new ArgumentNullException(nameof(options.CurrentRawCandidateDataRow));    
+            throw new ArgumentNullException(nameof(options.CurrentRawCandidateDataRow));
         }
-        
+
         options.InitializedCandidateEntity = new()
         {
+            AddressLine1 = options.CurrentRawCandidateDataRow["Address 1:"].ToString().NullifyEmptyOrWhitespace()
+                ?.ToLower()
+                .Titleize(),
+            AddressLine2 = options.CurrentRawCandidateDataRow["Address 2:"].ToString().NullifyEmptyOrWhitespace()
+                ?.ToLower()
+                .Titleize(),
+            City = options.CurrentRawCandidateDataRow["City"].ToString().NullifyEmptyOrWhitespace().OnlyLetters()?
+                .ToLower()
+                .Titleize(),
             EntityStatus = EntityStatuses.Active,
-            FirstName = options.CurrentRawCandidateDataRow["Candidate First Name"].ToString()!,
-            LastName = options.CurrentRawCandidateDataRow["Candidate Last Name"].ToString()!,
-            HireDate = DateTime.Parse(options.CurrentRawCandidateDataRow["Date Hired"].ToString()!),
+            FirstName = options.CurrentRawCandidateDataRow["Candidate First Name"].ToString()!.ToLower().Titleize(),
+            ImportedAt = DateTime.UtcNow,
+            LastName = options.CurrentRawCandidateDataRow["Candidate Last Name"].ToString()!.ToLower().Titleize(),
+            HireDate = DateOnly.Parse(options.CurrentRawCandidateDataRow["Date Hired"].ToString()!),
             JobId = int.Parse(options.CurrentRawCandidateDataRow["Job ID"].ToString()!),
             JobTitle = options.CurrentRawCandidateDataRow["Job Title"].ToString()!,
             PaycorCandidateId = options.CurrentRawCandidateDataRow["Candidate ID"].ToString()!,
-            PhoneNumber = options.CurrentRawCandidateDataRow["Phone Number"].ToString()!.ToUnformattedPhoneNumber()!,
-            StartDate = DateTime.TryParse(options.CurrentRawCandidateDataRow["Start Hired"].ToString()!,
+            PhoneNumber = options.CurrentRawCandidateDataRow["Mobile Phone"].ToString()!.ToUnformattedPhoneNumber()!,
+            PostalCode = options.CurrentRawCandidateDataRow["Postal Code"].ToString().NullifyEmptyOrWhitespace(),
+            StartDate = DateOnly.TryParse(options.CurrentRawCandidateDataRow["Start Date"].ToString()!,
                 out var startDate)
                 ? startDate
-                : null
+                : null,
+            State = options.CurrentRawCandidateDataRow["State"].ToString().NullifyEmptyOrWhitespace(),
         };
-        
+
+        if (options.InitializedCandidateEntity.State?.Length > 2)
+        {
+            options.InitializedCandidateEntity.State = options.InitializedCandidateEntity.State.Titleize();
+        }
+
         return Task.CompletedTask;
     }
 }
