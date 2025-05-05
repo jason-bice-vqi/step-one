@@ -105,10 +105,10 @@ public class StepOneDbContext(DbContextOptions<StepOneDbContext> options) : DbCo
             var parallelSeedingGroups = new[]
             {
                 [
-                    new CandidatesPopulator()
+                    //new CandidatesPopulator()
                 ],
                 [
-                    new CandidateWorkflowPopulator()
+                    //new CandidateWorkflowPopulator()
                 ],
                 [
                     

@@ -50,7 +50,18 @@ public class CandidateService(
     public async Task<SearchResponse<Candidate>> SearchAsync(CandidateSearchRequest searchRequest,
         CancellationToken cancellationToken)
     {
-        var candidates = await repository.All<Candidate>().ToArrayAsync(cancellationToken);
+        var candidates = await repository
+            .Filter<Candidate>(x =>
+                // Name
+                (searchRequest.Name == null || x.FirstName.Contains(searchRequest.Name) ||
+                 x.LastName.Contains(searchRequest.Name) || x.FullName.Contains(searchRequest.Name)) &&
+                // Candidate Status
+                (searchRequest.CandidateStatus == null || x.CandidateStatus == searchRequest.CandidateStatus) &&
+                // Workflow Status
+                (searchRequest.CandidateWorkflowStepStatus == null ||
+                 (x.CandidateWorkflowId != null && x.CandidateWorkflow!.CandidateWorkflowSteps.Any(w =>
+                     w.CandidateWorkflowStepStatus == searchRequest.CandidateWorkflowStepStatus))))
+            .ToArrayAsync(cancellationToken);
 
         return new(candidates, searchRequest);
     }

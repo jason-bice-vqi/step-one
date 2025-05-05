@@ -1,8 +1,8 @@
 ﻿namespace ViaQuestInc.StepOne.Core.Candidates.Workflows;
 
-public enum CandidateStatus
+public enum CandidateStatuses
 {
-    PendingInvite = 0,
+    Pending = 0,
     Invited = 1,
     Active = 2,
     WorkflowCompleted = 3

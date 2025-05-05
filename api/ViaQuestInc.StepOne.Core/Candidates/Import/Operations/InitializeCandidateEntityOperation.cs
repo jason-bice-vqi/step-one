@@ -18,6 +18,9 @@ public class InitializeCandidateEntityOperation : ICandidateImportOperation
             throw new ArgumentNullException(nameof(options.CurrentRawCandidateDataRow));
         }
 
+        var firstName = options.CurrentRawCandidateDataRow["Candidate First Name"].ToString()!.ToLower().Titleize();
+        var lastName = options.CurrentRawCandidateDataRow["Candidate Last Name"].ToString()!.ToLower().Titleize();
+
         options.InitializedCandidateEntity = new()
         {
             AddressLine1 = options.CurrentRawCandidateDataRow["Address 1:"].ToString().NullifyEmptyOrWhitespace()
@@ -30,9 +33,10 @@ public class InitializeCandidateEntityOperation : ICandidateImportOperation
                 .ToLower()
                 .Titleize(),
             EntityStatus = EntityStatuses.Active,
-            FirstName = options.CurrentRawCandidateDataRow["Candidate First Name"].ToString()!.ToLower().Titleize(),
+            FirstName = firstName,
+            FullName = $"{lastName}, {firstName}",
             ImportedAt = DateTime.UtcNow,
-            LastName = options.CurrentRawCandidateDataRow["Candidate Last Name"].ToString()!.ToLower().Titleize(),
+            LastName = lastName,
             HireDate = DateOnly.Parse(options.CurrentRawCandidateDataRow["Date Hired"].ToString()!),
             JobId = int.Parse(options.CurrentRawCandidateDataRow["Job ID"].ToString()!),
             JobTitle = options.CurrentRawCandidateDataRow["Job Title"].ToString()!,

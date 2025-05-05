@@ -1,10 +1,10 @@
 import {Injectable} from '@angular/core';
 import {HttpClient, HttpParams} from "@angular/common/http";
 import {Observable, tap} from "rxjs";
-import {CandidateInterface} from "../../models/candidates/candidate.interface";
 import {environment} from "../../../environments/environment";
-import {SearchResponseInterface} from "../../models/search/search-response.interface";
-import {SearchRequestInterface} from "../../models/search/search-request.interface";
+import {CandidateSearchRequestInterface} from "../../models/candidates/candidate-search-request.interface";
+import {CandidateSearchResponseInterface} from "../../models/candidates/candidate-search-response.interface";
+import {cleanRequestParams} from "../../functions/http.functions";
 
 @Injectable({
   providedIn: 'root'
@@ -15,10 +15,10 @@ export class CandidateService {
   constructor(private httpClient: HttpClient) {
   }
 
-  search(searchRequest: SearchRequestInterface<CandidateInterface>): Observable<SearchResponseInterface<CandidateInterface>> {
-    const httpParams = new HttpParams().append('page', searchRequest.page).append('limit', searchRequest.limit);
+  search(searchRequest: CandidateSearchRequestInterface): Observable<CandidateSearchResponseInterface> {
+    const httpParams = new HttpParams({fromObject: cleanRequestParams(searchRequest)});
 
-    return this.httpClient.get<SearchResponseInterface<CandidateInterface>>(this.endpoint, {params: httpParams})
+    return this.httpClient.get<CandidateSearchResponseInterface>(this.endpoint, {params: httpParams})
       .pipe(tap(x => console.info('Candidates Retrieved', x)));
   }
 }

@@ -17,6 +17,10 @@
     height: 56px; // Match the height of mat-form-field
     margin-bottom: 24px; // Small tweak to align with input fields if needed
 
+    button:not(:last-child) {
+      margin-right: $margin / 2;
+    }
+
     button {
       height: 100%; // Take the full height of container
       white-space: nowrap;
@@ -32,9 +36,12 @@
 }
 
 table {
-  th.mat-header-cell {
-    font-weight: 600;
-    white-space: nowrap;
+  th.mat-mdc-header-cell {
+    font-weight: 300;
+  }
+
+  th.mat-sort-header {
+    font-weight: 500;
   }
 
   td.mat-cell {
@@ -53,8 +60,8 @@ table {
   tr:hover {
     background-color: #ebebeb;
   }
+}
 
-  .text-center {
-    text-align: center;
-  }
+.text-center {
+  text-align: center;
 }

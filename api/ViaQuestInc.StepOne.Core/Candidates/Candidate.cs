@@ -19,6 +19,10 @@ public class Candidate : EntityBase<int>, IEntityStatusAssignable
     public required string LastName { get; set; }
     
     [MaxLength(255)]
+    [Required]
+    public required string FullName { get; set; }
+    
+    [MaxLength(255)]
     public string? Email { get; set; }
     
     [MaxLength(255)]
@@ -35,8 +39,6 @@ public class Candidate : EntityBase<int>, IEntityStatusAssignable
     
     [StringLength(10, MinimumLength = 5)]
     public string? PostalCode { get; set; }
-
-    public string FullName => $"{FirstName} {LastName}";
     
     public required DateTime ImportedAt { get; set; }
     
@@ -75,7 +77,7 @@ public class Candidate : EntityBase<int>, IEntityStatusAssignable
     /// </summary>
     public CandidateWorkflow? CandidateWorkflow { get; set; }
 
-    public CandidateStatus CandidateStatus { get; set; } = CandidateStatus.PendingInvite;
+    public CandidateStatuses CandidateStatus { get; set; } = CandidateStatuses.Pending;
 
     public string CandidateStatusDesc => CandidateStatus.ToString().Titleize();
 

@@ -20,16 +20,18 @@ import {MSAL_INSTANCE, MsalBroadcastService, MsalGuard, MsalService} from "@azur
 import {BrowserCacheLocation, LogLevel, PublicClientApplication} from "@azure/msal-browser";
 import {environment} from "../environments/environment";
 import {InternalDashboardComponent} from "./internal/internal-dashboard/internal-dashboard.component";
-import { ProgressBarComponent } from './progress-bar/progress-bar.component';
+import {ProgressBarComponent} from './progress-bar/progress-bar.component';
 import {MatTableModule} from "@angular/material/table";
 import {MatProgressBarModule} from "@angular/material/progress-bar";
 import {MatIconModule} from "@angular/material/icon";
 import {MatPaginatorModule} from "@angular/material/paginator";
 import {MatTooltipModule} from "@angular/material/tooltip";
 import {MatSelectModule} from "@angular/material/select";
-import { FileUploadComponent } from './file-upload/file-upload.component';
-import { CandidateWorkflowStepComponent } from './candidate-workflow-step/candidate-workflow-step.component';
+import {FileUploadComponent} from './file-upload/file-upload.component';
+import {CandidateWorkflowStepComponent} from './candidate-workflow-step/candidate-workflow-step.component';
 import {MatCheckboxModule} from "@angular/material/checkbox";
+import {MatSortModule} from '@angular/material/sort';
+import {MatMenuModule} from "@angular/material/menu";
 
 export function MSALInstanceFactory(): PublicClientApplication {
   return new PublicClientApplication({
@@ -76,26 +78,28 @@ export function MSALInstanceFactory(): PublicClientApplication {
     FileUploadComponent,
     CandidateWorkflowStepComponent
   ],
-    imports: [
-        BrowserModule,
-        AppRoutingModule,
-        BrowserAnimationsModule,
-        MatCardModule,
-        MatInputModule,
-        MatListModule,
-        MatButtonModule,
-        ReactiveFormsModule,
-        NgOptimizedImage,
-        FormsModule,
-        HttpClientModule,
-        MatTableModule,
-        MatProgressBarModule,
-        MatIconModule,
-        MatPaginatorModule,
-        MatTooltipModule,
-        MatSelectModule,
-        MatCheckboxModule
-    ],
+  imports: [
+    BrowserModule,
+    AppRoutingModule,
+    BrowserAnimationsModule,
+    MatCardModule,
+    MatInputModule,
+    MatListModule,
+    MatButtonModule,
+    ReactiveFormsModule,
+    NgOptimizedImage,
+    FormsModule,
+    HttpClientModule,
+    MatTableModule,
+    MatProgressBarModule,
+    MatIconModule,
+    MatPaginatorModule,
+    MatTooltipModule,
+    MatSelectModule,
+    MatCheckboxModule,
+    MatSortModule,
+    MatMenuModule
+  ],
   providers: [
     {provide: MSAL_INSTANCE, useFactory: MSALInstanceFactory},
     MsalService,
