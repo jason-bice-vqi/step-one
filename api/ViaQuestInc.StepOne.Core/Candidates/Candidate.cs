@@ -75,7 +75,7 @@ public class Candidate : EntityBase<int>, IEntityStatusAssignable
     /// </summary>
     public CandidateWorkflow? CandidateWorkflow { get; set; }
 
-    public CandidateStatus CandidateStatus { get; set; } = CandidateStatus.PendingInvitation;
+    public CandidateStatus CandidateStatus { get; set; } = CandidateStatus.PendingInvite;
 
     public string CandidateStatusDesc => CandidateStatus.ToString().Titleize();
 

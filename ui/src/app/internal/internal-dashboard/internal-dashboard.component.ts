@@ -22,15 +22,17 @@ export class InternalDashboardComponent implements OnInit {
     this.onSearchChange();
   }
 
-  statusOptions: string[] = ['Pending Invitation', 'Active', 'Pending Review'];
+  statusOptions: string[] = ['Invited - Active', 'Invited - Inactive', 'Pending Invite'];
   companyOptions: string[] = ['ViaQuest Day & Employment Services LLC'];
   jobTitleOptions: string[] = [];
+  workflowStatusOptions: string[] = ['Assigned', 'Completed by Candidate', 'Completed and Confirmed', 'Not Started', 'In Progress', 'Unassigned'];
 
   searchCriteria = {
     name: '',
     status: '',
     company: '',
-    jobTitle: ''
+    jobTitle: '',
+    workflowStatus: ''
   };
 
   displayedColumns: string[] = [
@@ -56,7 +58,8 @@ export class InternalDashboardComponent implements OnInit {
       name: '',
       status: '',
       company: '',
-      jobTitle: ''
+      jobTitle: '',
+      workflowStatus: ''
     };
 
     this.onSearchChange();
@@ -64,7 +67,7 @@ export class InternalDashboardComponent implements OnInit {
 
   onPageChange($event: PageEvent) {
     this.searchRequest.limit = $event.pageSize;
-    this.searchRequest.page = $event.pageIndex;
+    this.searchRequest.page = $event.pageIndex + 1;
 
     this.onSearchChange();
   }
