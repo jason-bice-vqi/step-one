@@ -16,7 +16,7 @@
 
 .nav-bar a {
   font-size: 16px;
-  margin-right: $margin;
+  //margin-right: $margin;
   font-weight: 400;
   text-decoration: none;
   color: $vqi-blue;
@@ -26,8 +26,9 @@
   height: 100%;
 
   &.active-link {
+    padding: 6px $margin -6px $margin;
     font-weight: 500;
-    border-bottom: 2px solid $vqi-blue-light;
+    border-bottom: 6px solid $vqi-blue;
     background-color: $vqi-blue-light;
     color: white;
   }
@@ -36,4 +37,11 @@
     vertical-align: middle;
     font-size: 20px;
   }
+}
+
+.nav-bar a:hover {
+  padding: 6px $margin -6px $margin;
+  background-color: white;
+  color: $vqi-blue;
+  border-bottom: 6px solid #ccc;
 }
