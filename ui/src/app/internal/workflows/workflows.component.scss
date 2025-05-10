@@ -1,0 +1,57 @@
+@import "variables";
+
+.workflow-container {
+  display: flex;
+  gap: $margin;
+  padding: $margin;
+  margin: $margin;
+  flex-wrap: wrap;
+
+  .workflow-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    cursor: pointer;
+    padding: $margin;
+    height: 16px;
+
+    &.selected {
+      background-color: #d0ebff;
+    }
+
+    .workflow-name {
+      flex: 1;
+
+      mat-icon {
+        height: auto;
+        width: auto;
+        line-height: $font-size;
+      }
+    }
+
+    .workflow-actions {
+      display: flex;
+    }
+  }
+}
+
+.column {
+  flex: 1 1 30%;
+  padding: $margin;
+}
+
+.step-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: $margin / 4 $margin;
+  border-bottom: 1px solid #eee;
+
+  .step-name {
+    flex: 1;
+  }
+
+  .step-actions {
+    display: flex;
+  }
+}

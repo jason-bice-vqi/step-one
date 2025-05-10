@@ -32,6 +32,9 @@ import {CandidateWorkflowStepComponent} from './candidate-workflow-step/candidat
 import {MatCheckboxModule} from "@angular/material/checkbox";
 import {MatSortModule} from '@angular/material/sort';
 import {MatMenuModule} from "@angular/material/menu";
+import { NavBarComponent } from './internal/nav-bar/nav-bar.component';
+import {MatToolbarModule} from "@angular/material/toolbar";
+import { WorkflowsComponent } from './internal/workflows/workflows.component';
 
 export function MSALInstanceFactory(): PublicClientApplication {
   return new PublicClientApplication({
@@ -76,7 +79,9 @@ export function MSALInstanceFactory(): PublicClientApplication {
     InternalDashboardComponent,
     ProgressBarComponent,
     FileUploadComponent,
-    CandidateWorkflowStepComponent
+    CandidateWorkflowStepComponent,
+    NavBarComponent,
+    WorkflowsComponent
   ],
   imports: [
     BrowserModule,
@@ -98,7 +103,8 @@ export function MSALInstanceFactory(): PublicClientApplication {
     MatSelectModule,
     MatCheckboxModule,
     MatSortModule,
-    MatMenuModule
+    MatMenuModule,
+    MatToolbarModule
   ],
   providers: [
     {provide: MSAL_INSTANCE, useFactory: MSALInstanceFactory},

@@ -5,6 +5,7 @@ import {UserDashboardComponent} from "./user-dashboard/user-dashboard.component"
 import {authGuard} from "./guards/auth.guard";
 import {InternalDashboardComponent} from "./internal/internal-dashboard/internal-dashboard.component";
 import {internalUserAuthGuard} from "./internal/guards/internal-user-auth.guard";
+import {WorkflowsComponent} from "./internal/workflows/workflows.component";
 
 const routes: Routes = [
   {path: 'login', component: LoginComponent},
@@ -14,7 +15,8 @@ const routes: Routes = [
     path: 'internal',
     canActivate: [internalUserAuthGuard],
     children: [
-      { path: 'dashboard', component: InternalDashboardComponent }
+      { path: 'dashboard', component: InternalDashboardComponent },
+      { path: 'workflows', component: WorkflowsComponent }
     ]
   },
   {path: 'intermediate', redirectTo: '/internal-user-dashboard'},

@@ -9,6 +9,7 @@
   </div>
 </div>
 <div class="content" role="main">
+  <app-nav-bar-admin *ngIf="isInternal"></app-nav-bar-admin>
   <router-outlet></router-outlet>
 </div>
 <footer>
