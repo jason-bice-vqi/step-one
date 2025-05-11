@@ -32,9 +32,15 @@ import {CandidateWorkflowStepComponent} from './candidate-workflow-step/candidat
 import {MatCheckboxModule} from "@angular/material/checkbox";
 import {MatSortModule} from '@angular/material/sort';
 import {MatMenuModule} from "@angular/material/menu";
-import { NavBarComponent } from './internal/nav-bar/nav-bar.component';
+import {NavBarComponent} from './internal/nav-bar/nav-bar.component';
 import {MatToolbarModule} from "@angular/material/toolbar";
-import { WorkflowsComponent } from './internal/workflows/workflows.component';
+import {WorkflowsComponent} from './internal/workflows/workflows.component';
+import {
+  WorkflowStepConfigDialogComponent
+} from './internal/workflow-step-config-dialog/workflow-step-config-dialog.component';
+import {MAT_DIALOG_DEFAULT_OPTIONS, MatDialogModule} from "@angular/material/dialog";
+import {MatSlideToggleModule} from "@angular/material/slide-toggle";
+import { ConfirmDeleteDialogComponent } from './confirm-delete-dialog/confirm-delete-dialog.component';
 
 export function MSALInstanceFactory(): PublicClientApplication {
   return new PublicClientApplication({
@@ -81,7 +87,9 @@ export function MSALInstanceFactory(): PublicClientApplication {
     FileUploadComponent,
     CandidateWorkflowStepComponent,
     NavBarComponent,
-    WorkflowsComponent
+    WorkflowsComponent,
+    WorkflowStepConfigDialogComponent,
+    ConfirmDeleteDialogComponent
   ],
   imports: [
     BrowserModule,
@@ -104,7 +112,9 @@ export function MSALInstanceFactory(): PublicClientApplication {
     MatCheckboxModule,
     MatSortModule,
     MatMenuModule,
-    MatToolbarModule
+    MatToolbarModule,
+    MatDialogModule,
+    MatSlideToggleModule
   ],
   providers: [
     {provide: MSAL_INSTANCE, useFactory: MSALInstanceFactory},
@@ -112,7 +122,17 @@ export function MSALInstanceFactory(): PublicClientApplication {
     MsalGuard,
     MsalBroadcastService,
     {provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true},
-    OtpAuthService
+    OtpAuthService,
+    {
+      provide: MAT_DIALOG_DEFAULT_OPTIONS,
+      useValue: {
+        hasBackdrop: true,
+        disableClose: false,
+        autoFocus: true,
+        maxWidth: '600px',
+        position: { top: '20vh' }
+      }
+    }
   ],
   bootstrap: [AppComponent]
 })

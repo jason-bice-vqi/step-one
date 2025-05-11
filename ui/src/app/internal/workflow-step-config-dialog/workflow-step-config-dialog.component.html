@@ -1,0 +1,20 @@
+<h2 mat-dialog-title>Configure &quot;{{ data.name }}&quot;</h2>
+<mat-dialog-content class="dialog-content">
+  <mat-form-field appearance="outline" class="full-width">
+    <mat-label>Display Name Override</mat-label>
+    <input matInput [(ngModel)]="data.name" />
+  </mat-form-field>
+
+  <mat-slide-toggle [(ngModel)]="data.blockDownstream">
+    Block downstream steps until complete
+  </mat-slide-toggle>
+
+  <mat-slide-toggle [(ngModel)]="data.requiresAdminApproval">
+    Requires administrative approval
+  </mat-slide-toggle>
+</mat-dialog-content>
+
+<mat-dialog-actions align="end">
+  <button mat-button mat-dialog-close>Cancel</button>
+  <button mat-raised-button color="primary" (click)="save()">Save</button>
+</mat-dialog-actions>

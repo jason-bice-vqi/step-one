@@ -1,0 +1,12 @@
+@import "variables";
+
+.dialog-content {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  padding-top: 6px; // Prevent input hint text from clipping
+}
+
+.full-width {
+  width: 100%;
+}

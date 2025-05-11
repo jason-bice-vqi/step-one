@@ -38,13 +38,15 @@
 .column {
   flex: 1 1 30%;
   padding: $margin;
+  max-width: 500px;
+  margin: $margin auto;
 }
 
 .step-row {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: $margin / 4 $margin;
+  padding: ($margin / 4) 0 ($margin / 4) $margin;
   border-bottom: 1px solid #eee;
 
   .step-name {
@@ -53,5 +55,11 @@
 
   .step-actions {
     display: flex;
+  }
+}
+
+.step-pool {
+  .step-row {
+    padding: ($margin / 4) 0 ($margin / 4) $margin;
   }
 }
