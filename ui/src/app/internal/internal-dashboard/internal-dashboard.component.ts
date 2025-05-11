@@ -1,11 +1,11 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, OnInit, ViewChild} from '@angular/core';
 import {CandidateService} from "../../services/candidates/candidate.service";
 import {debounceTime, take} from "rxjs";
 import {CandidateInterface} from "../../models/candidates/candidate.interface";
 import {SearchResponseInterface} from "../../models/search/search-response.interface";
-import {PageEvent} from "@angular/material/paginator";
+import {MatPaginator, PageEvent} from "@angular/material/paginator";
 import {CandidateSearchRequestInterface} from "../../models/candidates/candidate-search-request.interface";
-import { Sort } from '@angular/material/sort';
+import {Sort} from '@angular/material/sort';
 
 @Component({
   selector: 'app-internal-user-dashboard',
@@ -13,6 +13,8 @@ import { Sort } from '@angular/material/sort';
   styleUrls: ['./internal-dashboard.component.scss']
 })
 export class InternalDashboardComponent implements OnInit {
+  @ViewChild(MatPaginator) paginator!: MatPaginator;
+
   private searchDebounceMilliseconds = 500;
   private defaultPageSize = 10;
 
@@ -47,7 +49,12 @@ export class InternalDashboardComponent implements OnInit {
     'actions'
   ];
 
-  search() {
+  search(resetPaging = false) {
+    if (resetPaging) {
+      this.paginator.pageIndex = 0;
+      this.searchRequest.page = 0;
+    }
+
     this.candidateService.search(this.searchRequest)
       .pipe(debounceTime(this.searchDebounceMilliseconds), take(1))
       .subscribe((x) => this.searchResponse = x);
@@ -57,7 +64,7 @@ export class InternalDashboardComponent implements OnInit {
     this.searchRequest = {
       desc: false,
       limit: this.defaultPageSize,
-      page: 1
+      page: 0
     };
 
     this.search();

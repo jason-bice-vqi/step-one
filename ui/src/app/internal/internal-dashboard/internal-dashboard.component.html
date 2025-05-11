@@ -1,4 +1,4 @@
-<form (ngSubmit)="search()" class="search-bar">
+<form (ngSubmit)="search(true)" class="search-bar">
   <mat-form-field appearance="outline" class="search-field">
     <mat-label>Name or Candidate ID</mat-label>
     <input matInput [(ngModel)]="searchRequest.name" placeholder="Enter name" name="name"/>
