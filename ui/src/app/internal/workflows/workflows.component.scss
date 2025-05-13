@@ -1,5 +1,14 @@
 @import "variables";
 
+.mat-mdc-raised-button {
+  height: 48px;
+}
+
+.card-instructions {
+  color: gray;
+  margin-bottom: $margin / 2;
+}
+
 .workflow-container {
   display: flex;
   gap: $margin;

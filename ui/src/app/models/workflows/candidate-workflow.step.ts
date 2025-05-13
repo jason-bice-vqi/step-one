@@ -1,24 +1,24 @@
-import {CandidateWorkflowInterface} from "./candidate-workflow.interface";
-import {WorkflowStepInterface} from "./workflow-step.interface";
-import {CandidateWorkflowStepStatusesEnum} from "./candidate-workflow-step-statuses.enum";
+import {CandidateWorkflow} from "./candidate.workflow";
+import {WorkflowStep} from "./workflow.step";
+import {CandidateWorkflowStepStatuses} from "./candidate-workflow-step.statuses";
 
 /**
  * Represents a step within a candidate's workflow.
  */
-export interface CandidateWorkflowStepInterface {
+export interface CandidateWorkflowStep {
   id: number;
 
   /** The ID of the associated candidate workflow. */
   candidateWorkflowId: number;
 
   /** The candidate workflow associated with this step. */
-  candidateWorkflow?: CandidateWorkflowInterface | null;
+  candidateWorkflow?: CandidateWorkflow | null;
 
   /** The ID of the associated workflow step. */
   workflowStepId: number;
 
   /** The workflow step associated with this candidate workflow step. */
-  workflowStep?: WorkflowStepInterface | null;
+  workflowStep?: WorkflowStep | null;
 
   /** The timestamp when this step was completed, if applicable. */
   completedAt?: Date | null;
@@ -30,5 +30,5 @@ export interface CandidateWorkflowStepInterface {
   isConfirmedByAdmin: boolean;
 
   /** The current status of this candidate workflow step. */
-  candidateWorkflowStepStatus: CandidateWorkflowStepStatusesEnum;
+  candidateWorkflowStepStatus: CandidateWorkflowStepStatuses;
 }

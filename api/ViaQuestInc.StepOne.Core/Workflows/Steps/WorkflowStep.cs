@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.Text.Json.Serialization;
 using ViaQuestInc.StepOne.Kernel.Entity;
 
 namespace ViaQuestInc.StepOne.Core.Workflows.Steps;
@@ -14,6 +15,7 @@ public class WorkflowStep : EntityBase<int>
     /// <summary>
     /// The workflow with which this step is associated.
     /// </summary>
+    [JsonIgnore]
     public Workflow? Workflow { get; set; }
     
     public required int StepId { get; set; }
@@ -43,4 +45,14 @@ public class WorkflowStep : EntityBase<int>
     /// The display order of this step within the workflow.
     /// </summary>
     public int StepIndex { get; set; }
+    
+    /// <summary>
+    /// Whether this step should block downstream steps until it is completed.
+    /// </summary>
+    public bool BlockDownstream { get; set; }
+    
+    /// <summary>
+    /// Whether this step requires administrator confirmation to be considered completed.
+    /// </summary>
+    public bool RequiresAdminConfirmation { get; set; }
 }

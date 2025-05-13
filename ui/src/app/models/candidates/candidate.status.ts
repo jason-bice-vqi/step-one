@@ -1,4 +1,4 @@
-export enum CandidateStatusEnum {
+export enum CandidateStatus {
   Pending = 0,
   Invited = 1,
   Active = 2,

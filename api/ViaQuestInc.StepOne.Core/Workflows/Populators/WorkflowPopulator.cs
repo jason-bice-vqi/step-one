@@ -22,47 +22,27 @@ public class WorkflowPopulator : IDataPopulator
                 {
                     new WorkflowStep
                     {
-                        IsAdminConfirmationRequired =
-                            steps.Single(x => x.WorkflowStepType == WorkflowStepTypes.SignedOfferLetter)
-                                .IsAdminConfirmationRequiredDefault,
-                        StepId = steps.Single(x => x.WorkflowStepType == WorkflowStepTypes.SignedOfferLetter).Id
+                        StepId = steps.Single(x => x.NameDefault == "Submit Signed Offer Letter").Id
                     },
                     new WorkflowStep
                     {
-                        IsAdminConfirmationRequired =
-                            steps.Single(x => x.WorkflowStepType == WorkflowStepTypes.AtsEmploymentApplication)
-                                .IsAdminConfirmationRequiredDefault,
-                        StepId = steps.Single(x => x.WorkflowStepType == WorkflowStepTypes.AtsEmploymentApplication).Id
+                        StepId = steps.Single(x => x.NameDefault == "Complete Employment Application").Id
                     },
                     new WorkflowStep
                     {
-                        IsAdminConfirmationRequired =
-                            steps.Single(x => x.WorkflowStepType == WorkflowStepTypes.SignedVerificationOfCompliance)
-                                .IsAdminConfirmationRequiredDefault,
-                        StepId = steps.Single(x =>
-                            x.WorkflowStepType == WorkflowStepTypes.SignedVerificationOfCompliance).Id
+                        StepId = steps.Single(x => x.NameDefault == "Submit Signed Verification of Compliance Form").Id
                     },
                     new WorkflowStep
                     {
-                        IsAdminConfirmationRequired =
-                            steps.Single(x => x.WorkflowStepType == WorkflowStepTypes.SignedPreEmployment)
-                                .IsAdminConfirmationRequiredDefault,
-                        StepId = steps.Single(x => x.WorkflowStepType == WorkflowStepTypes.SignedPreEmployment).Id
+                        StepId = steps.Single(x => x.NameDefault == "Complete Pre-Employment Form").Id
                     },
                     new WorkflowStep
                     {
-                        IsAdminConfirmationRequired =
-                            steps.Single(x => x.WorkflowStepType == WorkflowStepTypes.SignedW9)
-                                .IsAdminConfirmationRequiredDefault,
-                        StepId = steps.Single(x => x.WorkflowStepType == WorkflowStepTypes.SignedW9).Id
+                        StepId = steps.Single(x => x.NameDefault == "Submit Signed W9").Id
                     },
                     new WorkflowStep
                     {
-                        IsAdminConfirmationRequired =
-                            steps.Single(x => x.WorkflowStepType == WorkflowStepTypes.ProofOfHighestFormOfEducation)
-                                .IsAdminConfirmationRequiredDefault,
-                        StepId = steps
-                            .Single(x => x.WorkflowStepType == WorkflowStepTypes.ProofOfHighestFormOfEducation).Id
+                        StepId = steps.Single(x => x.NameDefault == "Submit Proof of Highest Form of Education").Id
                     }
                 }
             },
@@ -73,61 +53,35 @@ public class WorkflowPopulator : IDataPopulator
                 {
                     new WorkflowStep
                     {
-                        IsAdminConfirmationRequired =
-                            steps.Single(x => x.WorkflowStepType == WorkflowStepTypes.SignedOfferLetter)
-                                .IsAdminConfirmationRequiredDefault,
-                        StepId = steps.Single(x => x.WorkflowStepType == WorkflowStepTypes.SignedOfferLetter).Id
+                        StepId = steps.Single(x => x.NameDefault == "Submit Signed Offer Letter").Id
                     },
                     new WorkflowStep
                     {
-                        IsAdminConfirmationRequired =
-                            steps.Single(x => x.WorkflowStepType == WorkflowStepTypes.AtsEmploymentApplication)
-                                .IsAdminConfirmationRequiredDefault,
-                        StepId = steps.Single(x => x.WorkflowStepType == WorkflowStepTypes.AtsEmploymentApplication).Id
+                        StepId = steps.Single(x => x.NameDefault == "Complete Employment Application").Id
                     },
                     new WorkflowStep
                     {
-                        IsAdminConfirmationRequired =
-                            steps.Single(x => x.WorkflowStepType == WorkflowStepTypes.SignedVerificationOfCompliance)
-                                .IsAdminConfirmationRequiredDefault,
-                        StepId = steps.Single(x =>
-                            x.WorkflowStepType == WorkflowStepTypes.SignedVerificationOfCompliance).Id
+                        StepId = steps.Single(x => x.NameDefault == "Submit Signed Verification of Compliance Form").Id
                     },
                     new WorkflowStep
                     {
-                        IsAdminConfirmationRequired =
-                            steps.Single(x => x.WorkflowStepType == WorkflowStepTypes.SignedPreEmployment)
-                                .IsAdminConfirmationRequiredDefault,
-                        StepId = steps.Single(x => x.WorkflowStepType == WorkflowStepTypes.SignedPreEmployment).Id
+                        StepId = steps.Single(x => x.NameDefault == "Complete Pre-Employment Form").Id
                     },
                     new WorkflowStep
                     {
-                        IsAdminConfirmationRequired =
-                            steps.Single(x => x.WorkflowStepType == WorkflowStepTypes.SignedW9)
-                                .IsAdminConfirmationRequiredDefault,
-                        StepId = steps.Single(x => x.WorkflowStepType == WorkflowStepTypes.SignedW9).Id
+                        StepId = steps.Single(x => x.NameDefault == "Submit Signed W9").Id
                     },
                     new WorkflowStep
                     {
-                        IsAdminConfirmationRequired =
-                            steps.Single(x => x.WorkflowStepType == WorkflowStepTypes.ProofOfHighestFormOfEducation)
-                                .IsAdminConfirmationRequiredDefault,
-                        StepId = steps
-                            .Single(x => x.WorkflowStepType == WorkflowStepTypes.ProofOfHighestFormOfEducation).Id
+                        StepId = steps.Single(x => x.NameDefault == "Submit Proof of Highest Form of Education").Id
                     },
                     new WorkflowStep
                     {
-                        IsAdminConfirmationRequired =
-                            steps.Single(x => x.WorkflowStepType == WorkflowStepTypes.SubmitDriversLicense)
-                                .IsAdminConfirmationRequiredDefault,
-                        StepId = steps.Single(x => x.WorkflowStepType == WorkflowStepTypes.SubmitDriversLicense).Id
+                        StepId = steps.Single(x => x.NameDefault == "Submit Driver's License").Id
                     },
                     new WorkflowStep
                     {
-                        IsAdminConfirmationRequired =
-                            steps.Single(x => x.WorkflowStepType == WorkflowStepTypes.SubmitSocialSecurityCard)
-                                .IsAdminConfirmationRequiredDefault,
-                        StepId = steps.Single(x => x.WorkflowStepType == WorkflowStepTypes.SubmitSocialSecurityCard).Id
+                        StepId = steps.Single(x => x.NameDefault == "Submit Social Security Card").Id
                     }
                 }
             },
@@ -138,39 +92,23 @@ public class WorkflowPopulator : IDataPopulator
                 {
                     new WorkflowStep
                     {
-                        IsAdminConfirmationRequired =
-                            steps.Single(x => x.WorkflowStepType == WorkflowStepTypes.SignedOfferLetter)
-                                .IsAdminConfirmationRequiredDefault,
-                        StepId = steps.Single(x => x.WorkflowStepType == WorkflowStepTypes.SignedOfferLetter).Id
+                        StepId = steps.Single(x => x.NameDefault == "Submit Signed Offer Letter").Id
                     },
                     new WorkflowStep
                     {
-                        IsAdminConfirmationRequired =
-                            steps.Single(x => x.WorkflowStepType == WorkflowStepTypes.AtsEmploymentApplication)
-                                .IsAdminConfirmationRequiredDefault,
-                        StepId = steps.Single(x => x.WorkflowStepType == WorkflowStepTypes.AtsEmploymentApplication).Id
+                        StepId = steps.Single(x => x.NameDefault == "Complete Employment Application").Id
                     },
                     new WorkflowStep
                     {
-                        IsAdminConfirmationRequired =
-                            steps.Single(x => x.WorkflowStepType == WorkflowStepTypes.SignedVerificationOfCompliance)
-                                .IsAdminConfirmationRequiredDefault,
-                        StepId = steps.Single(x =>
-                            x.WorkflowStepType == WorkflowStepTypes.SignedVerificationOfCompliance).Id
+                        StepId = steps.Single(x => x.NameDefault == "Submit Signed Verification of Compliance Form").Id
                     },
                     new WorkflowStep
                     {
-                        IsAdminConfirmationRequired =
-                            steps.Single(x => x.WorkflowStepType == WorkflowStepTypes.SignedPreEmployment)
-                                .IsAdminConfirmationRequiredDefault,
-                        StepId = steps.Single(x => x.WorkflowStepType == WorkflowStepTypes.SignedPreEmployment).Id
+                        StepId = steps.Single(x => x.NameDefault == "Complete Pre-Employment Form").Id
                     },
                     new WorkflowStep
                     {
-                        IsAdminConfirmationRequired =
-                            steps.Single(x => x.WorkflowStepType == WorkflowStepTypes.SignedW9)
-                                .IsAdminConfirmationRequiredDefault,
-                        StepId = steps.Single(x => x.WorkflowStepType == WorkflowStepTypes.SignedW9).Id
+                        StepId = steps.Single(x => x.NameDefault == "Submit Signed W9").Id
                     },
                 }
             }

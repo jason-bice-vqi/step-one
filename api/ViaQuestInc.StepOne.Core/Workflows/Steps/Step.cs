@@ -14,11 +14,6 @@ public class Step : EntityBase<int>
     public required StepTypes StepType { get; set; }
     
     /// <summary>
-    /// The specific nature of this workflow step.
-    /// </summary>
-    public required WorkflowStepTypes WorkflowStepType { get; set; }
-    
-    /// <summary>
     /// The default name of this step. Can be overridden by any <see cref="WorkflowStep"/> to which this step belongs.
     /// </summary>
     [MaxLength(100)]

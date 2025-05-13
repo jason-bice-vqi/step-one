@@ -1,7 +1,7 @@
 import {Component, Input} from '@angular/core';
-import {CandidateWorkflowStepStatusesEnum} from "../models/workflows/candidate-workflow-step-statuses.enum";
-import {CandidateWorkflowStepInterface} from "../models/workflows/candidate-workflow-step.interface";
-import {StepTypesEnum} from "../models/workflows/step-types.enum";
+import {CandidateWorkflowStepStatuses} from "../models/workflows/candidate-workflow-step.statuses";
+import {CandidateWorkflowStep} from "../models/workflows/candidate-workflow.step";
+import {StepTypes} from "../models/workflows/step.types";
 import {animate, keyframes, style, transition, trigger} from "@angular/animations";
 
 @Component({
@@ -40,15 +40,15 @@ import {animate, keyframes, style, transition, trigger} from "@angular/animation
   ]
 })
 export class CandidateWorkflowStepComponent {
-  @Input() cws!: CandidateWorkflowStepInterface;
+  @Input() cws!: CandidateWorkflowStep;
 
-  protected readonly CandidateWorkflowStepStatusesEnum = CandidateWorkflowStepStatusesEnum;
-  protected readonly StepTypesEnum = StepTypesEnum;
+  protected readonly CandidateWorkflowStepStatusesEnum = CandidateWorkflowStepStatuses;
+  protected readonly StepTypesEnum = StepTypes;
 
   taskStarted: boolean = false;
   isConfirmed: boolean = false;
 
-  onCompleteTask(cws: CandidateWorkflowStepInterface) {
+  onCompleteTask(cws: CandidateWorkflowStep) {
 
   }
 

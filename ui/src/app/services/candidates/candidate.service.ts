@@ -2,8 +2,8 @@ import {Injectable} from '@angular/core';
 import {HttpClient, HttpParams} from "@angular/common/http";
 import {Observable, tap} from "rxjs";
 import {environment} from "../../../environments/environment";
-import {CandidateSearchRequestInterface} from "../../models/candidates/candidate-search-request.interface";
-import {CandidateSearchResponseInterface} from "../../models/candidates/candidate-search-response.interface";
+import {CandidateSearchRequest} from "../../models/candidates/candidate-search.request";
+import {CandidateSearchResponse} from "../../models/candidates/candidate-search.response";
 import {cleanRequestParams} from "../../functions/http.functions";
 
 @Injectable({
@@ -15,10 +15,10 @@ export class CandidateService {
   constructor(private httpClient: HttpClient) {
   }
 
-  search(searchRequest: CandidateSearchRequestInterface): Observable<CandidateSearchResponseInterface> {
+  search(searchRequest: CandidateSearchRequest): Observable<CandidateSearchResponse> {
     const httpParams = new HttpParams({fromObject: cleanRequestParams(searchRequest)});
 
-    return this.httpClient.get<CandidateSearchResponseInterface>(this.endpoint, {params: httpParams})
+    return this.httpClient.get<CandidateSearchResponse>(this.endpoint, {params: httpParams})
       .pipe(tap(x => console.info('Candidates Retrieved', x)));
   }
 }

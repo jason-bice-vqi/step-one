@@ -1,10 +1,10 @@
-import {CandidateWorkflowInterface} from "../workflows/candidate-workflow.interface";
-import {EntityStatusesEnum} from "../entity-statuses.enum";
+import {CandidateWorkflow} from "../workflows/candidate.workflow";
+import {EntityStatuses} from "../entity.statuses";
 
 /**
  * Represents a candidate in the system.
  */
-export interface CandidateInterface {
+export interface Candidate {
   /** The candidate's unique identifier. */
   id: number;
 
@@ -30,8 +30,8 @@ export interface CandidateInterface {
   candidateWorkflowId?: number | null;
 
   /** The workflow associated with this candidate. */
-  candidateWorkflow?: CandidateWorkflowInterface | null;
+  candidateWorkflow?: CandidateWorkflow | null;
 
   /** The current status of this candidate. */
-  entityStatus: EntityStatusesEnum;
+  entityStatus: EntityStatuses;
 }

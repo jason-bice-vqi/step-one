@@ -221,7 +221,7 @@ try
         {
             foreach (var address in addressFeature.Addresses)
             {
-                Log.Information("Application is listening on {Address}.", address);
+                Log.Information("StepOne API is listening on {Address}.", address);
             }
         }
     });

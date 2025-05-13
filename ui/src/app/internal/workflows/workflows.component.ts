@@ -1,138 +1,181 @@
-import {Component} from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import {
   WorkflowStepConfig,
   WorkflowStepConfigDialogComponent,
 } from "../workflow-step-config-dialog/workflow-step-config-dialog.component";
-import {MatDialog} from "@angular/material/dialog";
-import {ConfirmDeleteDialogComponent} from "../../confirm-delete-dialog/confirm-delete-dialog.component";
-import {take} from "rxjs";
-
-interface WorkflowStep {
-  id: number;
-  name: string;
-  blockDownstream: boolean;
-  requiresAdminApproval: boolean;
-}
-
-interface Workflow {
-  id: number;
-  name: string;
-  steps: WorkflowStep[];
-}
+import { MatDialog } from "@angular/material/dialog";
+import { ConfirmDeleteDialogComponent } from "../../confirm-delete-dialog/confirm-delete-dialog.component";
+import { filter, switchMap, take, tap } from "rxjs";
+import { Workflow } from "../../models/workflows/workflow";
+import { WorkflowStep } from "../../models/workflows/workflow.step";
+import { WorkflowService } from "../../services/workflows/workflow.service";
+import { StepService } from "../../services/workflows/step.service";
+import { Step } from "../../models/workflows/step";
+import { StepDialogComponent } from "../step-dialog/step-dialog.component";
 
 @Component({
   selector: 'app-workflows',
   templateUrl: './workflows.component.html',
   styleUrls: ['./workflows.component.scss']
 })
-export class WorkflowsComponent {
-  workflows: Workflow[] = [
-    {id: 1, name: 'Workflow A', steps: []},
-    {id: 2, name: 'Workflow B', steps: []}
-  ];
-  stepPool: WorkflowStep[] = [
-    {id: 1, name: 'Job Application', blockDownstream: false, requiresAdminApproval: false},
-    {id: 2, name: 'Upload Drivers License', blockDownstream: false, requiresAdminApproval: false},
-    {id: 3, name: 'Upload Tax Documents', blockDownstream: false, requiresAdminApproval: false}
-  ];
+export class WorkflowsComponent implements OnInit {
+  /** All workflows. **/
+  workflows: Workflow[] = [];
 
+  /** All potential steps. **/
+  steps: Step[] = [];
+
+  /** Filtered/sorted steps available for the currently selected workflow. **/
+  stepPool: Step[] = [];
+
+  /** The currently selected workflow. **/
   selectedWorkflow: Workflow | null = null;
+
   newWorkflowName = '';
 
-  constructor(private dialog: MatDialog) {
+  constructor(private dialog: MatDialog, private stepService: StepService, private workflowService: WorkflowService) {}
 
+  ngOnInit(): void {
+    this.loadSteps();
+    this.loadWorkflows();
   }
 
+  loadSteps() {
+    this.stepService.get().pipe(take(1)).subscribe((x) => {
+      this.steps = x;
+      this.refreshLocalStepPool();
+    });
+  }
+
+  loadWorkflows() {
+    this.workflowService.get().pipe(take(1)).subscribe((x) => this.workflows = x);
+  }
+
+  refreshLocalStepPool() {
+    if (!this.selectedWorkflow) return;
+
+    const workflowSteps: WorkflowStep[] = this.selectedWorkflow.workflowSteps!;
+    const steps: Step[] = workflowSteps.map(x => x.step);
+    const stepIds: number[] = steps.map(x => x.id);
+
+    this.stepPool = this.steps
+      .filter(x => stepIds.indexOf(x.id) === -1)
+      .sort((a, b) => a.nameDefault.localeCompare(b.nameDefault));
+  }
 
   selectWorkflow(workflow: Workflow) {
     this.selectedWorkflow = workflow;
+    this.refreshLocalStepPool();
   }
 
-  createWorkflow() {
-    if (!this.newWorkflowName.trim()) return;
+  createNewWorkflow() {
+    alert('Coming soon.');
+  }
 
-    const newWorkflow: Workflow = {
-      id: this.workflows.length + 1,
-      name: this.newWorkflowName,
-      steps: []
+  saveSelectedWorkflow() {
+    this.workflowService.update(this.selectedWorkflow!).pipe(take(1), tap(x => this.selectedWorkflow = x)).subscribe();
+  }
+
+  createNewStep() {
+    this.dialog.open(StepDialogComponent, { width: '600px' }).afterClosed().pipe(
+      take(1),
+      filter(result => !!result),
+      switchMap(result => this.stepService.create(result)),
+      tap((x) => {
+        this.steps.push(x);
+        this.refreshLocalStepPool();
+      })
+    ).subscribe();
+  }
+
+  addStepToWorkflow(step: Step) {
+    if (!this.selectedWorkflow) return;
+
+    const workflowStep: WorkflowStep = {
+      blockDownstream: false,
+      id: 0,
+      isAdminConfirmationRequired: false,
+      requiresAdminConfirmation: false,
+      step: step,
+      stepId: step.id,
+      stepIndex: 0,
+      stepName: step.nameDefault,
+      workflowId: this.selectedWorkflow.id
     };
-    this.workflows.push(newWorkflow);
-    this.newWorkflowName = '';
-    this.selectWorkflow(newWorkflow);
+
+    this.selectedWorkflow.workflowSteps!.push(workflowStep);
+    this.refreshLocalStepPool();
   }
 
-  addStepToWorkflow(step: WorkflowStep) {
+  removeStepFromWorkflow(workflowStep: WorkflowStep) {
     if (!this.selectedWorkflow) return;
 
-    this.selectedWorkflow.steps.push(step);
-    this.stepPool = this.stepPool.filter(s => s.id !== step.id);
-  }
-
-  removeStepFromWorkflow(step: WorkflowStep) {
-    if (!this.selectedWorkflow) return;
-
-    const dialogRef = this.dialog.open(ConfirmDeleteDialogComponent, {
-      data: {
-        message: `Are you sure you want to delete the <strong>${step.name}</strong> step from the <strong>${this.selectedWorkflow.name}</strong> workflow?`
-      }
-    });
-
-    dialogRef.afterClosed().pipe(take(1)).subscribe(result => {
-      if (result) {
-        this.stepPool.push(step);
-        this.selectedWorkflow!.steps = this.selectedWorkflow!.steps.filter(s => s.id !== step.id);
-      }
-    });
+    this.selectedWorkflow!.workflowSteps = this.selectedWorkflow!.workflowSteps!.filter(s => s.id !== workflowStep.id);
+    this.refreshLocalStepPool();
   }
 
   moveStepUp(index: number) {
     if (index === 0 || !this.selectedWorkflow) return;
 
-    const steps = this.selectedWorkflow.steps;
-
+    const steps = this.selectedWorkflow.workflowSteps!;
     [steps[index - 1], steps[index]] = [steps[index], steps[index - 1]];
   }
 
   moveStepDown(index: number) {
     if (!this.selectedWorkflow) return;
 
-    const steps = this.selectedWorkflow.steps;
-
+    const steps = this.selectedWorkflow.workflowSteps!;
     if (index >= steps.length - 1) return;
 
     [steps[index], steps[index + 1]] = [steps[index + 1], steps[index]];
   }
 
   configureStep(step: WorkflowStep) {
-    const dialogRef = this.dialog.open(WorkflowStepConfigDialogComponent, {
+    this.dialog.open(WorkflowStepConfigDialogComponent, {
       width: '400px',
       data: {
-        name: step.name,
+        name: step.stepName,
         blockDownstream: step.blockDownstream || false,
-        requiresAdminApproval: step.requiresAdminApproval || false
+        requiresAdminApproval: step.requiresAdminConfirmation || false
       }
-    });
-
-    dialogRef.afterClosed().pipe(take(1)).subscribe((result: WorkflowStepConfig | undefined) => {
-      if (result) {
-        step.name = result.name;
+    }).afterClosed().pipe(
+      take(1),
+      filter((result): result is WorkflowStepConfig => !!result),
+      tap(result => {
+        step.stepName = result.name;
         step.blockDownstream = result.blockDownstream;
-        step.requiresAdminApproval = result.requiresAdminApproval;
-      }
-    });
+        step.requiresAdminConfirmation = result.requiresAdminApproval;
+      })
+    ).subscribe();
   }
 
   deleteWorkflow(selectedWorkflow: Workflow) {
-    const dialogRef = this.dialog.open(ConfirmDeleteDialogComponent, {
+    this.dialog.open(ConfirmDeleteDialogComponent, {
       data: {
         message: `Are you sure you want to delete the <strong>${selectedWorkflow.name}</strong> workflow?`
       }
-    });
+    }).afterClosed().pipe(
+      take(1),
+      filter(result => !!result),
+      tap(() => {
+        alert('Coming soon.');
+      })
+    ).subscribe();
+  }
 
-    dialogRef.afterClosed().pipe(take(1)).subscribe(result => {
-      if (result) {
-        // Proceed with delete
+  deleteStep(step: Step) {
+    this.dialog.open(ConfirmDeleteDialogComponent, {
+      data: {
+        message: `Are you sure you want to delete <strong>${step.nameDefault}</strong>? This will delete it from the pool and from any/all workflows to which it's been assigned.`
       }
-    });
+    }).afterClosed().pipe(
+      take(1),
+      filter(result => !!result),
+      switchMap(() => this.stepService.delete(step)),
+      tap(() => {
+        this.loadSteps();
+        this.loadWorkflows();
+      })
+    ).subscribe();
   }
 }

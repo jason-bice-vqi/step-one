@@ -2,7 +2,10 @@
 using ViaQuestInc.StepOne.Core.Candidates.Import.Operations;
 using ViaQuestInc.StepOne.Core.Candidates.Services;
 using ViaQuestInc.StepOne.Core.Candidates.Workflows.Services;
+using ViaQuestInc.StepOne.Core.Workflows.Persistence;
+using ViaQuestInc.StepOne.Core.Workflows.Persistence.Operations;
 using ViaQuestInc.StepOne.Core.Workflows.Services;
+using ViaQuestInc.StepOne.Core.Workflows.Steps;
 using ViaQuestInc.StepOne.Infrastructure.Services;
 
 namespace ViaQuestInc.StepOne.Web.ServicesManagement;
@@ -19,6 +22,7 @@ public static class StepOneServices
             .AddScoped<CandidateService>()
             .AddScoped<CandidateWorkflowService>()
             .AddScoped<ExcelService>()
+            .AddScoped<StepService>()
             .AddScoped<WorkflowService>()
 
             // Candidate import operations (ordered)
@@ -26,6 +30,12 @@ public static class StepOneServices
             .AddScoped<ICandidateImportOperation, ValidateMobileNumberOperation>()
             .AddScoped<ICandidateImportOperation, InitializeCandidateEntityOperation>()
             .AddScoped<ICandidateImportOperation, AbortExistingCandidateOperation>()
-            .AddScoped<ICandidateImportOperation, CreateCandidateOperation>();
+            .AddScoped<ICandidateImportOperation, CreateCandidateOperation>()
+
+            // Workflow persistence
+            .AddScoped<WorkflowPersistenceEngine>()
+            .AddScoped<IWorkflowPersistenceOperation, ResequenceWorkflowStepsOperation>()
+            .AddScoped<IWorkflowPersistenceOperation, PersistWorkflowStepsOperation>()
+            .AddScoped<IWorkflowPersistenceOperation, PersistWorkflowOperation>();
     }
 }

@@ -1,11 +1,11 @@
 import {Component, OnInit} from '@angular/core';
 import {CandidateWorkflowService} from "../services/workflows/candidate-workflow.service";
-import {CandidateWorkflowInterface} from "../models/workflows/candidate-workflow.interface";
+import {CandidateWorkflow} from "../models/workflows/candidate.workflow";
 import {take} from "rxjs";
 import {JwtService} from "../services/auth/jwt.service";
-import {CandidateWorkflowStepStatusesEnum} from "../models/workflows/candidate-workflow-step-statuses.enum";
-import {CandidateWorkflowStepInterface} from "../models/workflows/candidate-workflow-step.interface";
-import {StepTypesEnum} from "../models/workflows/step-types.enum";
+import {CandidateWorkflowStepStatuses} from "../models/workflows/candidate-workflow-step.statuses";
+import {CandidateWorkflowStep} from "../models/workflows/candidate-workflow.step";
+import {StepTypes} from "../models/workflows/step.types";
 
 @Component({
   selector: 'app-internal-user-dashboard',
@@ -14,7 +14,7 @@ import {StepTypesEnum} from "../models/workflows/step-types.enum";
 })
 export class UserDashboardComponent implements OnInit {
 
-  candidateWorkflow?: CandidateWorkflowInterface | null = null;
+  candidateWorkflow?: CandidateWorkflow | null = null;
 
   constructor(private jwtService: JwtService, private candidateWorkflowService: CandidateWorkflowService) {
   }
@@ -26,17 +26,17 @@ export class UserDashboardComponent implements OnInit {
       .pipe(take(1)).subscribe(x => this.candidateWorkflow = x.candidateWorkflow);
   }
 
-  protected readonly CandidateWorkflowStepStatusesEnum = CandidateWorkflowStepStatusesEnum;
+  protected readonly CandidateWorkflowStepStatusesEnum = CandidateWorkflowStepStatuses;
 
-  onCompleteTask(cws: CandidateWorkflowStepInterface) {
+  onCompleteTask(cws: CandidateWorkflowStep) {
     switch(cws.workflowStep?.step.stepType) {
-      case StepTypesEnum.DataEntry:
+      case StepTypes.DataEntry:
         alert('Data Entry');
         return;
-      case StepTypesEnum.ExternalHttpTask:
+      case StepTypes.ExternalHttpTask:
         alert('External HTTP Task');
         return;
-      case StepTypesEnum.FileSubmission:
+      case StepTypes.FileSubmission:
         alert('File Submission');
         return;
     }

@@ -1,17 +1,11 @@
-import {WorkflowStepTypesEnum} from "./workflow-step-types.enum";
-import {StepTypesEnum} from "./step-types.enum";
+import {StepTypes} from "./step.types";
 
-/**
- * The fundamental definition of a task. Provides a default template for a WorkflowStep.
- */
-export interface StepInterface {
+/** The fundamental definition of a task. Provides a default template for a WorkflowStep. */
+export interface Step {
   id: number;
 
   /** The type of step this entity represents. */
-  stepType: StepTypesEnum;
-
-  /** The specific nature of this workflow step. */
-  workflowStepType: WorkflowStepTypesEnum;
+  stepType: StepTypes;
 
   /** The default name of this step. Can be overridden by any WorkflowStep to which this step belongs. */
   nameDefault: string;

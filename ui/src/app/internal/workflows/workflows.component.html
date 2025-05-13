@@ -1,7 +1,13 @@
 <div class="workflow-container mat-typography">
+
   <!-- Column 1: Workflows -->
   <mat-card class="column">
     <mat-card-title>Workflows</mat-card-title>
+    <div class="card-instructions">
+      Select a workflow to manage its configuration and/or its associated steps, or click <strong>Add New
+      Workflow</strong> to configure a new
+      one.
+    </div>
     <mat-nav-list>
       <div
         *ngFor="let workflow of workflows"
@@ -14,70 +20,101 @@
           {{ workflow.name }}
         </div>
         <div *ngIf="workflow === selectedWorkflow" class="workflow-actions">
-          <button mat-icon-button color="primary"
-                  matTooltip="Manage job title assignments for {{ selectedWorkflow.name }}">
-            <mat-icon>assignment</mat-icon>
+          <button mat-icon-button [matMenuTriggerFor]="workflowMenu" aria-label="Workflow Actions">
+            <mat-icon>more_vert</mat-icon>
           </button>
-          <button mat-icon-button color="primary" matTooltip="Rename {{ selectedWorkflow.name }}">
-            <mat-icon>edit</mat-icon>
-          </button>
-          <button mat-icon-button color="warn" matTooltip="Delete {{ selectedWorkflow.name }}"
-                  (click)="deleteWorkflow(selectedWorkflow)">
-            <mat-icon>delete</mat-icon>
-          </button>
+
+          <mat-menu #workflowMenu="matMenu">
+            <button mat-menu-item>
+              <mat-icon>assignment</mat-icon>
+              <span>Manage Job Assignments</span>
+            </button>
+            <button mat-menu-item>
+              <mat-icon>edit</mat-icon>
+              <span>Rename Workflow</span>
+            </button>
+            <button mat-menu-item>
+              <mat-icon>content_copy</mat-icon>
+              <span>Copy to New Workflow</span>
+            </button>
+            <button mat-menu-item (click)="deleteWorkflow(selectedWorkflow)">
+              <mat-icon color="warn">delete</mat-icon>
+              <span>Delete Workflow</span>
+            </button>
+          </mat-menu>
         </div>
+
       </div>
     </mat-nav-list>
-
-    <mat-form-field appearance="outline">
-      <mat-label>New Workflow Name</mat-label>
-      <input matInput [(ngModel)]="newWorkflowName"/>
-    </mat-form-field>
-
-    <button mat-raised-button color="primary" disabled *ngIf="!newWorkflowName">Create</button>
-    <button mat-raised-button color="primary" (click)="createWorkflow()" *ngIf="newWorkflowName">
-      Create "{{ newWorkflowName }}"
+    <button mat-raised-button color="accent" (click)="createNewWorkflow()">
+      <mat-icon>add_circle</mat-icon>
+      Add New Workflow
     </button>
   </mat-card>
 
   <!-- Column 2: Workflow Steps -->
   <mat-card class="column" *ngIf="selectedWorkflow">
     <mat-card-title>Steps in "{{ selectedWorkflow.name }}"</mat-card-title>
-    <div *ngFor="let step of selectedWorkflow.steps; let i = index" class="step-row">
+    <div class="card-instructions">
+      Reorder, configure, or remove steps in the selected workflow. Once finished, click <strong>Save
+      Workflow Changes</strong> to finalize your changes.
+    </div>
+    <div *ngFor="let step of selectedWorkflow.workflowSteps; let i = index" class="step-row">
       <div class="step-name">
-        {{ step.name }}
+        {{ step.stepName }}
       </div>
       <div class="step-actions">
-        <button mat-icon-button (click)="moveStepUp(i)" [disabled]="i === 0"
-                matTooltip="Move {{ step.name }} upward in {{ selectedWorkflow.name }}">
+        <button mat-icon-button color="primary" (click)="moveStepUp(i)" [disabled]="i === 0"
+                matTooltip="Move {{ step.stepName }} upward in {{ selectedWorkflow.name }}">
           <mat-icon>arrow_upward</mat-icon>
         </button>
-        <button mat-icon-button (click)="moveStepDown(i)" [disabled]="i === selectedWorkflow.steps.length - 1"
-                matTooltip="Move {{ step.name }} downward in {{ selectedWorkflow.name }}">
+        <button mat-icon-button color="primary" (click)="moveStepDown(i)"
+                [disabled]="i === selectedWorkflow.workflowSteps?.length ?? 0 - 1"
+                matTooltip="Move {{ step.stepName }} downward in {{ selectedWorkflow.name }}">
           <mat-icon>arrow_downward</mat-icon>
         </button>
-        <button mat-icon-button color="primary" matTooltip="Configure {{ step.name }}" (click)="configureStep(step)">
+        <button mat-icon-button color="primary" matTooltip="Configure {{ step.stepName }}"
+                (click)="configureStep(step)">
           <mat-icon>settings</mat-icon>
         </button>
-        <button mat-icon-button color="warn" (click)="removeStepFromWorkflow(step)"
-                matTooltip="Remove {{ step.name }} from {{ selectedWorkflow.name }}">
-          <mat-icon>delete</mat-icon>
+        <button mat-icon-button color="primary" (click)="removeStepFromWorkflow(step)"
+                matTooltip="Remove {{ step.stepName }} from {{ selectedWorkflow.name }}">
+          <mat-icon>east</mat-icon>
         </button>
       </div>
     </div>
+    <button mat-raised-button color="primary" (click)="saveSelectedWorkflow()">
+      <mat-icon>save</mat-icon>
+      Save Workflow Changes
+    </button>
   </mat-card>
 
   <!-- Column 3: Step Pool -->
   <mat-card class="column step-pool" *ngIf="selectedWorkflow">
     <mat-card-title>Step Pool</mat-card-title>
-    <div *ngFor="let step of stepPool" class="step-row clickable" (click)="addStepToWorkflow(step)">
-      <div class="step-name">{{ step.name }}</div>
+    <div class="card-instructions">
+      Manage steps that are reusable across workflows. Click to add them to the current workflow, or click
+      <strong>Add New Step</strong> to configure a new one.
+    </div>
+    <div *ngFor="let step of stepPool" class="step-row clickable">
+      <div class="step-name" (click)="addStepToWorkflow(step)">{{ step.nameDefault }}</div>
       <div class="step-actions">
         <button mat-icon-button color="primary" [disabled]="!selectedWorkflow"
-                matTooltip="Add {{ step.name }} to {{ selectedWorkflow.name }}">
-          <mat-icon>add</mat-icon>
+                matTooltip="Add {{ step.nameDefault }} to {{ selectedWorkflow.name }}"
+                (click)="addStepToWorkflow(step)">
+          <mat-icon>west</mat-icon>
+        </button>
+        <button mat-icon-button color="warn"
+                matTooltip="Delete {{ step.nameDefault }} from the pool and from all workflows."
+                (click)="deleteStep(step)">
+          <mat-icon>delete</mat-icon>
         </button>
       </div>
     </div>
+    <button mat-raised-button color="accent" (click)="createNewStep()">
+      <mat-icon>add_circle</mat-icon>
+      Add New Step
+    </button>
   </mat-card>
+
 </div>

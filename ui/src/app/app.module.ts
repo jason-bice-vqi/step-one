@@ -41,6 +41,7 @@ import {
 import {MAT_DIALOG_DEFAULT_OPTIONS, MatDialogModule} from "@angular/material/dialog";
 import {MatSlideToggleModule} from "@angular/material/slide-toggle";
 import { ConfirmDeleteDialogComponent } from './confirm-delete-dialog/confirm-delete-dialog.component';
+import { StepDialogComponent } from './internal/step-dialog/step-dialog.component';
 
 export function MSALInstanceFactory(): PublicClientApplication {
   return new PublicClientApplication({
@@ -89,7 +90,8 @@ export function MSALInstanceFactory(): PublicClientApplication {
     NavBarComponent,
     WorkflowsComponent,
     WorkflowStepConfigDialogComponent,
-    ConfirmDeleteDialogComponent
+    ConfirmDeleteDialogComponent,
+    StepDialogComponent
   ],
   imports: [
     BrowserModule,
