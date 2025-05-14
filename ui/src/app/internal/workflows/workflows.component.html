@@ -29,11 +29,11 @@
               <mat-icon>assignment</mat-icon>
               <span>Manage Job Assignments</span>
             </button>
-            <button mat-menu-item>
+            <button mat-menu-item (click)="editWorkflow(selectedWorkflow)">
               <mat-icon>edit</mat-icon>
-              <span>Rename Workflow</span>
+              <span>Edit Workflow</span>
             </button>
-            <button mat-menu-item>
+            <button mat-menu-item (click)="copyWorkflow(selectedWorkflow)">
               <mat-icon>content_copy</mat-icon>
               <span>Copy to New Workflow</span>
             </button>
@@ -46,7 +46,7 @@
 
       </div>
     </mat-nav-list>
-    <button mat-raised-button color="accent" (click)="createNewWorkflow()">
+    <button mat-raised-button color="accent" (click)="createWorkflow()">
       <mat-icon>add_circle</mat-icon>
       Add New Workflow
     </button>
@@ -54,7 +54,7 @@
 
   <!-- Column 2: Workflow Steps -->
   <mat-card class="column" *ngIf="selectedWorkflow">
-    <mat-card-title>Steps in "{{ selectedWorkflow.name }}"</mat-card-title>
+    <mat-card-title>{{ selectedWorkflow.name }}</mat-card-title>
     <div class="card-instructions">
       Reorder, configure, or remove steps in the selected workflow. Once finished, click <strong>Save
       Workflow Changes</strong> to finalize your changes.

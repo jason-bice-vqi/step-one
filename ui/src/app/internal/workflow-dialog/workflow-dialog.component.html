@@ -1,0 +1,47 @@
+<h2 mat-dialog-title *ngIf="workflowDialogData.mode === 'copy'">
+  Copy Workflow
+</h2>
+<h2 mat-dialog-title *ngIf="workflowDialogData.mode === 'edit'">
+  Edit Workflow
+</h2>
+<h2 mat-dialog-title *ngIf="workflowDialogData.mode === 'create'">
+  Create Workflow
+</h2>
+
+<mat-dialog-content>
+  <div *ngIf="workflowDialogData.mode === 'copy'" class="context">
+    Copying workflow <strong>{{workflowDialogData.workflow!.name}}</strong>
+  </div>
+  <div *ngIf="workflowDialogData.mode === 'create' && workflow?.name" class="context">
+    Creating workflow <strong>{{workflow!.name}}</strong>
+  </div>
+  <div *ngIf="workflowDialogData.mode === 'edit'" class="context">
+    Editing workflow <strong>{{workflowDialogData.workflow!.name}}</strong>
+  </div>
+  <form>
+    <div class="form-row">
+      <mat-form-field appearance="fill" class="full-width">
+        <mat-label>Workflow Name</mat-label>
+        <input matInput [(ngModel)]="workflow.name" name="workflowName" required maxlength="100">
+      </mat-form-field>
+    </div>
+    <div class="form-row" *ngIf="workflowDialogData.mode === 'copy'">
+      <mat-slide-toggle [(ngModel)]="workflow.copyJobAssignments" name="copyJobAssignments">
+        Copy job assignments
+      </mat-slide-toggle>
+    </div>
+    <div class="form-row" *ngIf="workflowDialogData.mode === 'copy'">
+      <mat-slide-toggle [(ngModel)]="workflow.copySteps" name="copySteps">
+        Copy steps
+      </mat-slide-toggle>
+    </div>
+  </form>
+</mat-dialog-content>
+
+<mat-dialog-actions align="end">
+  <button mat-raised-button (click)="cancel()">Cancel</button>
+  <button mat-raised-button color="primary" (click)="save()" [disabled]="!workflow.name?.trim()">
+    <mat-icon>save</mat-icon>
+    Save Workflow
+  </button>
+</mat-dialog-actions>

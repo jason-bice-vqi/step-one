@@ -15,6 +15,6 @@ public class WorkflowPersistenceEngine(
             await operation.ExecuteAsync(pipelineOptions, cancellationToken);
         }
 
-        return await workflowService.GetAsync(pipelineOptions.UpdatedWorkflow.Id, cancellationToken);
+        return await workflowService.ShowAsync(pipelineOptions.UpdatedWorkflow.Id, cancellationToken);
     }
 }

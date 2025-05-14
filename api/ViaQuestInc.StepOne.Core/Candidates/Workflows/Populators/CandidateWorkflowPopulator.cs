@@ -20,7 +20,7 @@ public class CandidateWorkflowPopulator : IDataPopulator
         using var scope = serviceProvider.CreateScope();
         var workflowService = scope.ServiceProvider.GetRequiredService<WorkflowService>();
         var candidateWorkflowService = scope.ServiceProvider.GetRequiredService<CandidateWorkflowService>();
-        var workflow = await workflowService.GetAsync(1, cancellationToken);
+        var workflow = await workflowService.ShowAsync(1, cancellationToken);
 
         await candidateWorkflowService.CreateAsync(candidate, workflow, cancellationToken);
     }

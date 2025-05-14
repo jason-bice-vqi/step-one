@@ -1,4 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
+using System.Text.Json.Serialization;
 using ViaQuestInc.StepOne.Core.Workflows.Steps;
 using ViaQuestInc.StepOne.Kernel.Entity;
 
@@ -11,6 +13,26 @@ public class Workflow : EntityBase<int>
     /// </summary>
     [MaxLength(100)]
     public required string? Name { get; set; }
+    
+    public int? CopiedFromWorkflowId { get; set; }
+    
+    /// <summary>
+    /// The workflow from which this workflow was copied, if this was a copied workflow.
+    /// </summary>
+    [JsonIgnore]
+    public Workflow? CopiedFromWorkflow { get; set; }
+    
+    /// <summary>
+    /// Whether the job assignments should be copied to this workflow when copied from <see cref="CopiedFromWorkflow"/>.
+    /// </summary>
+    [NotMapped]
+    public bool CopyJobAssignments { get; set; }
+    
+    /// <summary>
+    /// Whether the steps should be copied to this workflow when copied from <see cref="CopiedFromWorkflow"/>.
+    /// </summary>
+    [NotMapped]
+    public bool CopySteps { get; set; }
     
     public ICollection<JobTitleWorkflow>? JobTitleWorkflows { get; set; }
     

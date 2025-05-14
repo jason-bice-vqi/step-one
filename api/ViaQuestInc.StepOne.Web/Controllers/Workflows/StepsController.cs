@@ -13,9 +13,9 @@ public class StepsController(StepService stepService) : ApiControllerBase
     [HttpPost]
     public async Task<IActionResult> Create([FromBody] Step step, CancellationToken cancellationToken)
     {
-        var id = await stepService.CreateAsync(step, cancellationToken);
+        var createdStep = await stepService.CreateAsync(step, cancellationToken);
 
-        return CreatedAtRoute(nameof(Show), new { stepId = id }, step);
+        return CreatedAtRoute(nameof(ShowStep), new { stepId = createdStep.Id }, createdStep);
     }
     
     [HttpDelete("{stepId:int}")]
@@ -38,8 +38,8 @@ public class StepsController(StepService stepService) : ApiControllerBase
         return Ok(steps);
     }
     
-    [HttpGet("{stepId:int}", Name = nameof(Show))]
-    public async Task<IActionResult> Show(int stepId, CancellationToken cancellationToken)
+    [HttpGet("{stepId:int}", Name = nameof(ShowStep))]
+    public async Task<IActionResult> ShowStep(int stepId, CancellationToken cancellationToken)
     {
         var step = await stepService.ShowAsync(stepId, cancellationToken);
 

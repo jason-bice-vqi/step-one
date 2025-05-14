@@ -1,17 +1,18 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {
   WorkflowStepConfig,
   WorkflowStepConfigDialogComponent,
 } from "../workflow-step-config-dialog/workflow-step-config-dialog.component";
-import { MatDialog } from "@angular/material/dialog";
-import { ConfirmDeleteDialogComponent } from "../../confirm-delete-dialog/confirm-delete-dialog.component";
-import { filter, switchMap, take, tap } from "rxjs";
-import { Workflow } from "../../models/workflows/workflow";
-import { WorkflowStep } from "../../models/workflows/workflow.step";
-import { WorkflowService } from "../../services/workflows/workflow.service";
-import { StepService } from "../../services/workflows/step.service";
-import { Step } from "../../models/workflows/step";
-import { StepDialogComponent } from "../step-dialog/step-dialog.component";
+import {MatDialog} from "@angular/material/dialog";
+import {ConfirmDeleteDialogComponent} from "../../confirm-delete-dialog/confirm-delete-dialog.component";
+import {filter, switchMap, take, tap} from "rxjs";
+import {Workflow} from "../../models/workflows/workflow";
+import {WorkflowStep} from "../../models/workflows/workflow.step";
+import {WorkflowService} from "../../services/workflows/workflow.service";
+import {StepService} from "../../services/workflows/step.service";
+import {Step} from "../../models/workflows/step";
+import {StepDialogComponent} from "../step-dialog/step-dialog.component";
+import {WorkflowDialogComponent} from "../workflow-dialog/workflow-dialog.component";
 
 @Component({
   selector: 'app-workflows',
@@ -31,9 +32,8 @@ export class WorkflowsComponent implements OnInit {
   /** The currently selected workflow. **/
   selectedWorkflow: Workflow | null = null;
 
-  newWorkflowName = '';
-
-  constructor(private dialog: MatDialog, private stepService: StepService, private workflowService: WorkflowService) {}
+  constructor(private dialog: MatDialog, private stepService: StepService, private workflowService: WorkflowService) {
+  }
 
   ngOnInit(): void {
     this.loadSteps();
@@ -47,8 +47,11 @@ export class WorkflowsComponent implements OnInit {
     });
   }
 
-  loadWorkflows() {
-    this.workflowService.get().pipe(take(1)).subscribe((x) => this.workflows = x);
+  loadWorkflows(): void {
+    this.workflowService.get().pipe(take(1)).subscribe(x => {
+      this.workflows = x;
+      this.selectedWorkflow = null;
+    });
   }
 
   refreshLocalStepPool() {
@@ -68,8 +71,34 @@ export class WorkflowsComponent implements OnInit {
     this.refreshLocalStepPool();
   }
 
-  createNewWorkflow() {
-    alert('Coming soon.');
+  createWorkflow() {
+    this.manageWorkflow('create');
+  }
+
+  copyWorkflow(workflow: Workflow) {
+    this.manageWorkflow('copy', workflow);
+  }
+
+  editWorkflow(workflow: Workflow) {
+    this.manageWorkflow('edit', workflow);
+  }
+
+  manageWorkflow(mode: 'copy' | 'create' | 'edit', workflow?: Workflow) {
+    this.dialog.open(WorkflowDialogComponent, {
+      width: '600px',
+      data: { mode, workflow }
+    }).afterClosed().pipe(
+      filter((result): result is Workflow => !!result),
+      switchMap(result => {
+        if (result.id) {
+          return this.workflowService.update(result);
+        } else {
+          return this.workflowService.create(result);
+        }
+      }),
+      take(1),
+      tap(() => this.loadWorkflows())
+    ).subscribe();
   }
 
   saveSelectedWorkflow() {
@@ -77,7 +106,7 @@ export class WorkflowsComponent implements OnInit {
   }
 
   createNewStep() {
-    this.dialog.open(StepDialogComponent, { width: '600px' }).afterClosed().pipe(
+    this.dialog.open(StepDialogComponent, {width: '600px'}).afterClosed().pipe(
       take(1),
       filter(result => !!result),
       switchMap(result => this.stepService.create(result)),
@@ -157,8 +186,9 @@ export class WorkflowsComponent implements OnInit {
     }).afterClosed().pipe(
       take(1),
       filter(result => !!result),
+      switchMap(() => this.workflowService.delete(selectedWorkflow)),
       tap(() => {
-        alert('Coming soon.');
+        this.loadWorkflows();
       })
     ).subscribe();
   }

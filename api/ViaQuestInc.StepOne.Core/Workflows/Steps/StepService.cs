@@ -5,16 +5,9 @@ namespace ViaQuestInc.StepOne.Core.Workflows.Steps;
 
 public class StepService(IRepository repository)
 {
-    public async Task<int> CreateAsync(Step step, CancellationToken cancellationToken)
+    public async Task<Step> CreateAsync(Step step, CancellationToken cancellationToken)
     {
-        await repository.CreateAsync(step, cancellationToken);
-
-        return step.Id;
-    }
-
-    public async Task<int> DeleteAsync(Step step, CancellationToken cancellationToken)
-    {
-        return await repository.DeleteAsync(step, cancellationToken);
+        return await repository.CreateAsync(step, cancellationToken);
     }
     
     public async Task<IEnumerable<Step>> IndexAsync(CancellationToken cancellationToken)
@@ -25,5 +18,10 @@ public class StepService(IRepository repository)
     public async Task<Step?> ShowAsync(int stepId, CancellationToken cancellationToken)
     {
         return await repository.FindAsync<Step>(stepId, cancellationToken);
+    }
+    
+    public async Task<int> DeleteAsync(Step step, CancellationToken cancellationToken)
+    {
+        return await repository.DeleteAsync(step, cancellationToken);
     }
 }

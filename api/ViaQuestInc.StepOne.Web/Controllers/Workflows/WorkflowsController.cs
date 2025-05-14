@@ -11,11 +11,31 @@ namespace ViaQuestInc.StepOne.Web.Controllers.Workflows;
 [Route("workflows")]
 public class WorkflowsController(WorkflowService workflowService) : ApiControllerBase
 {
-    public async Task<IActionResult> Get(CancellationToken cancellationToken)
+    [HttpGet]
+    public async Task<IActionResult> Index(CancellationToken cancellationToken)
     {
-        var workflows = await workflowService.GetAsync(cancellationToken);
+        var workflows = await workflowService.IndexAsync(cancellationToken);
 
         return Ok(workflows);
+    }
+
+    [HttpGet("{workflowId:int}", Name = nameof(ShowWorkflow))]
+    public async Task<IActionResult> ShowWorkflow([FromRoute] int workflowId, CancellationToken cancellationToken)
+    {
+        var workflow = await workflowService.ShowAsync(workflowId, cancellationToken);
+
+        if (workflow == null) return NotFound($"Workflow {workflowId} was not found.");
+
+        return Ok(workflow);
+    }
+
+    // TODO - authorization
+    [HttpPost]
+    public async Task<IActionResult> Create([FromBody] Workflow workflow, CancellationToken cancellationToken)
+    {
+        var createdWorkflow = await workflowService.CreateAsync(workflow, cancellationToken);
+
+        return CreatedAtRoute(nameof(ShowWorkflow), new { workflowId = createdWorkflow.Id }, createdWorkflow);
     }
 
     // TODO - authorization
@@ -24,19 +44,31 @@ public class WorkflowsController(WorkflowService workflowService) : ApiControlle
         [FromServices] WorkflowPersistenceEngine workflowPersistenceEngine,
         CancellationToken cancellationToken)
     {
-        var originalWorkflow = await workflowService.GetAsync(workflowId, cancellationToken);
+        var originalWorkflow = await workflowService.ShowAsync(workflowId, cancellationToken);
 
         if (originalWorkflow == null) return NotFound($"Workflow {workflowId} was not found.");
 
         if (workflowId != updatedWorkflow.Id)
         {
-            return BadRequest($"The supplied workflow does not belong to workflow ID {workflowId}.");   
+            return BadRequest($"The supplied workflow does not belong to workflow ID {workflowId}.");
         }
 
         var pipelineOptions = new PipelineOptions(originalWorkflow, updatedWorkflow);
-        
+
         updatedWorkflow = await workflowPersistenceEngine.ExecuteAsync(pipelineOptions, cancellationToken);
 
         return Ok(updatedWorkflow);
+    }
+
+    [HttpDelete("{workflowId:int}")]
+    public async Task<IActionResult> Delete(int workflowId, CancellationToken cancellationToken)
+    {
+        var workflow = await workflowService.ShowAsync(workflowId, cancellationToken);
+
+        if (workflow == null) return NotFound($"Workflow {workflowId} was not found.");
+
+        await workflowService.DeleteAsync(workflow, cancellationToken);
+
+        return NoContent();
     }
 }
