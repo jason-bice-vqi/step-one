@@ -43,6 +43,7 @@ import {MatSlideToggleModule} from "@angular/material/slide-toggle";
 import { ConfirmDeleteDialogComponent } from './confirm-delete-dialog/confirm-delete-dialog.component';
 import { StepDialogComponent } from './internal/step-dialog/step-dialog.component';
 import { WorkflowDialogComponent } from './internal/workflow-dialog/workflow-dialog.component';
+import { GlowOnInitDirective } from './directives/glow-on-init.directive';
 
 export function MSALInstanceFactory(): PublicClientApplication {
   return new PublicClientApplication({
@@ -93,7 +94,8 @@ export function MSALInstanceFactory(): PublicClientApplication {
     WorkflowStepConfigDialogComponent,
     ConfirmDeleteDialogComponent,
     StepDialogComponent,
-    WorkflowDialogComponent
+    WorkflowDialogComponent,
+    GlowOnInitDirective
   ],
   imports: [
     BrowserModule,

@@ -14,11 +14,13 @@ public class Workflow : EntityBase<int>
     [MaxLength(100)]
     public required string? Name { get; set; }
     
+    /// <summary>
+    /// The workflow from which this workflow was copied, if this was a copied workflow. Used to copy navigation
+    /// properties on inbound requests.
+    /// </summary>
+    [NotMapped]
     public int? CopiedFromWorkflowId { get; set; }
     
-    /// <summary>
-    /// The workflow from which this workflow was copied, if this was a copied workflow.
-    /// </summary>
     [JsonIgnore]
     public Workflow? CopiedFromWorkflow { get; set; }
     

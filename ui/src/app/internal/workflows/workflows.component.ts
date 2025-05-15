@@ -1,4 +1,4 @@
-import {Component, OnInit} from '@angular/core';
+import {ChangeDetectorRef, Component, OnInit} from '@angular/core';
 import {
   WorkflowStepConfig,
   WorkflowStepConfigDialogComponent,
@@ -47,17 +47,23 @@ export class WorkflowsComponent implements OnInit {
     });
   }
 
-  loadWorkflows(): void {
+  loadWorkflows(selectWorkflow?: Workflow | null): void {
     this.workflowService.get().pipe(take(1)).subscribe(x => {
       this.workflows = x;
       this.selectedWorkflow = null;
+
+      if (selectWorkflow) {
+        selectWorkflow = x.filter(w => w.id === selectWorkflow!.id)[0];
+
+        this.selectWorkflow(selectWorkflow!);
+      }
+
+      this.refreshLocalStepPool();
     });
   }
 
   refreshLocalStepPool() {
-    if (!this.selectedWorkflow) return;
-
-    const workflowSteps: WorkflowStep[] = this.selectedWorkflow.workflowSteps!;
+    const workflowSteps: WorkflowStep[] = this.selectedWorkflow?.workflowSteps ?? [];
     const steps: Step[] = workflowSteps.map(x => x.step);
     const stepIds: number[] = steps.map(x => x.id);
 
@@ -97,7 +103,7 @@ export class WorkflowsComponent implements OnInit {
         }
       }),
       take(1),
-      tap(() => this.loadWorkflows())
+      tap((x) => this.loadWorkflows(x))
     ).subscribe();
   }
 
@@ -159,9 +165,9 @@ export class WorkflowsComponent implements OnInit {
     [steps[index], steps[index + 1]] = [steps[index + 1], steps[index]];
   }
 
-  configureStep(step: WorkflowStep) {
+  configureWorkflowStep(step: WorkflowStep) {
     this.dialog.open(WorkflowStepConfigDialogComponent, {
-      width: '400px',
+      width: '600px',
       data: {
         name: step.stepName,
         blockDownstream: step.blockDownstream || false,
@@ -207,5 +213,9 @@ export class WorkflowsComponent implements OnInit {
         this.loadWorkflows();
       })
     ).subscribe();
+  }
+
+  configureStep(step: Step) {
+    
   }
 }
