@@ -9,12 +9,16 @@ import {DomSanitizer, SafeHtml} from "@angular/platform-browser";
 })
 export class ConfirmDeleteDialogComponent {
   message: SafeHtml;
+  yesText: string = 'Delete';
+  noText: string = 'Cancel';
 
   constructor(
-    @Inject(MAT_DIALOG_DATA) public data: { message: string },
+    @Inject(MAT_DIALOG_DATA) public data: { message: string, yesText?: string, noText?: string },
     public dialogRef: MatDialogRef<ConfirmDeleteDialogComponent>,
     private sanitizer: DomSanitizer
   ) {
     this.message = this.sanitizer.bypassSecurityTrustHtml(data.message);
+    this.yesText = data.yesText ?? this.yesText;
+    this.noText = data.noText ?? this.noText;
   }
 }

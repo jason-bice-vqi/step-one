@@ -3,7 +3,7 @@
 namespace ViaQuestInc.StepOne.Core.Workflows.Persistence.Operations;
 
 /// <summary>
-/// An operation that persists the steps included on the workflow that are not already persisted.
+/// An operation that persists the steps included on the workflow.
 /// </summary>
 public class PersistWorkflowStepsOperation(IRepository repository) : IWorkflowPersistenceOperation
 {
@@ -14,8 +14,8 @@ public class PersistWorkflowStepsOperation(IRepository repository) : IWorkflowPe
 
     public async Task ExecuteAsync(PipelineOptions pipelineOptions, CancellationToken cancellationToken)
     {
-        var stepsToPersist = pipelineOptions.UpdatedWorkflow.WorkflowSteps.Where(x => x.Id == default).ToArray();
+        var workflowSteps = pipelineOptions.UpdatedWorkflow.WorkflowSteps.ToArray();
         
-        await repository.CreateRangeAsync(stepsToPersist, cancellationToken);
+        await repository.UpdateRangeAsync(workflowSteps, cancellationToken);
     }
 }

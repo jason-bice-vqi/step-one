@@ -44,6 +44,7 @@ import { ConfirmDeleteDialogComponent } from './confirm-delete-dialog/confirm-de
 import { StepDialogComponent } from './internal/step-dialog/step-dialog.component';
 import { WorkflowDialogComponent } from './internal/workflow-dialog/workflow-dialog.component';
 import { GlowOnInitDirective } from './directives/glow-on-init.directive';
+import { WorkflowStepNamePipe } from './pipes/workflows/workflow-step-name.pipe';
 
 export function MSALInstanceFactory(): PublicClientApplication {
   return new PublicClientApplication({
@@ -95,7 +96,9 @@ export function MSALInstanceFactory(): PublicClientApplication {
     ConfirmDeleteDialogComponent,
     StepDialogComponent,
     WorkflowDialogComponent,
-    GlowOnInitDirective
+    GlowOnInitDirective,
+    WorkflowStepNamePipe,
+    WorkflowStepNamePipe
   ],
   imports: [
     BrowserModule,

@@ -13,6 +13,7 @@ import {StepService} from "../../services/workflows/step.service";
 import {Step} from "../../models/workflows/step";
 import {StepDialogComponent} from "../step-dialog/step-dialog.component";
 import {WorkflowDialogComponent} from "../workflow-dialog/workflow-dialog.component";
+import {sortWorkflows, sortWorkflowSteps} from "../../functions/workflow.functions";
 
 @Component({
   selector: 'app-workflows',
@@ -32,6 +33,9 @@ export class WorkflowsComponent implements OnInit {
   /** The currently selected workflow. **/
   selectedWorkflow: Workflow | null = null;
 
+  /** Whether the configuration of the currently selected workflow's steps contains unsaved changes. */
+  workflowStepsDirty = false;
+
   constructor(private dialog: MatDialog, private stepService: StepService, private workflowService: WorkflowService) {
   }
 
@@ -48,12 +52,14 @@ export class WorkflowsComponent implements OnInit {
   }
 
   loadWorkflows(selectWorkflow?: Workflow | null): void {
-    this.workflowService.get().pipe(take(1)).subscribe(x => {
-      this.workflows = x;
+    this.workflowService.get().pipe(take(1)).subscribe(workflows => {
+      sortWorkflows(workflows);
+
+      this.workflows = workflows;
       this.selectedWorkflow = null;
 
       if (selectWorkflow) {
-        selectWorkflow = x.filter(w => w.id === selectWorkflow!.id)[0];
+        selectWorkflow = workflows.filter(w => w.id === selectWorkflow!.id)[0];
 
         this.selectWorkflow(selectWorkflow!);
       }
@@ -72,7 +78,30 @@ export class WorkflowsComponent implements OnInit {
       .sort((a, b) => a.nameDefault.localeCompare(b.nameDefault));
   }
 
-  selectWorkflow(workflow: Workflow) {
+  confirmSelectWorkflow(workflow: Workflow) {
+    if (this.workflowStepsDirty) {
+      this.dialog.open(ConfirmDeleteDialogComponent, {
+        data: {
+          message: `You have unsaved changes on the workflow <strong>${this.selectedWorkflow!.name}</strong>, and if you select a new workflow those changes will be lost.<br/><br/>Do you want to continue with selecting the new workflow?`,
+          yesText: 'Yes - Ignore Changes',
+          noText: 'No - Continue Working'
+        }
+      }).afterClosed().pipe(
+        take(1),
+        filter(result => !!result),
+        tap(() => {
+          this.selectWorkflow(workflow);
+        })
+      ).subscribe();
+    } else {
+      this.selectWorkflow(workflow);
+    }
+  }
+
+  private selectWorkflow(workflow:Workflow) {
+    sortWorkflowSteps(workflow);
+
+    this.workflowStepsDirty = false;
     this.selectedWorkflow = workflow;
     this.refreshLocalStepPool();
   }
@@ -108,7 +137,17 @@ export class WorkflowsComponent implements OnInit {
   }
 
   saveSelectedWorkflow() {
-    this.workflowService.update(this.selectedWorkflow!).pipe(take(1), tap(x => this.selectedWorkflow = x)).subscribe();
+    this.workflowService.update(this.selectedWorkflow!)
+      .pipe(
+        take(1),
+        tap((updatedWorkflow: Workflow) => {
+          const index = this.workflows.findIndex(w => w.id === updatedWorkflow.id);
+
+          this.workflows[index] = updatedWorkflow;
+          this.selectWorkflow(updatedWorkflow);
+        })
+      )
+      .subscribe();
   }
 
   createNewStep() {
@@ -125,6 +164,8 @@ export class WorkflowsComponent implements OnInit {
 
   addStepToWorkflow(step: Step) {
     if (!this.selectedWorkflow) return;
+
+    this.workflowStepsDirty = true;
 
     const workflowStep: WorkflowStep = {
       blockDownstream: false,
@@ -145,41 +186,52 @@ export class WorkflowsComponent implements OnInit {
   removeStepFromWorkflow(workflowStep: WorkflowStep) {
     if (!this.selectedWorkflow) return;
 
+    this.workflowStepsDirty = true;
+
     this.selectedWorkflow!.workflowSteps = this.selectedWorkflow!.workflowSteps!.filter(s => s.id !== workflowStep.id);
+
     this.refreshLocalStepPool();
   }
 
   moveStepUp(index: number) {
     if (index === 0 || !this.selectedWorkflow) return;
 
+    this.workflowStepsDirty = true;
+
     const steps = this.selectedWorkflow.workflowSteps!;
+
     [steps[index - 1], steps[index]] = [steps[index], steps[index - 1]];
   }
 
   moveStepDown(index: number) {
     if (!this.selectedWorkflow) return;
 
+    this.workflowStepsDirty = true;
+
     const steps = this.selectedWorkflow.workflowSteps!;
+
     if (index >= steps.length - 1) return;
 
     [steps[index], steps[index + 1]] = [steps[index + 1], steps[index]];
   }
 
-  configureWorkflowStep(step: WorkflowStep) {
+  configureWorkflowStep(workflowStep: WorkflowStep) {
     this.dialog.open(WorkflowStepConfigDialogComponent, {
       width: '600px',
       data: {
-        name: step.stepName,
-        blockDownstream: step.blockDownstream || false,
-        requiresAdminApproval: step.requiresAdminConfirmation || false
+        name: workflowStep.stepName,
+        blockDownstream: workflowStep.blockDownstream || false,
+        requiresAdminApproval: workflowStep.requiresAdminConfirmation || false
       }
     }).afterClosed().pipe(
       take(1),
       filter((result): result is WorkflowStepConfig => !!result),
       tap(result => {
-        step.stepName = result.name;
-        step.blockDownstream = result.blockDownstream;
-        step.requiresAdminConfirmation = result.requiresAdminApproval;
+        this.workflowStepsDirty = true;
+
+        workflowStep.stepNameOverride = result.name != workflowStep.stepName && result.name ? result.name : null;
+        workflowStep.blockDownstream = result.blockDownstream;
+        workflowStep.requiresAdminConfirmation = result.requiresAdminApproval;
       })
     ).subscribe();
   }
@@ -216,6 +268,6 @@ export class WorkflowsComponent implements OnInit {
   }
 
   configureStep(step: Step) {
-    
+
   }
 }

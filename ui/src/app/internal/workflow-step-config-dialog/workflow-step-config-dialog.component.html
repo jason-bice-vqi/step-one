@@ -2,7 +2,11 @@
 <mat-dialog-content class="dialog-content">
   <mat-form-field appearance="outline" class="full-width">
     <mat-label>Display Name Override</mat-label>
-    <input matInput [(ngModel)]="data.name" />
+    <input matInput [(ngModel)]="data.name"/>
+
+    <button *ngIf="data.name" matSuffix mat-icon-button aria-label="Clear" (click)="data.name = ''">
+      <mat-icon>close</mat-icon>
+    </button>
   </mat-form-field>
 
   <mat-slide-toggle [(ngModel)]="data.blockDownstream">

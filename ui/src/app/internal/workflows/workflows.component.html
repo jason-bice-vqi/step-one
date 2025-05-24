@@ -12,7 +12,7 @@
       <div
         *ngFor="let workflow of workflows"
         class="workflow-item"
-        (click)="selectWorkflow(workflow)"
+        (click)="confirmSelectWorkflow(workflow)"
         [class.selected]="workflow === selectedWorkflow"
       >
         <div class="workflow-name">
@@ -67,29 +67,29 @@
       Workflow Changes</strong> to finalize your changes.
     </div>
     <div *ngFor="let step of selectedWorkflow.workflowSteps; let i = index" class="step-row" [glowOnInit]="'green'">
-      <div class="step-index">{{ i + 1 }}. {{ step.stepName }}</div>
+      <div class="step-index">{{ i + 1 }}. {{ step | workflowStepName }}</div>
       <div class="step-actions">
         <button mat-icon-button color="primary" (click)="moveStepUp(i)" [disabled]="i === 0"
-                matTooltip="Move {{ step.stepName }} upward in {{ selectedWorkflow.name }}.">
+                matTooltip="Move {{ step | workflowStepName }} upward in {{ selectedWorkflow.name }}.">
           <mat-icon>arrow_upward</mat-icon>
         </button>
         <button mat-icon-button color="primary" (click)="moveStepDown(i)"
                 [disabled]="i === (selectedWorkflow.workflowSteps?.length ?? 0) - 1"
-                matTooltip="Move {{ step.stepName }} downward in {{ selectedWorkflow.name }}.">
+                matTooltip="Move {{ step | workflowStepName }} downward in {{ selectedWorkflow.name }}.">
           <mat-icon>arrow_downward</mat-icon>
         </button>
         <button mat-icon-button color="primary"
-                matTooltip="Configure {{ step.stepName }} for {{ selectedWorkflow.name }}."
+                matTooltip="Configure {{ step | workflowStepName }} for {{ selectedWorkflow.name }}."
                 (click)="configureWorkflowStep(step)">
           <mat-icon>settings</mat-icon>
         </button>
         <button mat-icon-button color="primary" (click)="removeStepFromWorkflow(step)"
-                matTooltip="Remove {{ step.stepName }} from {{ selectedWorkflow.name }}.">
+                matTooltip="Remove {{ step | workflowStepName }} from {{ selectedWorkflow.name }}.">
           <mat-icon>east</mat-icon>
         </button>
       </div>
     </div>
-    <button mat-raised-button color="primary" (click)="saveSelectedWorkflow()">
+    <button mat-raised-button color="primary" (click)="saveSelectedWorkflow()" [disabled]="!workflowStepsDirty">
       <mat-icon>save</mat-icon>
       Save Workflow Changes
     </button>
