@@ -1,11 +1,6 @@
-import { Component, Inject } from '@angular/core';
-import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
-
-export interface WorkflowStepConfig {
-  name: string;
-  blockDownstream: boolean;
-  requiresAdminApproval: boolean;
-}
+import {Component, Inject} from '@angular/core';
+import {MAT_DIALOG_DATA, MatDialogRef} from '@angular/material/dialog';
+import {WorkflowStep} from "../../models/workflows/workflow.step";
 
 @Component({
   selector: 'app-workflow-step-config-modal',
@@ -15,7 +10,7 @@ export interface WorkflowStepConfig {
 export class WorkflowStepConfigDialogComponent {
   constructor(
     public dialogRef: MatDialogRef<WorkflowStepConfigDialogComponent>,
-    @Inject(MAT_DIALOG_DATA) public data: WorkflowStepConfig
+    @Inject(MAT_DIALOG_DATA) public data: WorkflowStep
   ) {}
 
   save() {

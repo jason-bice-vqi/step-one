@@ -1,8 +1,5 @@
 import {ChangeDetectorRef, Component, OnInit} from '@angular/core';
-import {
-  WorkflowStepConfig,
-  WorkflowStepConfigDialogComponent,
-} from "../workflow-step-config-dialog/workflow-step-config-dialog.component";
+import {WorkflowStepConfigDialogComponent,} from "../workflow-step-config-dialog/workflow-step-config-dialog.component";
 import {MatDialog} from "@angular/material/dialog";
 import {ConfirmDeleteDialogComponent} from "../../confirm-delete-dialog/confirm-delete-dialog.component";
 import {filter, switchMap, take, tap} from "rxjs";
@@ -171,7 +168,6 @@ export class WorkflowsComponent implements OnInit {
       blockDownstream: false,
       id: 0,
       isAdminConfirmationRequired: false,
-      requiresAdminConfirmation: false,
       step: step,
       stepId: step.id,
       stepIndex: 0,
@@ -216,22 +212,22 @@ export class WorkflowsComponent implements OnInit {
   }
 
   configureWorkflowStep(workflowStep: WorkflowStep) {
+    const workflowStepCopy = structuredClone(workflowStep);
+
     this.dialog.open(WorkflowStepConfigDialogComponent, {
       width: '600px',
-      data: {
-        name: workflowStep.stepName,
-        blockDownstream: workflowStep.blockDownstream || false,
-        requiresAdminApproval: workflowStep.requiresAdminConfirmation || false
-      }
+      data: workflowStepCopy
     }).afterClosed().pipe(
       take(1),
-      filter((result): result is WorkflowStepConfig => !!result),
+      filter((result): result is WorkflowStep => !!result),
       tap(result => {
         this.workflowStepsDirty = true;
 
-        workflowStep.stepNameOverride = result.name != workflowStep.stepName && result.name ? result.name : null;
-        workflowStep.blockDownstream = result.blockDownstream;
-        workflowStep.requiresAdminConfirmation = result.requiresAdminApproval;
+        const workflowStepIndex = this.selectedWorkflow!.workflowSteps!.findIndex(x => x.id === workflowStep.id);
+
+        if (workflowStepIndex !== -1) {
+          this.selectedWorkflow!.workflowSteps![workflowStepIndex] = {...result};
+        }
       })
     ).subscribe();
   }

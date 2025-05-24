@@ -102,7 +102,7 @@
       Manage steps that are reusable across workflows. Click to add them to the current workflow, or click
       <strong>Add New Step</strong> to configure a new one.
     </div>
-    <div *ngFor="let step of stepPool" class="step-row clickable"  [glowOnInit]="'orange'">
+    <div *ngFor="let step of stepPool" class="step-row clickable" [glowOnInit]="'orange'">
       <div class="step-name" (click)="addStepToWorkflow(step)">{{ step.nameDefault }}</div>
       <div class="step-actions">
         <button mat-icon-button color="primary" *ngIf="selectedWorkflow"

@@ -54,5 +54,6 @@ public class WorkflowStep : EntityBase<int>
     /// <summary>
     /// Whether this step requires administrator confirmation to be considered completed.
     /// </summary>
+    // TODO - get rid of this; dupe
     public bool RequiresAdminConfirmation { get; set; }
 }

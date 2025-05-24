@@ -33,7 +33,4 @@ export interface WorkflowStep {
 
   /** Whether this step should block downstream steps until it is completed. **/
   blockDownstream: boolean;
-
-  /** Whether this step requires administrator confirmation to be considered completed. **/
-  requiresAdminConfirmation: boolean;
 }

@@ -2,9 +2,9 @@
 <mat-dialog-content class="dialog-content">
   <mat-form-field appearance="outline" class="full-width">
     <mat-label>Display Name Override</mat-label>
-    <input matInput [(ngModel)]="data.name"/>
+    <input matInput [(ngModel)]="data.stepNameOverride"/>
 
-    <button *ngIf="data.name" matSuffix mat-icon-button aria-label="Clear" (click)="data.name = ''">
+    <button *ngIf="data.stepNameOverride" matSuffix mat-icon-button aria-label="Clear" (click)="data.stepNameOverride = null">
       <mat-icon>close</mat-icon>
     </button>
   </mat-form-field>
@@ -13,7 +13,7 @@
     Block downstream steps until complete
   </mat-slide-toggle>
 
-  <mat-slide-toggle [(ngModel)]="data.requiresAdminApproval">
+  <mat-slide-toggle [(ngModel)]="data.isAdminConfirmationRequired">
     Admin confirmation required to finalize a step as "completed"
   </mat-slide-toggle>
 </mat-dialog-content>
