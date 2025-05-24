@@ -79,9 +79,9 @@ export class WorkflowsComponent implements OnInit {
     if (this.workflowStepsDirty) {
       this.dialog.open(ConfirmDeleteDialogComponent, {
         data: {
-          message: `You have unsaved changes on the workflow <strong>${this.selectedWorkflow!.name}</strong>, and if you select a new workflow those changes will be lost.<br/><br/>Do you want to continue with selecting the new workflow?`,
-          yesText: 'Yes - Ignore Changes',
-          noText: 'No - Continue Working'
+          message: `You have unsaved changes on the workflow <strong>${this.selectedWorkflow!.name}</strong>, and if you select a new workflow those changes will be lost.`,
+          yesText: 'Discard Changes',
+          noText: 'Cancel'
         }
       }).afterClosed().pipe(
         take(1),
@@ -99,7 +99,11 @@ export class WorkflowsComponent implements OnInit {
     sortWorkflowSteps(workflow);
 
     this.workflowStepsDirty = false;
-    this.selectedWorkflow = workflow;
+
+    // Clone the workflow so there is consistent behavior if the selected workflow changes after changes were made and
+    // then discarded.
+    this.selectedWorkflow = structuredClone(workflow);
+
     this.refreshLocalStepPool();
   }
 

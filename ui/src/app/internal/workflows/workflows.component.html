@@ -13,7 +13,7 @@
         *ngFor="let workflow of workflows"
         class="workflow-item"
         (click)="confirmSelectWorkflow(workflow)"
-        [class.selected]="workflow === selectedWorkflow"
+        [class.selected]="workflow.id === selectedWorkflow?.id"
       >
         <div class="workflow-name">
           {{ workflow.name }}

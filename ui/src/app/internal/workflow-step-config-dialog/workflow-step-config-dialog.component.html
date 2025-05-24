@@ -4,7 +4,7 @@
     <mat-label>Display Name Override</mat-label>
     <input matInput [(ngModel)]="data.stepNameOverride"/>
 
-    <button *ngIf="data.stepNameOverride" matSuffix mat-icon-button aria-label="Clear" (click)="data.stepNameOverride = null">
+    <button *ngIf="data.stepNameOverride" matSuffix mat-icon-button aria-label="Clear" (click)="clearStepNameOverride()">
       <mat-icon>close</mat-icon>
     </button>
   </mat-form-field>

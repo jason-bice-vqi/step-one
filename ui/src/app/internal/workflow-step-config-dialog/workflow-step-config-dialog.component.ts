@@ -16,4 +16,8 @@ export class WorkflowStepConfigDialogComponent {
   save() {
     this.dialogRef.close(this.data);
   }
+
+  clearStepNameOverride() {
+    this.data.stepNameOverride = null;
+  }
 }
