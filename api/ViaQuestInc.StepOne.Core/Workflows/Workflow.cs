@@ -37,6 +37,6 @@ public class Workflow : EntityBase<int>
     public bool CopySteps { get; set; }
     
     public ICollection<JobTitleWorkflow>? JobTitleWorkflows { get; set; }
-    
-    public ICollection<WorkflowStep>? WorkflowSteps { get; set; }
+
+    public ICollection<WorkflowStep> WorkflowSteps { get; set; }
 }

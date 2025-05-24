@@ -14,7 +14,6 @@
         class="workflow-item"
         (click)="selectWorkflow(workflow)"
         [class.selected]="workflow === selectedWorkflow"
-        glowOnInit
       >
         <div class="workflow-name">
           {{ workflow.name }}
@@ -61,23 +60,21 @@
   </mat-card>
 
   <!-- Column 2: Workflow Steps -->
-  <mat-card class="column" *ngIf="selectedWorkflow" glowOnInit>
+  <mat-card class="column" *ngIf="selectedWorkflow">
     <mat-card-title>{{ selectedWorkflow.name }}</mat-card-title>
     <div class="card-instructions">
       Reorder, configure, or remove steps in the selected workflow. Once finished, click <strong>Save
       Workflow Changes</strong> to finalize your changes.
     </div>
-    <div *ngFor="let step of selectedWorkflow.workflowSteps; let i = index" class="step-row" glowOnInit>
-      <div class="step-name">
-        {{ step.stepName }}
-      </div>
+    <div *ngFor="let step of selectedWorkflow.workflowSteps; let i = index" class="step-row" [glowOnInit]="'green'">
+      <div class="step-index">{{ i + 1 }}. {{ step.stepName }}</div>
       <div class="step-actions">
         <button mat-icon-button color="primary" (click)="moveStepUp(i)" [disabled]="i === 0"
                 matTooltip="Move {{ step.stepName }} upward in {{ selectedWorkflow.name }}.">
           <mat-icon>arrow_upward</mat-icon>
         </button>
         <button mat-icon-button color="primary" (click)="moveStepDown(i)"
-                [disabled]="i === selectedWorkflow.workflowSteps?.length ?? 0 - 1"
+                [disabled]="i === (selectedWorkflow.workflowSteps?.length ?? 0) - 1"
                 matTooltip="Move {{ step.stepName }} downward in {{ selectedWorkflow.name }}.">
           <mat-icon>arrow_downward</mat-icon>
         </button>
@@ -105,7 +102,7 @@
       Manage steps that are reusable across workflows. Click to add them to the current workflow, or click
       <strong>Add New Step</strong> to configure a new one.
     </div>
-    <div *ngFor="let step of stepPool" class="step-row clickable" glowOnInit>
+    <div *ngFor="let step of stepPool" class="step-row clickable"  [glowOnInit]="'orange'">
       <div class="step-name" (click)="addStepToWorkflow(step)">{{ step.nameDefault }}</div>
       <div class="step-actions">
         <button mat-icon-button color="primary" *ngIf="selectedWorkflow"

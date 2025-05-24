@@ -1,9 +1,11 @@
-﻿using ViaQuestInc.StepOne.Kernel.Data;
+﻿using ViaQuestInc.StepOne.Core.Workflows.Steps;
+using ViaQuestInc.StepOne.Kernel.Data;
+using ViaQuestInc.StepOne.Kernel.Entity;
 
 namespace ViaQuestInc.StepOne.Core.Workflows.Persistence.Operations;
 
 /// <summary>
-/// An operation that clears the old workflow steps from the workflow.
+/// An operation that deletes old workflow steps that are no longer included on the workflow.
 /// </summary>
 public class DeleteWorkflowStepsOperation(IRepository repository) : IWorkflowPersistenceOperation
 {
@@ -14,6 +16,10 @@ public class DeleteWorkflowStepsOperation(IRepository repository) : IWorkflowPer
 
     public async Task ExecuteAsync(PipelineOptions pipelineOptions, CancellationToken cancellationToken)
     {
-        await repository.DeleteRangeAsync(pipelineOptions.OriginalWorkflow.WorkflowSteps!.ToList(), cancellationToken);
+        var stepsToRemove = pipelineOptions.OriginalWorkflow.WorkflowSteps
+            .Except<WorkflowStep>(pipelineOptions.UpdatedWorkflow.WorkflowSteps, new EntityIdEqualityComparer<int>())
+            .ToArray();
+        
+        await repository.DeleteRangeAsync(stepsToRemove, cancellationToken);
     }
 }

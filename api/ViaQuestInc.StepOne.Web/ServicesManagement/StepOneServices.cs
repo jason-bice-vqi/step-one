@@ -34,6 +34,7 @@ public static class StepOneServices
 
             // Workflow persistence
             .AddScoped<WorkflowPersistenceEngine>()
+            .AddScoped<IWorkflowPersistenceOperation, DeleteWorkflowStepsOperation>()
             .AddScoped<IWorkflowPersistenceOperation, ResequenceWorkflowStepsOperation>()
             .AddScoped<IWorkflowPersistenceOperation, PersistWorkflowStepsOperation>()
             .AddScoped<IWorkflowPersistenceOperation, PersistWorkflowOperation>();

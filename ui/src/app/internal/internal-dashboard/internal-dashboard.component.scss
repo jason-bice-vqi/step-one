@@ -18,7 +18,7 @@
     margin-bottom: 24px; // Small tweak to align with input fields if needed
 
     button:not(:last-child) {
-      margin-right: $margin / 2;
+      margin-right: calc($margin / 2);
     }
 
     button {

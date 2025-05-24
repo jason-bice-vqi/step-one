@@ -90,18 +90,84 @@ body.internal-area .content {
   cursor: pointer;
 }
 
-@keyframes glow-pulse {
+/* Glowing stuff */
+
+@keyframes glow-pulse-blue {
   0% {
-    box-shadow: 0 0 0px rgba(0, 150, 255, 0.0);
+    box-shadow: 0 0 0 rgba(0, 0, 0, 0);
   }
   50% {
     box-shadow: 0 0 12px 4px rgba(0, 150, 255, 0.6);
   }
   100% {
-    box-shadow: 0 0 0px rgba(0, 150, 255, 0.0);
+    box-shadow: 0 0 0 rgba(0, 0, 0, 0);
   }
 }
 
-.glow {
-  animation: glow-pulse 1.5s ease-out;
+.glow-blue {
+  animation: glow-pulse-blue 1.5s ease-out;
+}
+
+@keyframes glow-pulse-green {
+  0% {
+    box-shadow: 0 0 0 rgba(0, 0, 0, 0);
+  }
+  50% {
+    box-shadow: 0 0 12px 4px rgba(0, 200, 100, 0.6);
+  }
+  100% {
+    box-shadow: 0 0 0 rgba(0, 0, 0, 0);
+  }
+}
+
+.glow-green {
+  animation: glow-pulse-green 1.5s ease-out;
+}
+
+@keyframes glow-pulse-orange {
+  0% {
+    box-shadow: 0 0 0 rgba(0, 0, 0, 0);
+  }
+  50% {
+    box-shadow: 0 0 12px 4px rgba(255, 140, 0, 0.6);
+  }
+  100% {
+    box-shadow: 0 0 0 rgba(0, 0, 0, 0);
+  }
+}
+
+.glow-orange {
+  animation: glow-pulse-orange 1.5s ease-out;
+}
+
+@keyframes glow-pulse-gray {
+  0% {
+    box-shadow: 0 0 0 rgba(0, 0, 0, 0);
+  }
+  50% {
+    box-shadow: 0 0 12px 4px rgba(128, 128, 128, 0.6);
+  }
+  100% {
+    box-shadow: 0 0 0 rgba(0, 0, 0, 0);
+  }
+}
+
+.glow-gray {
+  animation: glow-pulse-gray 1.5s ease-out;
+}
+
+@keyframes glow-pulse-red {
+  0% {
+    box-shadow: 0 0 0 rgba(0, 0, 0, 0);
+  }
+  50% {
+    box-shadow: 0 0 12px 4px rgba(220, 0, 0, 0.6);
+  }
+  100% {
+    box-shadow: 0 0 0 rgba(0, 0, 0, 0);
+  }
+}
+
+.glow-red {
+  animation: glow-pulse-red 1.5s ease-out;
 }

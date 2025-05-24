@@ -7,7 +7,7 @@
 
 .card-instructions {
   color: gray;
-  margin-bottom: $margin / 2;
+  margin-bottom: calc($margin / 2);
 }
 
 .workflow-container {
@@ -56,10 +56,11 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: ($margin / 4) 0 ($margin / 4) $margin;
+  padding: calc($margin / 4) 0 calc($margin / 4) 0;
   border-bottom: 1px solid #eee;
 
-  .step-name {
+  .step-index {
+    width: 10px;
     flex: 1;
   }
 
@@ -70,6 +71,6 @@
 
 .step-pool {
   .step-row {
-    padding: ($margin / 4) 0 ($margin / 4) $margin;
+    padding: calc($margin / 4) 0 calc($margin / 4) $margin;
   }
 }
