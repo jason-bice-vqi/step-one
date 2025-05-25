@@ -9,6 +9,7 @@
       one.
     </div>
     <mat-nav-list>
+      <app-loading-spinner color="accent" text="Loading Workflows" *ngIf="!workflows"></app-loading-spinner>
       <div
         *ngFor="let workflow of workflows"
         class="workflow-item"
@@ -18,7 +19,7 @@
         <div class="workflow-name">
           {{ workflow.name }}
         </div>
-        <div *ngIf="workflow === selectedWorkflow" class="workflow-actions">
+        <div *ngIf="workflow.id === selectedWorkflow?.id" class="workflow-actions">
           <button mat-icon-button [matMenuTriggerFor]="workflowMenu" aria-label="Workflow Actions">
             <mat-icon>more_vert</mat-icon>
           </button>
@@ -28,15 +29,15 @@
               <mat-icon>assignment</mat-icon>
               <span>Manage Job Assignments</span>
             </button>
-            <button mat-menu-item (click)="editWorkflow(selectedWorkflow)">
+            <button mat-menu-item (click)="editWorkflow(selectedWorkflow!)">
               <mat-icon>edit</mat-icon>
               <span>Edit Workflow</span>
             </button>
-            <button mat-menu-item (click)="copyWorkflow(selectedWorkflow)">
+            <button mat-menu-item (click)="copyWorkflow(selectedWorkflow!)">
               <mat-icon>content_copy</mat-icon>
               <span>Copy to New Workflow</span>
             </button>
-            <button mat-menu-item (click)="deleteWorkflow(selectedWorkflow)">
+            <button mat-menu-item (click)="deleteWorkflow(selectedWorkflow!)">
               <mat-icon color="warn">delete</mat-icon>
               <span>Delete Workflow</span>
             </button>
@@ -102,6 +103,7 @@
       Manage steps that are reusable across workflows. Click to add them to the current workflow, or click
       <strong>Add New Step</strong> to configure a new one.
     </div>
+    <app-loading-spinner color="accent" text="Loading Step Pool" *ngIf="!stepPool"></app-loading-spinner>
     <div *ngFor="let step of stepPool" class="step-row clickable" [glowOnInit]="'orange'">
       <div class="step-name" (click)="addStepToWorkflow(step)">{{ step.nameDefault }}</div>
       <div class="step-actions">

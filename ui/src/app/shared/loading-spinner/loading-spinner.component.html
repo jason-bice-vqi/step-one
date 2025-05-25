@@ -1,0 +1,14 @@
+<div class="spinner-container">
+  <div class="loading-spinner-overlay">
+    <mat-progress-spinner
+      [diameter]="diameter"
+      [mode]="mode"
+      [color]="color"
+      class="spinner">
+    </mat-progress-spinner>
+
+    <div class="spinner-text" *ngIf="text">
+      {{ text }}
+    </div>
+  </div>
+</div>

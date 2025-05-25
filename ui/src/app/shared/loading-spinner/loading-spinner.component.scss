@@ -1,0 +1,33 @@
+@import 'variables';
+
+.spinner-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 300px;
+}
+
+.loading-spinner-overlay {
+  position: relative;
+  display: inline-block;
+  width: fit-content;
+  height: fit-content;
+}
+
+.spinner {
+  display: block;
+}
+
+.spinner-text {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 14px;
+  text-align: center;
+  pointer-events: none;
+  font-weight: bold;
+  color: $vqi-blue;
+  white-space: nowrap;
+  background-color: white;
+}

@@ -45,6 +45,8 @@ import { StepDialogComponent } from './internal/step-dialog/step-dialog.componen
 import { WorkflowDialogComponent } from './internal/workflow-dialog/workflow-dialog.component';
 import { GlowOnInitDirective } from './directives/glow-on-init.directive';
 import { WorkflowStepNamePipe } from './pipes/workflows/workflow-step-name.pipe';
+import { LoadingSpinnerComponent } from './shared/loading-spinner/loading-spinner.component';
+import {MatProgressSpinnerModule} from "@angular/material/progress-spinner";
 
 export function MSALInstanceFactory(): PublicClientApplication {
   return new PublicClientApplication({
@@ -98,7 +100,8 @@ export function MSALInstanceFactory(): PublicClientApplication {
     WorkflowDialogComponent,
     GlowOnInitDirective,
     WorkflowStepNamePipe,
-    WorkflowStepNamePipe
+    WorkflowStepNamePipe,
+    LoadingSpinnerComponent
   ],
   imports: [
     BrowserModule,
@@ -123,7 +126,8 @@ export function MSALInstanceFactory(): PublicClientApplication {
     MatMenuModule,
     MatToolbarModule,
     MatDialogModule,
-    MatSlideToggleModule
+    MatSlideToggleModule,
+    MatProgressSpinnerModule
   ],
   providers: [
     {provide: MSAL_INSTANCE, useFactory: MSALInstanceFactory},

@@ -1,4 +1,4 @@
-import {ChangeDetectorRef, Component, OnInit} from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {WorkflowStepConfigDialogComponent,} from "../workflow-step-config-dialog/workflow-step-config-dialog.component";
 import {MatDialog} from "@angular/material/dialog";
 import {ConfirmDeleteDialogComponent} from "../../confirm-delete-dialog/confirm-delete-dialog.component";
@@ -19,13 +19,13 @@ import {sortWorkflows, sortWorkflowSteps} from "../../functions/workflow.functio
 })
 export class WorkflowsComponent implements OnInit {
   /** All workflows. **/
-  workflows: Workflow[] = [];
+  workflows: Workflow[] | null = null;
 
   /** All potential steps. **/
-  steps: Step[] = [];
+  steps: Step[] | null = null;
 
   /** Filtered/sorted steps available for the currently selected workflow. **/
-  stepPool: Step[] = [];
+  stepPool: Step[] | null = null;
 
   /** The currently selected workflow. **/
   selectedWorkflow: Workflow | null = null;
@@ -37,32 +37,44 @@ export class WorkflowsComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.loadSteps();
-    this.loadWorkflows();
+    setTimeout(() => {
+      this.loadSteps();
+      this.loadWorkflows();
+    }, 1000);
   }
 
   loadSteps() {
-    this.stepService.get().pipe(take(1)).subscribe((x) => {
-      this.steps = x;
-      this.refreshLocalStepPool();
-    });
+    this.steps = null;
+    this.stepPool = null;
+
+    this.stepService.get()
+      .pipe(take(1))
+      .subscribe((x) => {
+        this.steps = x;
+        this.refreshLocalStepPool();
+      });
   }
 
   loadWorkflows(selectWorkflow?: Workflow | null): void {
-    this.workflowService.get().pipe(take(1)).subscribe(workflows => {
-      sortWorkflows(workflows);
+    this.workflows = null;
+    this.selectedWorkflow = null;
 
-      this.workflows = workflows;
-      this.selectedWorkflow = null;
+    this.workflowService.get()
+      .pipe(take(1))
+      .subscribe(workflows => {
+        sortWorkflows(workflows);
 
-      if (selectWorkflow) {
-        selectWorkflow = workflows.filter(w => w.id === selectWorkflow!.id)[0];
+        this.workflows = workflows;
+        this.selectedWorkflow = null;
 
-        this.selectWorkflow(selectWorkflow!);
-      }
+        if (selectWorkflow) {
+          selectWorkflow = workflows.filter(w => w.id === selectWorkflow!.id)[0];
 
-      this.refreshLocalStepPool();
-    });
+          this.selectWorkflow(selectWorkflow!);
+        }
+
+        this.refreshLocalStepPool();
+      });
   }
 
   refreshLocalStepPool() {
@@ -70,7 +82,7 @@ export class WorkflowsComponent implements OnInit {
     const steps: Step[] = workflowSteps.map(x => x.step);
     const stepIds: number[] = steps.map(x => x.id);
 
-    this.stepPool = this.steps
+    this.stepPool = this.steps!
       .filter(x => stepIds.indexOf(x.id) === -1)
       .sort((a, b) => a.nameDefault.localeCompare(b.nameDefault));
   }
@@ -95,7 +107,7 @@ export class WorkflowsComponent implements OnInit {
     }
   }
 
-  private selectWorkflow(workflow:Workflow) {
+  private selectWorkflow(workflow: Workflow) {
     sortWorkflowSteps(workflow);
 
     this.workflowStepsDirty = false;
@@ -122,7 +134,7 @@ export class WorkflowsComponent implements OnInit {
   manageWorkflow(mode: 'copy' | 'create' | 'edit', workflow?: Workflow) {
     this.dialog.open(WorkflowDialogComponent, {
       width: '600px',
-      data: { mode, workflow }
+      data: {mode, workflow}
     }).afterClosed().pipe(
       filter((result): result is Workflow => !!result),
       switchMap(result => {
@@ -142,9 +154,9 @@ export class WorkflowsComponent implements OnInit {
       .pipe(
         take(1),
         tap((updatedWorkflow: Workflow) => {
-          const index = this.workflows.findIndex(w => w.id === updatedWorkflow.id);
+          const index = this.workflows!.findIndex(w => w.id === updatedWorkflow.id);
 
-          this.workflows[index] = updatedWorkflow;
+          this.workflows![index] = updatedWorkflow;
           this.selectWorkflow(updatedWorkflow);
         })
       )
@@ -157,7 +169,7 @@ export class WorkflowsComponent implements OnInit {
       filter(result => !!result),
       switchMap(result => this.stepService.create(result)),
       tap((x) => {
-        this.steps.push(x);
+        this.steps!.push(x);
         this.refreshLocalStepPool();
       })
     ).subscribe();
