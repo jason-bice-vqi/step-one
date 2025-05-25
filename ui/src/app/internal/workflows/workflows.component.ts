@@ -30,7 +30,7 @@ export class WorkflowsComponent implements OnInit {
   /** The currently selected workflow. **/
   selectedWorkflow: Workflow | null = null;
 
-  /** Whether the configuration of the currently selected workflow's steps contains unsaved changes. */
+  /** Whether the configuration of the currently selected workflow's steps contains unsaved changes. **/
   workflowStepsDirty = false;
 
   constructor(private dialog: MatDialog, private stepService: StepService, private workflowService: WorkflowService) {
