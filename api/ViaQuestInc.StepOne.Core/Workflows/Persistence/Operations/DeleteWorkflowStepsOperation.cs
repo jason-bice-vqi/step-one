@@ -11,7 +11,7 @@ public class DeleteWorkflowStepsOperation(IRepository repository) : IWorkflowPer
 {
     public Task<bool> ShouldExecuteAsync(PipelineOptions pipelineOptions, CancellationToken cancellationToken)
     {
-        return Task.FromResult(pipelineOptions.OriginalWorkflow.WorkflowSteps!.Count > 0);
+        return Task.FromResult(pipelineOptions.OriginalWorkflow.WorkflowSteps.Count > 0);
     }
 
     public async Task ExecuteAsync(PipelineOptions pipelineOptions, CancellationToken cancellationToken)

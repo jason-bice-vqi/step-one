@@ -18,7 +18,7 @@ public class InternalUsersController(CandidateWorkflowService candidateWorkflowS
         
         var candidate = await candidateWorkflowService.GetAsync(candidateId!.Value, cancellationToken);
 
-        if (candidate is null) return CandidateNotFound(candidateId!.Value);
+        if (candidate is null) return CandidateNotFound(candidateId.Value);
 
         return Ok(candidate);
     }

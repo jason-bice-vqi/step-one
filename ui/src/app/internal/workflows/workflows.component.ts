@@ -1,7 +1,7 @@
 import {Component, OnInit} from '@angular/core';
 import {WorkflowStepConfigDialogComponent,} from "../workflow-step-config-dialog/workflow-step-config-dialog.component";
 import {MatDialog} from "@angular/material/dialog";
-import {ConfirmDeleteDialogComponent} from "../../confirm-delete-dialog/confirm-delete-dialog.component";
+import {ConfirmDeleteDialogComponent} from "../../shared/confirm-delete-dialog/confirm-delete-dialog.component";
 import {filter, switchMap, take, tap} from "rxjs";
 import {Workflow} from "../../models/workflows/workflow";
 import {WorkflowStep} from "../../models/workflows/workflow.step";
@@ -92,6 +92,7 @@ export class WorkflowsComponent implements OnInit {
       this.dialog.open(ConfirmDeleteDialogComponent, {
         data: {
           message: `You have unsaved changes on the workflow <strong>${this.selectedWorkflow!.name}</strong>, and if you select a new workflow those changes will be lost.`,
+          title: 'Unsaved Changes',
           yesText: 'Discard Changes',
           noText: 'Cancel'
         }

@@ -40,13 +40,14 @@ import {
 } from './internal/workflow-step-config-dialog/workflow-step-config-dialog.component';
 import {MAT_DIALOG_DEFAULT_OPTIONS, MatDialogModule} from "@angular/material/dialog";
 import {MatSlideToggleModule} from "@angular/material/slide-toggle";
-import { ConfirmDeleteDialogComponent } from './confirm-delete-dialog/confirm-delete-dialog.component';
+import { ConfirmDeleteDialogComponent } from './shared/confirm-delete-dialog/confirm-delete-dialog.component';
 import { StepDialogComponent } from './internal/step-dialog/step-dialog.component';
 import { WorkflowDialogComponent } from './internal/workflow-dialog/workflow-dialog.component';
 import { GlowOnInitDirective } from './directives/glow-on-init.directive';
 import { WorkflowStepNamePipe } from './pipes/workflows/workflow-step-name.pipe';
 import { LoadingSpinnerComponent } from './shared/loading-spinner/loading-spinner.component';
 import {MatProgressSpinnerModule} from "@angular/material/progress-spinner";
+import { WarnUnsavedDialogComponent } from './shared/warn-unsaved-dialog/warn-unsaved-dialog.component';
 
 export function MSALInstanceFactory(): PublicClientApplication {
   return new PublicClientApplication({
@@ -101,7 +102,8 @@ export function MSALInstanceFactory(): PublicClientApplication {
     GlowOnInitDirective,
     WorkflowStepNamePipe,
     WorkflowStepNamePipe,
-    LoadingSpinnerComponent
+    LoadingSpinnerComponent,
+    WarnUnsavedDialogComponent
   ],
   imports: [
     BrowserModule,

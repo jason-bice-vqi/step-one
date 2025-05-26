@@ -1,0 +1,7 @@
+@import '../../../styles/variables';
+
+.title-with-icon {
+  display: inline-flex;
+  align-items: center;
+  gap: calc($margin / 2);
+}

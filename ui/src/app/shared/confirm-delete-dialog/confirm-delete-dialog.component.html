@@ -1,4 +1,10 @@
-<h2 mat-dialog-title>Confirm Delete</h2>
+<h2 mat-dialog-title>
+  <span class="title-with-icon">
+    <mat-icon color="warn">warning</mat-icon>
+    {{ data.title }}
+  </span>
+</h2>
+
 <mat-dialog-content [innerHTML]="data.message"></mat-dialog-content>
 <mat-dialog-actions align="end">
   <button mat-button (click)="dialogRef.close(false)">{{ noText }}</button>

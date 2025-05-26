@@ -116,7 +116,7 @@ public class WorkflowPopulator : IDataPopulator
 
         foreach (var workflow in workflows)
         {
-            var workflowSteps = workflow.WorkflowSteps!.ToArray();
+            var workflowSteps = workflow.WorkflowSteps.ToArray();
 
             await repository.CreateAsync(workflow, cancellationToken);
 

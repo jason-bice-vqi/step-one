@@ -23,7 +23,7 @@ public class WorkflowService(IRepository repository)
 
         if (workflow.CopySteps)
         {
-            var workflowSteps = copiedFromWorkflow.WorkflowSteps!.ToArray();
+            var workflowSteps = copiedFromWorkflow.WorkflowSteps.ToArray();
         
             foreach (var workflowStep in workflowSteps)
             {

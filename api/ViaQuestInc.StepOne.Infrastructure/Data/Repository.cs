@@ -383,7 +383,7 @@ public class Repository<TContext>(TContext context) : IRepository
         }
 
         return parts.Length > 1 && propertyInfo != null
-            ? GetProperty(propertyInfo!.PropertyType, parts.Skip(1).Aggregate((a, i) => a + "." + i))
+            ? GetProperty(propertyInfo.PropertyType, parts.Skip(1).Aggregate((a, i) => a + "." + i))
             : propertyInfo;
     }
 }
