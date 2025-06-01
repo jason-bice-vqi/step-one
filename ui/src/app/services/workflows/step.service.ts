@@ -3,6 +3,7 @@ import {HttpClient, HttpHeaders} from "@angular/common/http";
 import {Observable, tap} from "rxjs";
 import {environment} from "../../../environments/environment";
 import {Step} from "../../models/workflows/step";
+import {Workflow} from "../../models/workflows/workflow";
 
 @Injectable({
   providedIn: 'root'
@@ -17,6 +18,13 @@ export class StepService {
 
     return this.httpClient.post<Step>(endpoint, step)
       .pipe(tap(x => console.info('Step Created', x)));
+  }
+
+  update(step: Step): Observable<Step> {
+    const endpoint = `${environment.apiUrl}/steps/${step.id}`;
+
+    return this.httpClient.patch<Step>(endpoint, step)
+      .pipe(tap(x => console.info('Step Updated', x)));
   }
 
   delete(step: Step): Observable<any> {

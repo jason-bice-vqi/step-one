@@ -80,8 +80,8 @@
           <mat-icon>arrow_downward</mat-icon>
         </button>
         <button mat-icon-button color="primary"
-                matTooltip="Configure {{ step | workflowStepName }} for {{ selectedWorkflow.name }}."
-                (click)="configureWorkflowStep(step)">
+                matTooltip="Edit {{ step | workflowStepName }} for {{ selectedWorkflow.name }}."
+                (click)="editWorkflowStep(step)">
           <mat-icon>settings</mat-icon>
         </button>
         <button mat-icon-button color="primary" (click)="removeStepFromWorkflow(step)"
@@ -112,9 +112,9 @@
                 (click)="addStepToWorkflow(step)">
           <mat-icon>west</mat-icon>
         </button>
-        <button mat-icon-button color="primary" disabled
-                matTooltip="Configure {{ step.nameDefault }}."
-                (click)="configureStep(step)">
+        <button mat-icon-button color="primary"
+                matTooltip="Edit {{ step.nameDefault }}."
+                (click)="editStep(step)">
           <mat-icon>settings</mat-icon>
         </button>
         <button mat-icon-button color="warn"

@@ -20,6 +20,11 @@ public class StepService(IRepository repository)
         return await repository.FindAsync<Step>(stepId, cancellationToken);
     }
     
+    public async Task<int> UpdateAsync(Step step, CancellationToken cancellationToken)
+    {
+        return await repository.UpdateAsync(step, cancellationToken);
+    }
+    
     public async Task<int> DeleteAsync(Step step, CancellationToken cancellationToken)
     {
         return await repository.DeleteAsync(step, cancellationToken);

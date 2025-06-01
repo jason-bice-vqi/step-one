@@ -1,10 +1,13 @@
-<h2 mat-dialog-title>Configure Workflow Step</h2>
+<h2 mat-dialog-title>Edit Workflow Step
+  <small>{{data.stepName}}</small>
+</h2>
 <mat-dialog-content class="dialog-content">
   <mat-form-field appearance="outline" class="full-width">
     <mat-label>Display Name Override</mat-label>
     <input matInput [(ngModel)]="data.stepNameOverride"/>
 
-    <button *ngIf="data.stepNameOverride" matSuffix mat-icon-button aria-label="Clear" (click)="clearStepNameOverride()">
+    <button *ngIf="data.stepNameOverride" matSuffix mat-icon-button aria-label="Clear"
+            (click)="clearStepNameOverride()">
       <mat-icon>close</mat-icon>
     </button>
   </mat-form-field>

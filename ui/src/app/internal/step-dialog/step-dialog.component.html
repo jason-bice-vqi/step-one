@@ -1,5 +1,5 @@
-<h2 mat-dialog-title>
-  {{ step.id ? 'Edit Step' : 'Create Step' }}
+<h2 mat-dialog-title>{{ step.id ? 'Edit Step' : 'Create Step' }}
+  <small>{{ step.nameDefault }}</small>
 </h2>
 
 <form #form="ngForm">

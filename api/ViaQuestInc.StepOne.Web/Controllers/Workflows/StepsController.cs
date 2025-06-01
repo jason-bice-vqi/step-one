@@ -18,6 +18,20 @@ public class StepsController(StepService stepService) : ApiControllerBase
         return CreatedAtRoute(nameof(ShowStep), new { stepId = createdStep.Id }, createdStep);
     }
     
+    // TODO - authorization
+    [HttpPatch("{stepId:int}")]
+    public async Task<IActionResult> Update([FromRoute] int stepId, [FromBody] Step updatedStep,
+        CancellationToken cancellationToken)
+    {
+        var originalStep = await stepService.ShowAsync(stepId, cancellationToken);
+
+        if (originalStep == null) return NotFound($"Step {stepId} was not found.");
+
+        await stepService.UpdateAsync(updatedStep, cancellationToken);
+
+        return Ok(updatedStep);
+    }
+    
     [HttpDelete("{stepId:int}")]
     public async Task<IActionResult> Delete(int stepId, CancellationToken cancellationToken)
     {

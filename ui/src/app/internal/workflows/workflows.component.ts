@@ -176,6 +176,21 @@ export class WorkflowsComponent implements OnInit {
     ).subscribe();
   }
 
+  editStep(step: Step) {
+    this.dialog.open(StepDialogComponent, {data: step, width: '600px'}).afterClosed().pipe(
+      take(1),
+      filter(result => !!result),
+      switchMap(result => this.stepService.update(result)),
+      tap((updatedStep) => {
+        const index = this.steps!.findIndex(s => s.id === step.id);
+
+        this.steps![index] = updatedStep;
+
+        this.refreshLocalStepPool();
+      })
+    ).subscribe();
+  }
+
   addStepToWorkflow(step: Step) {
     if (!this.selectedWorkflow) return;
 
@@ -228,7 +243,7 @@ export class WorkflowsComponent implements OnInit {
     [steps[index], steps[index + 1]] = [steps[index + 1], steps[index]];
   }
 
-  configureWorkflowStep(workflowStep: WorkflowStep) {
+  editWorkflowStep(workflowStep: WorkflowStep) {
     const workflowStepCopy = structuredClone(workflowStep);
 
     this.dialog.open(WorkflowStepConfigDialogComponent, {
@@ -278,9 +293,5 @@ export class WorkflowsComponent implements OnInit {
         this.loadWorkflows();
       })
     ).subscribe();
-  }
-
-  configureStep(step: Step) {
-
   }
 }
