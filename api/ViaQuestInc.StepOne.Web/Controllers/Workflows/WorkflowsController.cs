@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using ViaQuestInc.StepOne.Core.Workflows;
 using ViaQuestInc.StepOne.Core.Workflows.Persistence;
 using ViaQuestInc.StepOne.Core.Workflows.Services;
+using ViaQuestInc.StepOne.Kernel.Auth;
 using ViaQuestInc.StepOne.Web.Auth;
 
 namespace ViaQuestInc.StepOne.Web.Controllers.Workflows;
@@ -29,7 +30,7 @@ public class WorkflowsController(WorkflowService workflowService) : ApiControlle
         return Ok(workflow);
     }
 
-    // TODO - authorization
+    [Authorize(Roles = Roles.Internal)]
     [HttpPost]
     public async Task<IActionResult> Create([FromBody] Workflow workflow, CancellationToken cancellationToken)
     {
@@ -38,7 +39,7 @@ public class WorkflowsController(WorkflowService workflowService) : ApiControlle
         return CreatedAtRoute(nameof(ShowWorkflow), new { workflowId = createdWorkflow.Id }, createdWorkflow);
     }
 
-    // TODO - authorization
+    [Authorize(Roles = Roles.Internal)]
     [HttpPatch("{workflowId:int}")]
     public async Task<IActionResult> Update([FromRoute] int workflowId, [FromBody] Workflow updatedWorkflow,
         [FromServices] WorkflowPersistenceEngine workflowPersistenceEngine,
@@ -60,6 +61,7 @@ public class WorkflowsController(WorkflowService workflowService) : ApiControlle
         return Ok(updatedWorkflow);
     }
 
+    [Authorize(Roles = Roles.Internal)]
     [HttpDelete("{workflowId:int}")]
     public async Task<IActionResult> Delete(int workflowId, CancellationToken cancellationToken)
     {

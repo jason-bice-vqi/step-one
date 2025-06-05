@@ -37,10 +37,8 @@ export class WorkflowsComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    setTimeout(() => {
-      this.loadSteps();
-      this.loadWorkflows();
-    }, 1000);
+    this.loadSteps();
+    this.loadWorkflows();
   }
 
   loadSteps() {

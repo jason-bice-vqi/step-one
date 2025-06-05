@@ -5,13 +5,13 @@ using ViaQuestInc.StepOne.Web.Auth;
 
 namespace ViaQuestInc.StepOne.Web.Controllers.Workflows;
 
+[Authorize(Policy = Policies.NativeJwtAuthPolicy)]
 [Route("candidates/{candidateId:int}/workflow")]
 public class CandidateWorkflowsController(
     CandidateWorkflowService candidateWorkflowService,
     IAuthorizationService authorizationService)
     : ApiControllerBase
 {
-    [Authorize(Policy = Policies.NativeJwtAuthPolicy)]
     public async Task<IActionResult> Get([FromRoute] int candidateId, CancellationToken cancellationToken)
     {
         var candidateWithWorkflow = await candidateWorkflowService.GetWithWorkflowAsync(candidateId, cancellationToken);

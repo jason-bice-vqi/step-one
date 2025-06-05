@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using ViaQuestInc.StepOne.Core.Workflows.Steps;
+using ViaQuestInc.StepOne.Kernel.Auth;
 using ViaQuestInc.StepOne.Web.Auth;
 
 namespace ViaQuestInc.StepOne.Web.Controllers.Workflows;
@@ -9,7 +10,7 @@ namespace ViaQuestInc.StepOne.Web.Controllers.Workflows;
 [Route("steps")]
 public class StepsController(StepService stepService) : ApiControllerBase
 {
-    // TODO - authorize permission to do this
+    [Authorize(Roles = Roles.Internal)]
     [HttpPost]
     public async Task<IActionResult> Create([FromBody] Step step, CancellationToken cancellationToken)
     {
@@ -18,7 +19,7 @@ public class StepsController(StepService stepService) : ApiControllerBase
         return CreatedAtRoute(nameof(ShowStep), new { stepId = createdStep.Id }, createdStep);
     }
     
-    // TODO - authorization
+    [Authorize(Roles = Roles.Internal)]
     [HttpPatch("{stepId:int}")]
     public async Task<IActionResult> Update([FromRoute] int stepId, [FromBody] Step updatedStep,
         CancellationToken cancellationToken)
@@ -32,6 +33,7 @@ public class StepsController(StepService stepService) : ApiControllerBase
         return Ok(updatedStep);
     }
     
+    [Authorize(Roles = Roles.Internal)]
     [HttpDelete("{stepId:int}")]
     public async Task<IActionResult> Delete(int stepId, CancellationToken cancellationToken)
     {
