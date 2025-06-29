@@ -1,5 +1,6 @@
 ﻿using System.Linq.Expressions;
 using Microsoft.Data.SqlClient;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata;
 
 namespace ViaQuestInc.StepOne.Kernel.Data;

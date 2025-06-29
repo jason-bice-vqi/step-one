@@ -14,11 +14,5 @@ public class JobTitle : EntityBase<int>
     
     public Company Company { get; set; }
     
-    public int? WorkflowId { get; set; }
-    
-    /// <summary>
-    /// The onboarding workflow assigned to this job title. If no workflow has been assigned
-    /// (see null status of <see cref="WorkflowId"/>), this will be null.
-    /// </summary>
-    public Workflow? Workflow { get; set; }
+    public ICollection<JobTitleAtsMapping> JobTitleAtsMappings { get; set; }
 }

@@ -6,10 +6,9 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Options;
 using Serilog;
 using ViaQuestInc.StepOne.Core.Candidates;
-using ViaQuestInc.StepOne.Core.Candidates.Populators;
 using ViaQuestInc.StepOne.Core.Candidates.Workflows;
-using ViaQuestInc.StepOne.Core.Candidates.Workflows.Populators;
 using ViaQuestInc.StepOne.Core.Organization;
+using ViaQuestInc.StepOne.Core.Organization.Populators;
 using ViaQuestInc.StepOne.Core.Workflows;
 using ViaQuestInc.StepOne.Core.Workflows.Populators;
 using ViaQuestInc.StepOne.Core.Workflows.Steps;
@@ -26,6 +25,7 @@ public class StepOneDbContext(DbContextOptions<StepOneDbContext> options) : DbCo
     public DbSet<CandidateWorkflow> CandidateWorkflows { get; set; }
     public DbSet<CandidateWorkflowStep> CandidateWorkflowSteps { get; set; }
     public DbSet<Company> Companies { get; set; }
+    public DbSet<JobTitleAtsMapping> JobTitleAtsMappings { get; set; }
     public DbSet<JobTitle> JobTitles { get; set; }
     public DbSet<JobTitleWorkflow> JobTitleWorkflows { get; set; }
     public DbSet<Region> Regions { get; set; }
@@ -82,6 +82,7 @@ public class StepOneDbContext(DbContextOptions<StepOneDbContext> options) : DbCo
         {
             var priorityDatabasePopulators = new IDataPopulator[]
             {
+                new CompanyPopulator(),
                 new StepPopulator(),
                 new WorkflowPopulator()
             };

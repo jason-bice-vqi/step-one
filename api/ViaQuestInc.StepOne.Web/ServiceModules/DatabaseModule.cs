@@ -12,6 +12,8 @@ namespace ViaQuestInc.StepOne.Web.ServiceModules;
 public class DatabaseModule : IServiceModule
 {
     public string ConnectionString { get; set; }
+    
+    public string HrtConnectionString { get; set; }
 
     public int CommandTimeout { get; set; } = 120;
 
@@ -25,7 +27,7 @@ public class DatabaseModule : IServiceModule
         
         services.AddSingleton(databaseConfig);
         
-        Log.Information("  Registering database services");
+        Log.Information("  Registering StepOne database services");
         services.AddScoped<IRepository, Repository<StepOneDbContext>>()
             // Database start-up actions
             .AddTransient<IStartupAction, LogDatabaseStartupTypeAction>()
@@ -35,12 +37,14 @@ public class DatabaseModule : IServiceModule
             .AddTransient<IStartupAction, PopulateDatabaseAction>()
             .AddTransient<IStartupAction, WarnOfPendingMigrationsAction>(); // Must be last AcesDbContext action
         
-        Log.Information("  Registering database context");
+        Log.Information("  Registering StepOne database context");
         services.AddHealthChecks().Services.AddSqlServer<StepOneDbContext>(ConnectionString,
             o => o.MigrationsAssembly("ViaQuestInc.StepOne.Infrastructure").CommandTimeout(CommandTimeout),
             o => o
                 .UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking)
                 .ConfigureWarnings(w => w.Ignore(SqlServerEventId.SavepointsDisabledBecauseOfMARS))
                 .EnableSensitiveDataLogging(EnableSensitiveDataLogging));
+        
+        Log.Information("  Registering HR Tracker database services");
     }
 }
