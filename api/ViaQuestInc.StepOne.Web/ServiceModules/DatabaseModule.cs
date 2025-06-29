@@ -2,6 +2,8 @@
 using Microsoft.EntityFrameworkCore.Diagnostics;
 using Serilog;
 using ViaQuestInc.StepOne.Core.Data;
+using ViaQuestInc.StepOne.Core.Data.Entity;
+using ViaQuestInc.StepOne.Core.Organization.Synchronizers;
 using ViaQuestInc.StepOne.Web.StartupActions;
 using ViaQuestInc.StepOne.Web.StartupActions.Data;
 
@@ -33,6 +35,7 @@ public class DatabaseModule : IServiceModule
             .AddTransient<IStartupAction, CreateDatabaseAction>()
             .AddTransient<IStartupAction, ApplyMigrationsAction>()
             .AddTransient<IStartupAction, PopulateDatabaseAction>()
+            .AddTransient<IStartupAction, SynchronizeWithHrtAction>()
             .AddTransient<IStartupAction, WarnOfPendingMigrationsAction>(); // Must be last AcesDbContext action
 
         Log.Information("  Registering StepOne database context");
@@ -55,5 +58,8 @@ public class DatabaseModule : IServiceModule
                 .UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking)
                 .ConfigureWarnings(w => w.Ignore(SqlServerEventId.SavepointsDisabledBecauseOfMARS))
                 .EnableSensitiveDataLogging(EnableSensitiveDataLogging));
+        
+        Log.Information("  Registering HRT-to-StepOne Synchronizers");
+        services.AddTransient<IDataSynchronizer, CompanySynchronizer>();
     }
 }

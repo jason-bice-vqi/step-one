@@ -9,7 +9,6 @@ using ViaQuestInc.StepOne.Core.Candidates;
 using ViaQuestInc.StepOne.Core.Candidates.Workflows;
 using ViaQuestInc.StepOne.Core.Data.Entity;
 using ViaQuestInc.StepOne.Core.Organization;
-using ViaQuestInc.StepOne.Core.Organization.Populators;
 using ViaQuestInc.StepOne.Core.Workflows;
 using ViaQuestInc.StepOne.Core.Workflows.Populators;
 using ViaQuestInc.StepOne.Core.Workflows.Steps;
@@ -81,7 +80,6 @@ public class StepOneDbContext(DbContextOptions<StepOneDbContext> options) : DbCo
         {
             var priorityDatabasePopulators = new IDataPopulator[]
             {
-                new CompanyPopulator(),
                 new StepPopulator(),
                 new WorkflowPopulator()
             };

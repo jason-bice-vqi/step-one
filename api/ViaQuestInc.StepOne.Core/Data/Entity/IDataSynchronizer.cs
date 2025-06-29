@@ -9,7 +9,12 @@ public interface IDataSynchronizer
     /// An awaitable task containing the result, where true indicates the synchronizer should run and false
     /// indicates it should not.
     /// </returns>
-    Task<bool> ShouldSyncAsync(CancellationToken cancellationToken)
+    Task<bool> ShouldSyncAsync(
+        IRepository<StepOneDbContext> stepOneRepository,
+        IRepository<HrtDbContext> hrtRepository,
+        IServiceProvider serviceProvider,
+        int batchSize,
+        CancellationToken cancellationToken)
     {
         return Task.FromResult(true);
     }
@@ -18,7 +23,8 @@ public interface IDataSynchronizer
     /// Executes the synchronizer.
     /// </summary>
     Task SyncAsync(
-        IRepository<StepOneDbContext> repository,
+        IRepository<StepOneDbContext> stepOneRepository,
+        IRepository<HrtDbContext> hrtRepository,
         IServiceProvider serviceProvider,
         int batchSize,
         CancellationToken cancellationToken);

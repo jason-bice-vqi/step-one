@@ -22,7 +22,7 @@
     </ItemGroup>
 
     <ItemGroup>
-        <Folder Include="Organization\Synchronizers\" />
+        <Folder Include="Organization\Populators\" />
         <Folder Include="Workflows\Preemployment\" />
     </ItemGroup>
 
