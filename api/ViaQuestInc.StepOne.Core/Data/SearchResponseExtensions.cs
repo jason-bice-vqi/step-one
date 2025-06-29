@@ -1,4 +1,4 @@
-﻿namespace ViaQuestInc.StepOne.Kernel.Data;
+﻿namespace ViaQuestInc.StepOne.Core.Data;
 
 /// <summary>
 /// Extension static factory methods for <see cref="SearchResponse{T}"/>.

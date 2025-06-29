@@ -3,12 +3,10 @@ using System.Reflection;
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata;
-using ViaQuestInc.StepOne.Kernel.Data;
 
-namespace ViaQuestInc.StepOne.Infrastructure.Data;
+namespace ViaQuestInc.StepOne.Core.Data;
 
-public class Repository<TContext>(TContext context) : IRepository
-    where TContext : DbContext
+public class Repository<TContext>(TContext context) : IRepository<TContext> where TContext : DbContext
 {
     private const string WildcardIncludes = "*";
     private const string TerminatingWildcardIncludes = $".{WildcardIncludes}";
@@ -17,10 +15,7 @@ public class Repository<TContext>(TContext context) : IRepository
     {
         var query = context.Set<T>().AsQueryable();
 
-        if (includes != null && includes.Length != 0)
-        {
-            query = query.Includes(includes);
-        }
+        if (includes != null && includes.Length != 0) query = query.Includes(includes);
 
         return query;
     }
@@ -29,10 +24,7 @@ public class Repository<TContext>(TContext context) : IRepository
     {
         var validatedIncludes = ValidateRequestedIncludes<T>(includes).ToArray();
 
-        if (validatedIncludes.Length == 0)
-        {
-            return context.Set<T>().AsQueryable();
-        }
+        if (validatedIncludes.Length == 0) return context.Set<T>().AsQueryable();
 
         var query = context.Set<T>().Include(validatedIncludes.First());
 
@@ -55,7 +47,8 @@ public class Repository<TContext>(TContext context) : IRepository
         return await FilterWithChildren(expression, includes).SingleOrDefaultAsync(cancellationToken);
     }
 
-    public async Task<T?> GetWithChildrenAsync<T>(Expression<Func<T, bool>> expression,
+    public async Task<T?> GetWithChildrenAsync<T>(
+        Expression<Func<T, bool>> expression,
         CancellationToken cancellationToken,
         params Expression<Func<T, object>>[]? includes) where T : class
     {
@@ -67,9 +60,7 @@ public class Repository<TContext>(TContext context) : IRepository
         var entity = await context.FindAsync<T>([key], cancellationToken);
 
         if (entity != null && context.ChangeTracker.QueryTrackingBehavior == QueryTrackingBehavior.NoTracking)
-        {
             context.Entry(entity).State = EntityState.Detached;
-        }
 
         return entity;
     }
@@ -87,13 +78,10 @@ public class Repository<TContext>(TContext context) : IRepository
     {
         var validatedIncludes = ValidateRequestedIncludes<T>(includes).ToArray();
 
-        if (validatedIncludes.Length == 0)
-        {
-            return context.Set<T>().Where(predicate).AsQueryable();
-        }
+        if (validatedIncludes.Length == 0) return context.Set<T>().Where(predicate).AsQueryable();
 
         var query = context.Set<T>().Include(validatedIncludes.First());
-        
+
         query = validatedIncludes
             .Skip(1)
             .Aggregate(query, (current, include) => current.Include(include));
@@ -108,12 +96,15 @@ public class Repository<TContext>(TContext context) : IRepository
         return await context.Set<T>().CountAsync(predicate, cancellationToken) > 0;
     }
 
-    public T CreateNoSave<T>(T tObject) where T : class => context.Set<T>().Add(tObject).Entity;
+    public T CreateNoSave<T>(T tObject) where T : class
+    {
+        return context.Set<T>().Add(tObject).Entity;
+    }
 
     public async Task<T> CreateAsync<T>(T tObject, CancellationToken cancellationToken) where T : class
     {
         StripNavigationProperties(tObject);
-        
+
         var newEntry = (await context.Set<T>().AddAsync(tObject, cancellationToken)).Entity;
 
         try
@@ -138,18 +129,12 @@ public class Repository<TContext>(TContext context) : IRepository
 
         try
         {
-            foreach (var entity in entities)
-            {
-                StripNavigationProperties(entity);
-            }
+            foreach (var entity in entities) StripNavigationProperties(entity);
 
             await context.AddRangeAsync(entities, cancellationToken);
             await context.SaveChangesAsync(cancellationToken);
 
-            foreach (var entry in context.ChangeTracker.Entries())
-            {
-                entry.State = EntityState.Detached;
-            }
+            foreach (var entry in context.ChangeTracker.Entries()) entry.State = EntityState.Detached;
         }
         catch (Exception ex)
         {
@@ -163,7 +148,7 @@ public class Repository<TContext>(TContext context) : IRepository
 
         context.Entry(entity).State = EntityState.Deleted;
         context.Set<T>().Remove(entity);
-        
+
         return await context.SaveChangesAsync(cancellationToken);
     }
 
@@ -182,13 +167,10 @@ public class Repository<TContext>(TContext context) : IRepository
     {
         if (!entities.Any()) return;
 
-        foreach (var entity in entities)
-        {
-            StripNavigationProperties(entity);
-        }
+        foreach (var entity in entities) StripNavigationProperties(entity);
 
         context.RemoveRange(entities);
-        
+
         await context.SaveChangesAsync(cancellationToken);
     }
 
@@ -213,7 +195,7 @@ public class Repository<TContext>(TContext context) : IRepository
         try
         {
             ResetChangeTracker();
-            
+
             context.UpdateRange(entities);
 
             itemsUpdated = await context.SaveChangesAsync(cancellationToken);
@@ -243,9 +225,7 @@ public class Repository<TContext>(TContext context) : IRepository
         finally
         {
             if (context.ChangeTracker.QueryTrackingBehavior == QueryTrackingBehavior.NoTracking)
-            {
                 context.Entry(entity).State = EntityState.Detached;
-            }
         }
 
         return itemsUpdated;
@@ -275,7 +255,9 @@ public class Repository<TContext>(TContext context) : IRepository
         {
             await context.SaveChangesAsync(cancellationToken);
         }
-        catch (TaskCanceledException) { }
+        catch (TaskCanceledException)
+        {
+        }
     }
 
     public IEnumerable<INavigation> GetNavigationProperties(Type t)
@@ -317,20 +299,14 @@ public class Repository<TContext>(TContext context) : IRepository
         var validIncludes = explicitRequestedIncludes.Where(r => GetProperty(typeof(T), r) != null).ToArray();
         var invalidIncludes = explicitRequestedIncludes.Except(validIncludes).ToArray();
 
-        if (invalidIncludes.Any())
-        {
-            throw new($"Invalid includes: {string.Join(',', invalidIncludes)}");
-        }
+        if (invalidIncludes.Any()) throw new($"Invalid includes: {string.Join(',', invalidIncludes)}");
 
         return validIncludes;
     }
 
     public T StripNavigationProperties<T>(T entity) where T : class
     {
-        if (context.Entry(entity).State != EntityState.Detached)
-        {
-            context.Entry(entity).State = EntityState.Detached;
-        }
+        if (context.Entry(entity).State != EntityState.Detached) context.Entry(entity).State = EntityState.Detached;
 
         var type = typeof(T);
         var navigationProperties = GetNavigationProperties(type);
@@ -339,16 +315,16 @@ public class Repository<TContext>(TContext context) : IRepository
         {
             var prop = type.GetProperty(navigationProperty.Name, BindingFlags.Public | BindingFlags.Instance);
 
-            if (prop != null && prop.CanWrite)
-            {
-                prop.SetValue(entity, null);
-            }
+            if (prop != null && prop.CanWrite) prop.SetValue(entity, null);
         }
 
         return entity;
     }
 
-    public string GetTableName<T>() where T : class => context.Model.FindEntityType(typeof(T))!.GetTableName()!;
+    public string GetTableName<T>() where T : class
+    {
+        return context.Model.FindEntityType(typeof(T))!.GetTableName()!;
+    }
 
     public async Task<bool> AnyAsync<T>(CancellationToken cancellationToken) where T : class
     {
@@ -357,12 +333,9 @@ public class Repository<TContext>(TContext context) : IRepository
 
     private void ResetChangeTracker()
     {
-        foreach (var entry in context.ChangeTracker.Entries().ToList())
-        {
-            entry.State = EntityState.Detached;
-        }
+        foreach (var entry in context.ChangeTracker.Entries().ToList()) entry.State = EntityState.Detached;
     }
-    
+
     /// <summary>
     /// Gets the requested property from the supplied type.
     /// </summary>
@@ -378,7 +351,7 @@ public class Repository<TContext>(TContext context) : IRepository
         if (parts.Length > 1 && propertyInfo != null && propertyInfo.PropertyType.IsGenericType)
         {
             var genericType = propertyInfo.PropertyType.GenericTypeArguments[0];
-            
+
             return GetProperty(genericType, parts[1]);
         }
 

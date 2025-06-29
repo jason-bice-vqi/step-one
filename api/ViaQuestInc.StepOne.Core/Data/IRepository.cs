@@ -3,9 +3,9 @@ using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata;
 
-namespace ViaQuestInc.StepOne.Kernel.Data;
+namespace ViaQuestInc.StepOne.Core.Data;
 
-public interface IRepository
+public interface IRepository<TContext> where TContext : DbContext
 {
     /// <summary>
     /// Used to retrieve all entities of type <typeparamref name="T"/>.
@@ -51,7 +51,7 @@ public interface IRepository
         Expression<Func<T, bool>> expression,
         CancellationToken cancellationToken,
         params string[]? includes) where T : class;
-    
+
     /// <summary>
     /// Used to retrieve a single (first) entity of type <typeparamref name="T"/>, for which the Expression
     /// parameter "<paramref name="expression"/>" evaluates true.

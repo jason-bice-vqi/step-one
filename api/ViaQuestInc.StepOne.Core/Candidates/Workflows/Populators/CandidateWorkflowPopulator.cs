@@ -1,9 +1,9 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using ViaQuestInc.StepOne.Core.Candidates.Workflows.Services;
+using ViaQuestInc.StepOne.Core.Data;
+using ViaQuestInc.StepOne.Core.Data.Entity;
 using ViaQuestInc.StepOne.Core.Workflows.Services;
-using ViaQuestInc.StepOne.Kernel.Data;
-using ViaQuestInc.StepOne.Kernel.Entity;
 
 namespace ViaQuestInc.StepOne.Core.Candidates.Workflows.Populators;
 
@@ -12,11 +12,14 @@ namespace ViaQuestInc.StepOne.Core.Candidates.Workflows.Populators;
 /// </summary>
 public class CandidateWorkflowPopulator : IDataPopulator
 {
-    public async Task PopulateAsync(IRepository repository, IServiceProvider serviceProvider, int batchSize,
+    public async Task PopulateAsync(
+        IRepository<StepOneDbContext> repository,
+        IServiceProvider serviceProvider,
+        int batchSize,
         CancellationToken cancellationToken)
     {
         var candidate = await repository.All<Candidate>().SingleAsync(cancellationToken);
-        
+
         using var scope = serviceProvider.CreateScope();
         var workflowService = scope.ServiceProvider.GetRequiredService<WorkflowService>();
         var candidateWorkflowService = scope.ServiceProvider.GetRequiredService<CandidateWorkflowService>();

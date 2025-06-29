@@ -1,8 +1,8 @@
-﻿using ViaQuestInc.StepOne.Kernel.Data;
+﻿using ViaQuestInc.StepOne.Core.Data;
 
 namespace ViaQuestInc.StepOne.Core.Candidates.Import.Operations;
 
-public class CreateCandidateOperation(IRepository repository) : ICandidateImportOperation
+public class CreateCandidateOperation(IRepository<StepOneDbContext> repository) : ICandidateImportOperation
 {
     public Task<bool> ShouldExecuteAsync(CandidateImportOptions options, CancellationToken cancellationToken)
     {

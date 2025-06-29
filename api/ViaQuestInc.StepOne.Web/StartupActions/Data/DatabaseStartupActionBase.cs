@@ -1,13 +1,12 @@
 ﻿using Serilog;
 using ViaQuestInc.StepOne.Core.Data;
-using ViaQuestInc.StepOne.Infrastructure.Data;
-using ViaQuestInc.StepOne.Kernel.Data;
 
 namespace ViaQuestInc.StepOne.Web.StartupActions.Data;
 
 public abstract class DatabaseStartupActionBase(
     StepOneDbContext dbContext,
-    DatabaseConfig databaseConfig)
+    DatabaseConfig databaseConfig
+)
     : IStartupAction
 {
     protected readonly StepOneDbContext DbContext = dbContext;
@@ -16,8 +15,10 @@ public abstract class DatabaseStartupActionBase(
     protected abstract IEnumerable<DatabaseStartupTypes> RequiredByStartupTypes { get; }
     protected abstract IEnumerable<string> SupportedEnvironmentNames { get; }
 
-    public virtual Task<bool> ShouldExecuteAsync(WebApplication app, CancellationToken cancellationToken) =>
-        Task.FromResult(RequiredByStartupTypes.Contains(DatabaseConfig.DatabaseStartupType));
+    public virtual Task<bool> ShouldExecuteAsync(WebApplication app, CancellationToken cancellationToken)
+    {
+        return Task.FromResult(RequiredByStartupTypes.Contains(DatabaseConfig.DatabaseStartupType));
+    }
 
     public virtual Task OnStartupAsync(WebApplication app, CancellationToken cancellationToken = default)
     {

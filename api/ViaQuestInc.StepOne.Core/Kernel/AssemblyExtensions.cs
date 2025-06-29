@@ -1,11 +1,13 @@
 ﻿using System.Reflection;
 using System.Text;
 
-namespace ViaQuestInc.StepOne.Kernel;
+namespace ViaQuestInc.StepOne.Core.Kernel;
 
 public static class AssemblyExtensions
 {
-    public static async Task<string> GetManifestResourceString(this Assembly assembly, string resource,
+    public static async Task<string> GetManifestResourceString(
+        this Assembly assembly,
+        string resource,
         Encoding encoding)
     {
         await using var stream = assembly.GetManifestResourceStream(resource);
@@ -13,7 +15,7 @@ public static class AssemblyExtensions
         if (stream == null) throw new($"The specified fixture file {resource} could not be found.");
 
         using var streamReader = new StreamReader(stream, encoding);
-        
+
         return await streamReader.ReadToEndAsync();
     }
 }

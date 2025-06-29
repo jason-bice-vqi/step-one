@@ -3,7 +3,6 @@ using System.Security.Claims;
 using System.Text;
 using Microsoft.IdentityModel.Tokens;
 using ViaQuestInc.StepOne.Core.Candidates;
-using ViaQuestInc.StepOne.Kernel.Auth;
 
 namespace ViaQuestInc.StepOne.Core.Auth.Services;
 
@@ -21,7 +20,7 @@ public class JwtService(AuthConfig authConfig)
     public string GenerateToken(ClaimsPrincipal fromAdClaimsPrincipal)
     {
         var claims = fromAdClaimsPrincipal.Claims.Where(x => CopyAzureAdClaimNames.Contains(x.Type)).ToList();
-        
+
         claims.Add(new(ClaimTypes.Role, Roles.Internal));
 
         return GenerateToken(claims, authConfig.Jwt.LifetimeHoursInternal);
@@ -41,9 +40,7 @@ public class JwtService(AuthConfig authConfig)
         };
 
         if (candidate.CandidateWorkflowId != null)
-        {
             claims.Add(new(Claims.CandidateWorkflowId, candidate.CandidateWorkflowId.ToString()!));
-        }
 
         return GenerateToken(claims, authConfig.Jwt.LifetimeHoursInternal);
     }

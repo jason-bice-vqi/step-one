@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using ViaQuestInc.StepOne.Core.Auth;
 using ViaQuestInc.StepOne.Core.Candidates.Workflows.Services;
-using ViaQuestInc.StepOne.Kernel.Auth;
 using ViaQuestInc.StepOne.Web.Auth;
 
 namespace ViaQuestInc.StepOne.Web.Controllers.Users;
@@ -15,7 +15,7 @@ public class InternalUsersController(CandidateWorkflowService candidateWorkflowS
     public async Task<IActionResult> GetUser(CancellationToken cancellationToken)
     {
         var candidateId = User.GetCandidateId();
-        
+
         var candidate = await candidateWorkflowService.GetAsync(candidateId!.Value, cancellationToken);
 
         if (candidate is null) return CandidateNotFound(candidateId.Value);

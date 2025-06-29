@@ -1,7 +1,7 @@
 ﻿using System.Data;
 using OfficeOpenXml;
 
-namespace ViaQuestInc.StepOne.Infrastructure.Services;
+namespace ViaQuestInc.StepOne.Core.Kernel.Services;
 
 public class ExcelService
 {
@@ -21,20 +21,16 @@ public class ExcelService
 
             // Get the worksheet's column headers
             foreach (var cell in worksheet.Cells[headerRow, 1, 1, worksheet.Dimension.End.Column])
-            {
                 dataTable.Columns.Add(cell.Text);
-            }
 
             // Load worksheet rows into the DataTable
             for (var row = headerRow + 1; row <= worksheet.Dimension.End.Row; row++)
             {
                 var dataRow = dataTable.NewRow();
-                
+
                 for (var col = 1; col <= worksheet.Dimension.End.Column; col++)
-                {
                     dataRow[col - 1] = worksheet.Cells[row, col].Text;
-                }
-                
+
                 dataTable.Rows.Add(dataRow);
             }
 

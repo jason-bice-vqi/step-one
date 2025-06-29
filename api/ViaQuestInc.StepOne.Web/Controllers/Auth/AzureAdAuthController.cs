@@ -12,10 +12,11 @@ public class AzureAdAuthController(JwtService jwtService) : ApiControllerBase
     public IActionResult ExchangeAdJwtForStepOneJwt()
     {
         if (User.Identity is not { IsAuthenticated: true })
-        {
-            return Unauthorized(new
-                { Message = "User is not authenticated.", Claims = User.Claims.Select(c => new { c.Type, c.Value }) });
-        }
+            return Unauthorized(
+                new
+                {
+                    Message = "User is not authenticated.", Claims = User.Claims.Select(c => new { c.Type, c.Value })
+                });
 
         var jwt = jwtService.GenerateToken(User);
 

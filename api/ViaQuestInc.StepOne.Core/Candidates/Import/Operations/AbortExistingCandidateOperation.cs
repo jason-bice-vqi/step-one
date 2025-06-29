@@ -1,8 +1,8 @@
-﻿using ViaQuestInc.StepOne.Kernel.Data;
+﻿using ViaQuestInc.StepOne.Core.Data;
 
 namespace ViaQuestInc.StepOne.Core.Candidates.Import.Operations;
 
-public class AbortExistingCandidateOperation(IRepository repository) : ICandidateImportOperation
+public class AbortExistingCandidateOperation(IRepository<StepOneDbContext> repository) : ICandidateImportOperation
 {
     public async Task<bool> ShouldExecuteAsync(CandidateImportOptions options, CancellationToken cancellationToken)
     {
@@ -17,7 +17,7 @@ public class AbortExistingCandidateOperation(IRepository repository) : ICandidat
     public Task ExecuteAsync(CandidateImportOptions options, CancellationToken cancellationToken)
     {
         options.Abort = true;
-        
+
         return Task.CompletedTask;
     }
 }

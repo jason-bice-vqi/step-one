@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using ViaQuestInc.StepOne.Core.Auth;
 using ViaQuestInc.StepOne.Core.Workflows.Steps;
-using ViaQuestInc.StepOne.Kernel.Auth;
 using ViaQuestInc.StepOne.Web.Auth;
 
 namespace ViaQuestInc.StepOne.Web.Controllers.Workflows;
@@ -18,10 +18,12 @@ public class StepsController(StepService stepService) : ApiControllerBase
 
         return CreatedAtRoute(nameof(ShowStep), new { stepId = createdStep.Id }, createdStep);
     }
-    
+
     [Authorize(Roles = Roles.Internal)]
     [HttpPatch("{stepId:int}")]
-    public async Task<IActionResult> Update([FromRoute] int stepId, [FromBody] Step updatedStep,
+    public async Task<IActionResult> Update(
+        [FromRoute] int stepId,
+        [FromBody] Step updatedStep,
         CancellationToken cancellationToken)
     {
         var originalStep = await stepService.ShowAsync(stepId, cancellationToken);
@@ -32,7 +34,7 @@ public class StepsController(StepService stepService) : ApiControllerBase
 
         return Ok(updatedStep);
     }
-    
+
     [Authorize(Roles = Roles.Internal)]
     [HttpDelete("{stepId:int}")]
     public async Task<IActionResult> Delete(int stepId, CancellationToken cancellationToken)
@@ -45,7 +47,7 @@ public class StepsController(StepService stepService) : ApiControllerBase
 
         return NoContent();
     }
-    
+
     [HttpGet]
     public async Task<IActionResult> Index(CancellationToken cancellationToken)
     {
@@ -53,7 +55,7 @@ public class StepsController(StepService stepService) : ApiControllerBase
 
         return Ok(steps);
     }
-    
+
     [HttpGet("{stepId:int}", Name = nameof(ShowStep))]
     public async Task<IActionResult> ShowStep(int stepId, CancellationToken cancellationToken)
     {

@@ -9,12 +9,12 @@ public enum StepTypes
     /// A task that's completed at an external web site.
     /// </summary>
     ExternalHttpTask = 0,
-    
+
     /// <summary>
     /// A data entry task.
     /// </summary>
     DataEntry = 1,
-    
+
     /// <summary>
     /// A file that must be submitted/uploaded.
     /// </summary>

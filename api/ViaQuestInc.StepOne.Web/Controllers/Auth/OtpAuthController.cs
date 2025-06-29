@@ -22,9 +22,7 @@ public class OtpAuthController(IOtpService otpService) : ApiControllerBase
     public async Task<IActionResult> Authenticate([FromBody] OtpRequest otpRequest, CancellationToken cancellationToken)
     {
         if (!await otpService.ValidateOtpTokenAsync(otpRequest.PhoneNumber, otpRequest.Otp!, cancellationToken))
-        {
             return Unauthorized(new { Message = "Invalid OTP" });
-        }
 
         var jwt = await otpService.GetNativeTokenAsync(otpRequest.PhoneNumber, cancellationToken);
 

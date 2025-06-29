@@ -1,6 +1,4 @@
-﻿using ViaQuestInc.StepOne.Kernel.Data;
-
-namespace ViaQuestInc.StepOne.Kernel.Entity;
+﻿namespace ViaQuestInc.StepOne.Core.Data.Entity;
 
 public interface IDataSynchronizer
 {
@@ -20,7 +18,7 @@ public interface IDataSynchronizer
     /// Executes the synchronizer.
     /// </summary>
     Task SyncAsync(
-        IRepository repository,
+        IRepository<StepOneDbContext> repository,
         IServiceProvider serviceProvider,
         int batchSize,
         CancellationToken cancellationToken);

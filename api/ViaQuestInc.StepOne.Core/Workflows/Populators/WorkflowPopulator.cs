@@ -1,13 +1,16 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using ViaQuestInc.StepOne.Core.Data;
+using ViaQuestInc.StepOne.Core.Data.Entity;
 using ViaQuestInc.StepOne.Core.Workflows.Steps;
-using ViaQuestInc.StepOne.Kernel.Data;
-using ViaQuestInc.StepOne.Kernel.Entity;
 
 namespace ViaQuestInc.StepOne.Core.Workflows.Populators;
 
 public class WorkflowPopulator : IDataPopulator
 {
-    public async Task PopulateAsync(IRepository repository, IServiceProvider serviceProvider, int batchSize,
+    public async Task PopulateAsync(
+        IRepository<StepOneDbContext> repository,
+        IServiceProvider serviceProvider,
+        int batchSize,
         CancellationToken cancellationToken)
     {
         var steps = await repository.All<Step>().ToArrayAsync(cancellationToken);
@@ -109,7 +112,7 @@ public class WorkflowPopulator : IDataPopulator
                     new WorkflowStep
                     {
                         StepId = steps.Single(x => x.NameDefault == "Submit Signed W9").Id
-                    },
+                    }
                 }
             }
         };

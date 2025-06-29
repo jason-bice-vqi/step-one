@@ -20,7 +20,9 @@
     </ItemGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\ViaQuestInc.StepOne.Kernel\ViaQuestInc.StepOne.Kernel.csproj" />
+      <Folder Include="Auth\" />
+      <Folder Include="Data\" />
+      <Folder Include="Services\" />
     </ItemGroup>
 
 </Project>

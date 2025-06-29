@@ -1,4 +1,4 @@
-﻿namespace ViaQuestInc.StepOne.Kernel.Data;
+﻿namespace ViaQuestInc.StepOne.Core.Data;
 
 /// <summary>
 /// Describes an application's database handling at start-up.

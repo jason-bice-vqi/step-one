@@ -1,9 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Serilog;
 using ViaQuestInc.StepOne.Core.Data;
-using ViaQuestInc.StepOne.Infrastructure.Data;
-using ViaQuestInc.StepOne.Kernel.Data;
-using Environments = ViaQuestInc.StepOne.Kernel.Environments;
+using Environments = ViaQuestInc.StepOne.Core.Kernel.Environments;
 
 namespace ViaQuestInc.StepOne.Web.StartupActions.Data;
 
@@ -27,10 +25,7 @@ public class ApplyMigrationsAction(StepOneDbContext dbContext, DatabaseConfig da
     {
         await base.OnStartupAsync(app, cancellationToken);
 
-        if (!databaseConfig.EnableMigrations)
-        {
-            throw new("Cannot apply migrations with migrations disabled.");
-        }
+        if (!databaseConfig.EnableMigrations) throw new("Cannot apply migrations with migrations disabled.");
 
         var pendingMigrations = await DbContext.Database.GetPendingMigrationsAsync(cancellationToken);
 

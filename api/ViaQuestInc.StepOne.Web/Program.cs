@@ -7,13 +7,12 @@ using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Logging;
 using OfficeOpenXml;
 using Serilog;
-using ViaQuestInc.StepOne.Kernel;
+using ViaQuestInc.StepOne.Core.Kernel;
 using ViaQuestInc.StepOne.Web;
 using ViaQuestInc.StepOne.Web.Configuration;
 using ViaQuestInc.StepOne.Web.ServiceModules;
 using ViaQuestInc.StepOne.Web.ServicesManagement;
 using ViaQuestInc.StepOne.Web.StartupActions;
-using OfficeOpenXml;
 
 const string migrationsModeSwitch = "--migrations-mode";
 const string envVarsPrefix = "STEPONE_";
@@ -41,9 +40,7 @@ try
     var configurationBuilder = new ConfigurationBuilder().AddJsonFile("appsettings.json", false);
 
     if (!string.IsNullOrEmpty(environmentName))
-    {
         configurationBuilder.AddJsonFile($"appsettings.{environmentName}.json", true);
-    }
 
     configurationBuilder.AddEnvironmentVariables(envVarsPrefix);
     configurationBuilder.AddCommandLine(args);
@@ -76,11 +73,11 @@ try
             : string.Empty,
         banner
     );
-    
+
     if (args.Contains(migrationsModeSwitch))
     {
         var serviceModulesBuilder = new ServiceModulesBuilder(builder.Services, builder.Environment, configuration);
-        
+
         serviceModulesBuilder.AddModule<DatabaseModule>("Database");
 
         try
@@ -100,9 +97,7 @@ try
 
             if (!type.Equals("StopTheHostException", StringComparison.Ordinal) &&
                 !type.Equals("HostAbortedException", StringComparison.Ordinal))
-            {
                 throw;
-            }
 
             return 0;
         }
@@ -113,20 +108,22 @@ try
         "--migrations-mode",
         "dotnet ef dbcontext info -- --migrations-mode"
     );
-    
+
     const string stepOneCorsPolicy = nameof(stepOneCorsPolicy);
 
-    builder.Services.AddCors(options =>
-    {
-        options.AddPolicy(stepOneCorsPolicy,
-            policy =>
-            {
-                policy.WithOrigins("http://localhost:4200") // TODO
-                    .AllowAnyMethod()
-                    .AllowAnyHeader();
-            });
-    });
-    
+    builder.Services.AddCors(
+        options =>
+        {
+            options.AddPolicy(
+                stepOneCorsPolicy,
+                policy =>
+                {
+                    policy.WithOrigins("http://localhost:4200") // TODO
+                        .AllowAnyMethod()
+                        .AllowAnyHeader();
+                });
+        });
+
     builder.Services.AddHttpContextAccessor()
         .AddHttpClient()
         .AddRouting(options => options.LowercaseUrls = true)
@@ -135,7 +132,7 @@ try
         .AddStepOneModules(builder.Environment, configuration)
         .AddStepOneServices(configuration)
         .AddControllers();
-    
+
     var app = builder.Build();
 
     if (string.IsNullOrEmpty(app.Environment.EnvironmentName))
@@ -162,9 +159,7 @@ try
     if (!app.Environment.IsLocal())
     {
         if (!enableSsl)
-        {
             throw new("SSL must be enabled in all deployed environments. Set EnableSsl to true in appsettings.json.");
-        }
 
         app.UseExceptionHandler("/Error");
     }
@@ -185,19 +180,19 @@ try
     app.UseSerilogRequestLogging();
 
     var serverConfig = app.Services.GetService<IOptions<ServerConfig>>();
-    
+
     if (!string.IsNullOrEmpty(serverConfig?.Value.PathBase))
     {
         Log.Information("Server Path Base: {PathBase}", serverConfig.Value.PathBase);
         app.UsePathBase(serverConfig.Value.PathBase);
     }
-    
+
     app.UseRouting();
     app.UseCors(stepOneCorsPolicy);
     app.UseAuthentication();
     app.UseAuthorization();
     app.MapControllers().RequireAuthorization();
-    
+
     // Startup Actions
     using (var scope = app.Services.CreateScope())
     {
@@ -211,25 +206,22 @@ try
             await startupAction.OnStartupAsync(app);
         }
     }
-    
-    app.Lifetime.ApplicationStarted.Register(() =>
-    {
-        var server = app.Services.GetRequiredService<IServer>();
-        var addressFeature = server.Features.Get<IServerAddressesFeature>();
 
-        if (addressFeature?.Addresses is not null)
+    app.Lifetime.ApplicationStarted.Register(
+        () =>
         {
-            foreach (var address in addressFeature.Addresses)
-            {
-                Log.Information("StepOne API is listening on {Address}.", address);
-            }
-        }
-    });
-    
+            var server = app.Services.GetRequiredService<IServer>();
+            var addressFeature = server.Features.Get<IServerAddressesFeature>();
+
+            if (addressFeature?.Addresses is not null)
+                foreach (var address in addressFeature.Addresses)
+                    Log.Information("StepOne API is listening on {Address}.", address);
+        });
+
     ExcelPackage.LicenseContext = LicenseContext.Commercial;
 
     stopwatch.Stop();
-    
+
     Log.Information("");
     Log.Information("-------------------------------------------------");
     Log.Information(

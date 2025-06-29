@@ -1,6 +1,4 @@
-﻿using ViaQuestInc.StepOne.Kernel.Data;
-
-namespace ViaQuestInc.StepOne.Kernel.Entity;
+﻿namespace ViaQuestInc.StepOne.Core.Data.Entity;
 
 public interface IDataPopulator
 {
@@ -20,7 +18,7 @@ public interface IDataPopulator
     /// Executes the populator.
     /// </summary>
     Task PopulateAsync(
-        IRepository repository,
+        IRepository<StepOneDbContext> repository,
         IServiceProvider serviceProvider,
         int batchSize,
         CancellationToken cancellationToken);

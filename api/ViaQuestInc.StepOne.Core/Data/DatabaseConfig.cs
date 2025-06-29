@@ -1,4 +1,4 @@
-﻿namespace ViaQuestInc.StepOne.Kernel.Data;
+﻿namespace ViaQuestInc.StepOne.Core.Data;
 
 public class DatabaseConfig
 {
@@ -6,7 +6,7 @@ public class DatabaseConfig
     /// Disables database seeding/population: useful for rapid iteration on model changes.
     /// </summary>
     public bool DisablePopulators { get; set; }
-    
+
     public bool EnableMigrations { get; set; }
 
     public int RowValueExpressionLimit { get; set; }

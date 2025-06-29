@@ -5,7 +5,8 @@ namespace ViaQuestInc.StepOne.Web.ServiceModules;
 public class ServiceModulesBuilder(
     IServiceCollection services,
     IWebHostEnvironment environment,
-    IConfiguration configuration)
+    IConfiguration configuration
+)
 {
     public IServiceCollection Services { get; } = services;
 
@@ -24,17 +25,14 @@ public class ServiceModulesBuilder(
     {
         var module = new TModule();
 
-        if (!string.IsNullOrEmpty(configSectionName))
-        {
-            Configuration.GetSection(configSectionName).Bind(module);
-        }
-        
+        if (!string.IsNullOrEmpty(configSectionName)) Configuration.GetSection(configSectionName).Bind(module);
+
         Log.Information("Loading {Module} module:", module.GetType().Name);
-        
+
         module.Configure(Configuration, Services, Environment);
-        
+
         Log.Information("");
-        
+
         return this;
     }
 }

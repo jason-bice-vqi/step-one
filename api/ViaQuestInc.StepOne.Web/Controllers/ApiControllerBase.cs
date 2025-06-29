@@ -10,12 +10,12 @@ public class ApiControllerBase : ControllerBase
     {
         return NotFound($"Candidate '{candidateId}' was not found.");
     }
-    
+
     protected NotFoundObjectResult CandidateWorkflowNotFound(int candidateId)
     {
         return NotFound($"Workflow not found for candidate '{candidateId}'.");
     }
-    
+
     /// <summary>
     /// An override of <see cref="ControllerBase.Forbid()"/> that formulates a 403 Forbidden response with a custom
     /// message indicating why authorization for the requested resource failed. Only the first authorization failure
@@ -27,7 +27,7 @@ public class ApiControllerBase : ControllerBase
     protected static ObjectResult Forbid(AuthorizationResult authorizationResult)
     {
         var failureMessage = string.Join(',', authorizationResult.Failure!.FailureReasons);
-        
+
         return new(failureMessage)
         {
             StatusCode = (int)HttpStatusCode.Forbidden

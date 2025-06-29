@@ -1,4 +1,4 @@
-﻿namespace ViaQuestInc.StepOne.Kernel.Data;
+﻿namespace ViaQuestInc.StepOne.Core.Data;
 
 public abstract class SearchRequestBase
 {
@@ -11,7 +11,12 @@ public abstract class SearchRequestBase
     {
     }
 
-    public SearchRequestBase(bool desc, int page, int limit, string? sortBy, bool disableDefaultSortById,
+    public SearchRequestBase(
+        bool desc,
+        int page,
+        int limit,
+        string? sortBy,
+        bool disableDefaultSortById,
         string[] includes)
     {
         Desc = desc;

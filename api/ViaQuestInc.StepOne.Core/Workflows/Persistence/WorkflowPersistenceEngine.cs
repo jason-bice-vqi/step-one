@@ -4,7 +4,8 @@ namespace ViaQuestInc.StepOne.Core.Workflows.Persistence;
 
 public class WorkflowPersistenceEngine(
     IEnumerable<IWorkflowPersistenceOperation> workflowPersistenceOperations,
-    WorkflowService workflowService)
+    WorkflowService workflowService
+)
 {
     public async Task<Workflow> ExecuteAsync(PipelineOptions pipelineOptions, CancellationToken cancellationToken)
     {

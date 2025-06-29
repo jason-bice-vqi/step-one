@@ -11,7 +11,10 @@ public interface IStartupAction
     /// <returns>True if this action should execute; false otherwise.</returns>
     Task<bool> ShouldExecuteAsync(
         WebApplication webApplication,
-        CancellationToken cancellationToken = default) => Task.FromResult(true);
+        CancellationToken cancellationToken = default)
+    {
+        return Task.FromResult(true);
+    }
 
     /// <summary>
     /// Executes the startup action.

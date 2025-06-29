@@ -1,9 +1,9 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using ViaQuestInc.StepOne.Core.Auth;
 using ViaQuestInc.StepOne.Core.Workflows;
 using ViaQuestInc.StepOne.Core.Workflows.Persistence;
 using ViaQuestInc.StepOne.Core.Workflows.Services;
-using ViaQuestInc.StepOne.Kernel.Auth;
 using ViaQuestInc.StepOne.Web.Auth;
 
 namespace ViaQuestInc.StepOne.Web.Controllers.Workflows;
@@ -41,7 +41,9 @@ public class WorkflowsController(WorkflowService workflowService) : ApiControlle
 
     [Authorize(Roles = Roles.Internal)]
     [HttpPatch("{workflowId:int}")]
-    public async Task<IActionResult> Update([FromRoute] int workflowId, [FromBody] Workflow updatedWorkflow,
+    public async Task<IActionResult> Update(
+        [FromRoute] int workflowId,
+        [FromBody] Workflow updatedWorkflow,
         [FromServices] WorkflowPersistenceEngine workflowPersistenceEngine,
         CancellationToken cancellationToken)
     {
@@ -50,9 +52,7 @@ public class WorkflowsController(WorkflowService workflowService) : ApiControlle
         if (originalWorkflow == null) return NotFound($"Workflow {workflowId} was not found.");
 
         if (workflowId != updatedWorkflow.Id)
-        {
             return BadRequest($"The supplied workflow does not belong to workflow ID {workflowId}.");
-        }
 
         var pipelineOptions = new PipelineOptions(originalWorkflow, updatedWorkflow);
 

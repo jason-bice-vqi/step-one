@@ -1,11 +1,11 @@
-﻿using ViaQuestInc.StepOne.Kernel.Data;
+﻿using ViaQuestInc.StepOne.Core.Data;
 
 namespace ViaQuestInc.StepOne.Core.Workflows.Persistence.Operations;
 
 /// <summary>
 /// An operation that persists the steps included on the workflow.
 /// </summary>
-public class PersistWorkflowStepsOperation(IRepository repository) : IWorkflowPersistenceOperation
+public class PersistWorkflowStepsOperation(IRepository<StepOneDbContext> repository) : IWorkflowPersistenceOperation
 {
     public Task<bool> ShouldExecuteAsync(PipelineOptions pipelineOptions, CancellationToken cancellationToken)
     {
@@ -15,7 +15,7 @@ public class PersistWorkflowStepsOperation(IRepository repository) : IWorkflowPe
     public async Task ExecuteAsync(PipelineOptions pipelineOptions, CancellationToken cancellationToken)
     {
         var workflowSteps = pipelineOptions.UpdatedWorkflow.WorkflowSteps.ToArray();
-        
+
         await repository.UpdateRangeAsync(workflowSteps, cancellationToken);
     }
 }

@@ -1,10 +1,10 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using ViaQuestInc.StepOne.Core.Data;
 using ViaQuestInc.StepOne.Core.Workflows.Steps;
-using ViaQuestInc.StepOne.Kernel.Data;
 
 namespace ViaQuestInc.StepOne.Core.Workflows.Services;
 
-public class WorkflowService(IRepository repository)
+public class WorkflowService(IRepository<StepOneDbContext> repository)
 {
     private static readonly string[] DefaultIncludes =
     [
@@ -24,37 +24,39 @@ public class WorkflowService(IRepository repository)
         if (workflow.CopySteps)
         {
             var workflowSteps = copiedFromWorkflow.WorkflowSteps.ToArray();
-        
+
             foreach (var workflowStep in workflowSteps)
             {
                 workflowStep.WorkflowId = createdWorkflow.Id;
                 workflowStep.Id = 0;
             }
 
-            await repository.CreateRangeAsync(workflowSteps, cancellationToken);    
+            await repository.CreateRangeAsync(workflowSteps, cancellationToken);
         }
 
         return createdWorkflow;
     }
-    
+
     public async Task<IEnumerable<Workflow>> IndexAsync(CancellationToken cancellationToken)
     {
         return await repository.AllWithChildren<Workflow>(DefaultIncludes).ToArrayAsync(cancellationToken);
     }
-    
+
     public async Task<Workflow> ShowAsync(int workflowId, CancellationToken cancellationToken)
     {
-        return (await repository.GetWithChildrenAsync<Workflow>(x => x.Id == workflowId, cancellationToken,
+        return (await repository.GetWithChildrenAsync<Workflow>(
+            x => x.Id == workflowId,
+            cancellationToken,
             DefaultIncludes))!;
     }
 
     public async Task<Workflow> ShowWithJobTitleWorkflowsAsync(int workflowId, CancellationToken cancellationToken)
     {
-        var includes = DefaultIncludes.Concat(new [] {nameof(Workflow.JobTitleWorkflows)}).ToArray();
+        var includes = DefaultIncludes.Concat(new[] { nameof(Workflow.JobTitleWorkflows) }).ToArray();
 
         return (await repository.GetWithChildrenAsync<Workflow>(x => x.Id == workflowId, cancellationToken, includes))!;
     }
-    
+
     public async Task<int> DeleteAsync(Workflow workflow, CancellationToken cancellationToken)
     {
         return await repository.DeleteAsync(workflow, cancellationToken);

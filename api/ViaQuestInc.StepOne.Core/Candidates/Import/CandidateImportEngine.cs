@@ -20,10 +20,8 @@ public class CandidateImportEngine(IEnumerable<ICandidateImportOperation> candid
 
             foreach (var candidateImportOperation in candidateImportOperations)
             {
-                if (options.Abort || !await candidateImportOperation.ShouldExecuteAsync(options, cancellationToken))
-                {
-                    continue;
-                }
+                if (options.Abort ||
+                    !await candidateImportOperation.ShouldExecuteAsync(options, cancellationToken)) continue;
 
                 await candidateImportOperation.ExecuteAsync(options, cancellationToken);
             }

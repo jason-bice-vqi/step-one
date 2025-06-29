@@ -1,11 +1,11 @@
 ﻿using System.Text.Json;
 
-namespace ViaQuestInc.StepOne.Kernel.Entity;
+namespace ViaQuestInc.StepOne.Core.Data.Entity;
 
 public abstract class EntityBase<TId>
 {
     public virtual TId Id { get; set; }
-    
+
     protected virtual object Actual => this;
 
     public override bool Equals(object obj)
@@ -52,5 +52,8 @@ public abstract class EntityBase<TId>
         return ToJson().Equals(other.ToJson());
     }
 
-    public string ToJson() => JsonSerializer.Serialize(this, GetType());
+    public string ToJson()
+    {
+        return JsonSerializer.Serialize(this, GetType());
+    }
 }

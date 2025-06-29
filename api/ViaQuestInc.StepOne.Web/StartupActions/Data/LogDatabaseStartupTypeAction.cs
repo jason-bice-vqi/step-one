@@ -1,5 +1,5 @@
 ﻿using Serilog;
-using ViaQuestInc.StepOne.Kernel.Data;
+using ViaQuestInc.StepOne.Core.Data;
 
 namespace ViaQuestInc.StepOne.Web.StartupActions.Data;
 

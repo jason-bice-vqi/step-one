@@ -1,15 +1,16 @@
 ﻿using System.Data;
 using Microsoft.EntityFrameworkCore;
 using ViaQuestInc.StepOne.Core.Candidates.Import;
-using ViaQuestInc.StepOne.Infrastructure.Services;
-using ViaQuestInc.StepOne.Kernel.Data;
+using ViaQuestInc.StepOne.Core.Data;
+using ViaQuestInc.StepOne.Core.Kernel.Services;
 
 namespace ViaQuestInc.StepOne.Core.Candidates.Services;
 
 public class CandidateService(
     CandidateImportEngine candidateImportEngine,
     ExcelService excelService,
-    IRepository repository)
+    IRepository<StepOneDbContext> repository
+)
 {
     private const int HeaderRow = 7;
 
@@ -18,7 +19,8 @@ public class CandidateService(
         return await repository.GetAsync<Candidate>(x => x.PhoneNumber == phoneNumber, cancellationToken);
     }
 
-    public async Task<ICollection<Candidate>> ImportAsync(MemoryStream candidatesMemoryStream,
+    public async Task<ICollection<Candidate>> ImportAsync(
+        MemoryStream candidatesMemoryStream,
         CancellationToken cancellationToken)
     {
         using var dataSet = await excelService.ToDataSetAsync(candidatesMemoryStream, HeaderRow, cancellationToken);
@@ -47,20 +49,23 @@ public class CandidateService(
         await repository.UpdateAsync(candidate, cancellationToken);
     }
 
-    public async Task<SearchResponse<Candidate>> SearchAsync(CandidateSearchRequest searchRequest,
+    public async Task<SearchResponse<Candidate>> SearchAsync(
+        CandidateSearchRequest searchRequest,
         CancellationToken cancellationToken)
     {
         var candidates = await repository
-            .Filter<Candidate>(x =>
-                // Name
-                (searchRequest.Name == null || x.FirstName.Contains(searchRequest.Name) ||
-                 x.LastName.Contains(searchRequest.Name) || x.FullName.Contains(searchRequest.Name)) &&
-                // Candidate Status
-                (searchRequest.CandidateStatus == null || x.CandidateStatus == searchRequest.CandidateStatus) &&
-                // Workflow Status
-                (searchRequest.CandidateWorkflowStepStatus == null ||
-                 (x.CandidateWorkflowId != null && x.CandidateWorkflow!.CandidateWorkflowSteps.Any(w =>
-                     w.CandidateWorkflowStepStatus == searchRequest.CandidateWorkflowStepStatus))))
+            .Filter<Candidate>(
+                x =>
+                    // Name
+                    (searchRequest.Name == null || x.FirstName.Contains(searchRequest.Name) ||
+                     x.LastName.Contains(searchRequest.Name) || x.FullName.Contains(searchRequest.Name)) &&
+                    // Candidate Status
+                    (searchRequest.CandidateStatus == null || x.CandidateStatus == searchRequest.CandidateStatus) &&
+                    // Workflow Status
+                    (searchRequest.CandidateWorkflowStepStatus == null ||
+                     (x.CandidateWorkflowId != null && x.CandidateWorkflow!.CandidateWorkflowSteps.Any(
+                         w =>
+                             w.CandidateWorkflowStepStatus == searchRequest.CandidateWorkflowStepStatus))))
             .ToArrayAsync(cancellationToken);
 
         return new(candidates, searchRequest);

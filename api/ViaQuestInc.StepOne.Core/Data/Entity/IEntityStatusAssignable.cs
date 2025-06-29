@@ -1,4 +1,4 @@
-﻿namespace ViaQuestInc.StepOne.Kernel.Entity;
+﻿namespace ViaQuestInc.StepOne.Core.Data.Entity;
 
 public interface IEntityStatusAssignable
 {

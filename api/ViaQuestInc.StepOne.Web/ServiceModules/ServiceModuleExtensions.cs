@@ -7,14 +7,15 @@ namespace ViaQuestInc.StepOne.Web.ServiceModules;
 /// </summary>
 public static class ServiceModuleExtensions
 {
-    public static IServiceCollection AddStepOneModules(this IServiceCollection services,
+    public static IServiceCollection AddStepOneModules(
+        this IServiceCollection services,
         IWebHostEnvironment env,
         IConfiguration configuration)
     {
         var builder = new ServiceModulesBuilder(services, env, configuration);
 
         Log.Information("");
-        
+
         builder.AddModule<AuthModule>("Auth")
             .AddModule<DatabaseModule>("Database");
 

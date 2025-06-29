@@ -3,7 +3,7 @@
 /// <summary>
 /// An operation that resequences the steps within the workflow based on their order upon arrival. 
 /// </summary>
-public class ResequenceWorkflowStepsOperation: IWorkflowPersistenceOperation
+public class ResequenceWorkflowStepsOperation : IWorkflowPersistenceOperation
 {
     public Task<bool> ShouldExecuteAsync(PipelineOptions pipelineOptions, CancellationToken cancellationToken)
     {
@@ -13,9 +13,7 @@ public class ResequenceWorkflowStepsOperation: IWorkflowPersistenceOperation
     public Task ExecuteAsync(PipelineOptions pipelineOptions, CancellationToken cancellationToken)
     {
         for (var i = 0; i < pipelineOptions.UpdatedWorkflow.WorkflowSteps.Count; i++)
-        {
             pipelineOptions.UpdatedWorkflow.WorkflowSteps.ElementAt(i).StepIndex = i;
-        }
 
         return Task.CompletedTask;
     }

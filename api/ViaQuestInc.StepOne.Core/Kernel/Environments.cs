@@ -1,4 +1,4 @@
-﻿namespace ViaQuestInc.StepOne.Kernel;
+﻿namespace ViaQuestInc.StepOne.Core.Kernel;
 
 public static class Environments
 {

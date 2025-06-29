@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using ViaQuestInc.StepOne.Core.Auth;
 using ViaQuestInc.StepOne.Core.Candidates.Services;
-using ViaQuestInc.StepOne.Infrastructure.Auth;
 using ViaQuestInc.StepOne.Web.Auth;
 
 namespace ViaQuestInc.StepOne.Web.Controllers.Candidates;
@@ -22,9 +22,7 @@ public class CandidatesController(CandidateService candidateService) : ApiContro
                 "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
             ) ??
             false)
-        {
             return BadRequest("Invalid file format. Please upload an .xlsx file.");
-        }
 
         using var memoryStream = new MemoryStream();
 
@@ -36,7 +34,8 @@ public class CandidatesController(CandidateService candidateService) : ApiContro
     }
 
     [HttpGet]
-    public async Task<IActionResult> Index([FromQuery] CandidateSearchRequest searchRequest,
+    public async Task<IActionResult> Index(
+        [FromQuery] CandidateSearchRequest searchRequest,
         CancellationToken cancellationToken)
     {
         var searchResponse = await candidateService.SearchAsync(searchRequest, cancellationToken);

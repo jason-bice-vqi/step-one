@@ -7,14 +7,13 @@ using Microsoft.Extensions.Options;
 using Serilog;
 using ViaQuestInc.StepOne.Core.Candidates;
 using ViaQuestInc.StepOne.Core.Candidates.Workflows;
+using ViaQuestInc.StepOne.Core.Data.Entity;
 using ViaQuestInc.StepOne.Core.Organization;
 using ViaQuestInc.StepOne.Core.Organization.Populators;
 using ViaQuestInc.StepOne.Core.Workflows;
 using ViaQuestInc.StepOne.Core.Workflows.Populators;
 using ViaQuestInc.StepOne.Core.Workflows.Steps;
 using ViaQuestInc.StepOne.Core.Workflows.Steps.Populators;
-using ViaQuestInc.StepOne.Kernel.Data;
-using ViaQuestInc.StepOne.Kernel.Entity;
 
 namespace ViaQuestInc.StepOne.Core.Data;
 
@@ -32,7 +31,7 @@ public class StepOneDbContext(DbContextOptions<StepOneDbContext> options) : DbCo
     public DbSet<Step> Steps { get; set; }
     public DbSet<Workflow> Workflows { get; set; }
     public DbSet<WorkflowStep> WorkflowSteps { get; set; }
-    
+
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
         base.OnConfiguring(optionsBuilder);
@@ -73,7 +72,7 @@ public class StepOneDbContext(DbContextOptions<StepOneDbContext> options) : DbCo
             .HasForeignKey(cws => cws.CandidateWorkflowId)
             .OnDelete(DeleteBehavior.Cascade); // Deleting CandidateWorkflow deletes its CandidateWorkflowSteps
     }
-    
+
     public static async Task PopulateDatabaseAsync(IServiceProvider serviceProvider)
     {
         var hostEnvironment = serviceProvider.GetRequiredService<IHostEnvironment>();
@@ -91,15 +90,13 @@ public class StepOneDbContext(DbContextOptions<StepOneDbContext> options) : DbCo
 
             using (var scope = serviceProvider.CreateScope())
             {
-                var repository = scope.ServiceProvider.GetRequiredService<IRepository>();
+                var repository = scope.ServiceProvider.GetRequiredService<IRepository<StepOneDbContext>>();
                 var batchSize = scope.ServiceProvider
                     .GetRequiredService<IOptions<DatabaseConfig>>()
                     .Value.RowValueExpressionLimit;
 
                 foreach (var databasePopulator in priorityDatabasePopulators)
-                {
                     await PopulateEntity(databasePopulator, repository, serviceProvider, batchSize);
-                }
             }
 
             // Organize items within each group as largest -> smallest
@@ -112,21 +109,16 @@ public class StepOneDbContext(DbContextOptions<StepOneDbContext> options) : DbCo
                     //new CandidateWorkflowPopulator()
                 ],
                 [
-                    
                 ],
                 [
-                    
                 ],
                 new IDataPopulator[]
                 {
-                    
                 }
             };
 
             for (var i = 0; i < parallelSeedingGroups.Length; i++)
-            {
                 ParallelSeedDatabase(serviceProvider, parallelSeedingGroups[i], i);
-            }
         }
         catch (Exception ex)
         {
@@ -147,7 +139,7 @@ public class StepOneDbContext(DbContextOptions<StepOneDbContext> options) : DbCo
             databasePopulator =>
             {
                 using var scope = serviceProvider.CreateScope();
-                var repository = scope.ServiceProvider.GetRequiredService<IRepository>();
+                var repository = scope.ServiceProvider.GetRequiredService<IRepository<StepOneDbContext>>();
                 var batchSize = scope.ServiceProvider
                     .GetRequiredService<IOptions<DatabaseConfig>>()
                     .Value.RowValueExpressionLimit;
@@ -161,7 +153,7 @@ public class StepOneDbContext(DbContextOptions<StepOneDbContext> options) : DbCo
 
     private static async Task PopulateEntity(
         IDataPopulator dataPopulator,
-        IRepository repository,
+        IRepository<StepOneDbContext> repository,
         IServiceProvider serviceProvider,
         int batchSize)
     {

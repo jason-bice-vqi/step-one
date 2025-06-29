@@ -1,11 +1,8 @@
 ﻿using Serilog;
 using ViaQuestInc.StepOne.Core.Data;
-using ViaQuestInc.StepOne.Infrastructure.Data;
-using ViaQuestInc.StepOne.Kernel.Data;
-using Environments = ViaQuestInc.StepOne.Kernel.Environments;
+using Environments = ViaQuestInc.StepOne.Core.Kernel.Environments;
 
 namespace ViaQuestInc.StepOne.Web.StartupActions.Data;
-using Environments = Environments;
 
 /// <summary>
 /// An action that seeds the database with the required initial data.
@@ -36,12 +33,10 @@ public class PopulateDatabaseAction(StepOneDbContext dbContext, DatabaseConfig d
         await base.OnStartupAsync(app, cancellationToken);
 
         if (DatabaseStartupStatus.IsNew && DatabaseConfig.DatabaseStartupType != DatabaseStartupTypes.Recreate)
-        {
             Log.Warning(
                 "  Database startup type is {startupType}, but database is new. Running populators.",
                 DatabaseConfig.DatabaseStartupType
             );
-        }
 
         if (DatabaseConfig.DisablePopulators)
         {

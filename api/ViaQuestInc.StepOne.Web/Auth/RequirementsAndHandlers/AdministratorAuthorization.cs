@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.Identity.Web;
 using Serilog;
-using ViaQuestInc.StepOne.Kernel.Auth;
+using ViaQuestInc.StepOne.Core.Auth;
 
 namespace ViaQuestInc.StepOne.Web.Auth.RequirementsAndHandlers;
 
@@ -20,12 +20,12 @@ public class AdministratorHandler : AuthorizationHandler<AdministratorRequiremen
         AdministratorRequirement requirement)
     {
         Log.Verbose("Evaluating {Requirement}", nameof(AdministratorRequirement));
-        
+
         // This requirement needs to be succeeded regardless so that non-admins don't fail on this requirement.
         context.Succeed(requirement);
-        
+
         if (!context.User.IsInternal()) return Task.CompletedTask;
-        
+
         Log.Verbose("  {User} is administrator. Succeeding all requirements:", context.User.GetNameIdentifierId());
 
         // This is where the real work is done: If the user is an admin, all requirements are succeeded.
@@ -34,7 +34,7 @@ public class AdministratorHandler : AuthorizationHandler<AdministratorRequiremen
         foreach (var otherRequirement in otherRequirements)
         {
             Log.Verbose("    Succeeding {Requirement}", otherRequirement.GetType().Name);
-            
+
             context.Succeed(otherRequirement);
         }
 

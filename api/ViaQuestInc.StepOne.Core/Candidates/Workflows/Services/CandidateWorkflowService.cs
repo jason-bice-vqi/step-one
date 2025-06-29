@@ -1,11 +1,11 @@
-﻿using ViaQuestInc.StepOne.Core.Workflows;
+﻿using ViaQuestInc.StepOne.Core.Data;
+using ViaQuestInc.StepOne.Core.Data.Entity;
+using ViaQuestInc.StepOne.Core.Workflows;
 using ViaQuestInc.StepOne.Core.Workflows.Steps;
-using ViaQuestInc.StepOne.Kernel.Data;
-using ViaQuestInc.StepOne.Kernel.Entity;
 
 namespace ViaQuestInc.StepOne.Core.Candidates.Workflows.Services;
 
-public class CandidateWorkflowService(IRepository repository)
+public class CandidateWorkflowService(IRepository<StepOneDbContext> repository)
 {
     private static readonly string[] CandidateWorkflowIncludes =
     [
@@ -13,7 +13,9 @@ public class CandidateWorkflowService(IRepository repository)
         $"{nameof(CandidateWorkflow)}.{nameof(CandidateWorkflow.Workflow)}"
     ];
 
-    public async Task CreateAsync(Candidate candidate, Workflow workflow,
+    public async Task CreateAsync(
+        Candidate candidate,
+        Workflow workflow,
         CancellationToken cancellationToken)
     {
         ArgumentNullException.ThrowIfNull(workflow.WorkflowSteps);
@@ -28,12 +30,13 @@ public class CandidateWorkflowService(IRepository repository)
 
         await repository.CreateAsync(candidateWorkflow, cancellationToken);
 
-        var candidateWorkflowSteps = workflow.WorkflowSteps.Select(x =>
-            new CandidateWorkflowStep
-            {
-                CandidateWorkflowId = candidateWorkflow.Id,
-                WorkflowStepId = x.Id
-            }
+        var candidateWorkflowSteps = workflow.WorkflowSteps.Select(
+            x =>
+                new CandidateWorkflowStep
+                {
+                    CandidateWorkflowId = candidateWorkflow.Id,
+                    WorkflowStepId = x.Id
+                }
         ).ToArray();
 
         await repository.CreateRangeAsync(candidateWorkflowSteps, cancellationToken);
@@ -50,7 +53,9 @@ public class CandidateWorkflowService(IRepository repository)
 
     public async Task<Candidate?> GetWithWorkflowAsync(int candidateId, CancellationToken cancellationToken)
     {
-        return await repository.GetWithChildrenAsync<Candidate>(x => x.Id == candidateId,
-            cancellationToken, CandidateWorkflowIncludes);
+        return await repository.GetWithChildrenAsync<Candidate>(
+            x => x.Id == candidateId,
+            cancellationToken,
+            CandidateWorkflowIncludes);
     }
 }

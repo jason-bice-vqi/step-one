@@ -1,6 +1,6 @@
 ﻿using System.Security.Claims;
 
-namespace ViaQuestInc.StepOne.Kernel.Auth;
+namespace ViaQuestInc.StepOne.Core.Auth;
 
 public static class ClaimsPrincipalExtensions
 {
@@ -8,12 +8,12 @@ public static class ClaimsPrincipalExtensions
     {
         return claimsPrincipal.HasClaim(ClaimTypes.Role, Roles.External);
     }
-    
+
     public static bool IsInternal(this ClaimsPrincipal claimsPrincipal)
     {
         return claimsPrincipal.HasClaim(ClaimTypes.Role, Roles.Internal);
     }
-    
+
     public static int? GetCandidateId(this ClaimsPrincipal claimsPrincipal)
     {
         var candidateIdClaim = claimsPrincipal.FindFirstValue(Claims.CandidateId);

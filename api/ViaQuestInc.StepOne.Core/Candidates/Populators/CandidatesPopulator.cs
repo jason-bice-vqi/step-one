@@ -1,11 +1,14 @@
-﻿using ViaQuestInc.StepOne.Kernel.Data;
-using ViaQuestInc.StepOne.Kernel.Entity;
+﻿using ViaQuestInc.StepOne.Core.Data;
+using ViaQuestInc.StepOne.Core.Data.Entity;
 
 namespace ViaQuestInc.StepOne.Core.Candidates.Populators;
 
 public class CandidatesPopulator : IDataPopulator
 {
-    public async Task PopulateAsync(IRepository repository, IServiceProvider serviceProvider, int batchSize,
+    public async Task PopulateAsync(
+        IRepository<StepOneDbContext> repository,
+        IServiceProvider serviceProvider,
+        int batchSize,
         CancellationToken cancellationToken)
     {
         var testCandidates = new List<Candidate>
@@ -25,7 +28,7 @@ public class CandidatesPopulator : IDataPopulator
                 StartDate = null
             }
         };
-        
+
         await repository.CreateRangeAsync(testCandidates, cancellationToken);
     }
 }

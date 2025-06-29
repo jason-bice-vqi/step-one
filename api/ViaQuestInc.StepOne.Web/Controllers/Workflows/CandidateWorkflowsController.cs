@@ -9,7 +9,8 @@ namespace ViaQuestInc.StepOne.Web.Controllers.Workflows;
 [Route("candidates/{candidateId:int}/workflow")]
 public class CandidateWorkflowsController(
     CandidateWorkflowService candidateWorkflowService,
-    IAuthorizationService authorizationService)
+    IAuthorizationService authorizationService
+)
     : ApiControllerBase
 {
     public async Task<IActionResult> Get([FromRoute] int candidateId, CancellationToken cancellationToken)
@@ -20,7 +21,9 @@ public class CandidateWorkflowsController(
 
         if (candidateWithWorkflow.CandidateWorkflow is null) return CandidateWorkflowNotFound(candidateId);
 
-        var authorization = await authorizationService.AuthorizeAsync(User, candidateWithWorkflow.CandidateWorkflow,
+        var authorization = await authorizationService.AuthorizeAsync(
+            User,
+            candidateWithWorkflow.CandidateWorkflow,
             Policies.CandidateWorkflows.CanAccessCandidateWorkflow);
 
         return authorization.Succeeded ? Ok(candidateWithWorkflow) : Forbid(authorization);

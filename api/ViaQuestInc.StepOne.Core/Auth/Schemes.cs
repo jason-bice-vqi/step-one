@@ -1,4 +1,4 @@
-﻿namespace ViaQuestInc.StepOne.Kernel.Auth;
+﻿namespace ViaQuestInc.StepOne.Core.Auth;
 
 public static class Schemes
 {

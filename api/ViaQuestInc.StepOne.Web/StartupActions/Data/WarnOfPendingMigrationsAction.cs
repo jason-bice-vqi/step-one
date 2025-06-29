@@ -1,9 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Serilog;
 using ViaQuestInc.StepOne.Core.Data;
-using ViaQuestInc.StepOne.Infrastructure.Data;
-using ViaQuestInc.StepOne.Kernel.Data;
-using Environments = ViaQuestInc.StepOne.Kernel.Environments;
+using Environments = ViaQuestInc.StepOne.Core.Kernel.Environments;
 
 namespace ViaQuestInc.StepOne.Web.StartupActions.Data;
 
@@ -31,22 +29,18 @@ public class WarnOfPendingMigrationsAction(StepOneDbContext dbContext, DatabaseC
         if (!databaseConfig.EnableMigrations)
         {
             Log.Information("  Migrations are disabled; exiting action.");
-            
+
             return;
         }
 
         var pendingMigrations = (await DbContext.Database.GetPendingMigrationsAsync(cancellationToken)).ToArray();
 
         if (pendingMigrations.Length != 0)
-        {
             Log.Warning(
                 "  There are {PendingMigrationsCount} pending migrations that should be applied.",
                 pendingMigrations.Length
             );
-        }
         else
-        {
             Log.Information("  {NoPendingMigrations} pending migrations", "0");
-        }
     }
 }

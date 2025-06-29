@@ -1,6 +1,6 @@
 ﻿using System.Linq.Expressions;
 
-namespace ViaQuestInc.StepOne.Kernel.Data;
+namespace ViaQuestInc.StepOne.Core.Data;
 
 public class SearchResponse<T>
 {
@@ -62,7 +62,10 @@ public class SearchResponse<T>
             .ToArray();
     }
 
-    private int GetTotalPages() => Convert.ToInt32(Math.Ceiling((double)TotalItems / SearchRequest.Limit));
+    private int GetTotalPages()
+    {
+        return Convert.ToInt32(Math.Ceiling((double)TotalItems / SearchRequest.Limit));
+    }
 
     /// <summary>
     /// Sets the sortByProperty argument to the SortBy value of the SearchRequest object if it is set. If it is not
@@ -74,9 +77,7 @@ public class SearchResponse<T>
         if (string.IsNullOrEmpty(sortByProperty) &&
             typeof(TSource).GetProperties().Any(p => p.Name == "Id") &&
             !SearchRequest.DisableDefaultSortById)
-        {
             sortByProperty = "Id";
-        }
 
         return !string.IsNullOrEmpty(sortByProperty);
     }
@@ -96,10 +97,9 @@ public class SearchResponse<T>
         var parameterExpression = Expression.Parameter(type, "x");
 
         if (!TryGetPropertyExpression(parameterExpression, type, propNames, out var property))
-        {
-            throw new ArgumentException($"The property '{sortBy}' does not exist on the type '{type.Name}'.",
+            throw new ArgumentException(
+                $"The property '{sortBy}' does not exist on the type '{type.Name}'.",
                 nameof(sortBy));
-        }
 
         var boxedProperty = Expression.Convert(property, typeof(object));
         var expression = Expression.Lambda(boxedProperty, parameterExpression).Compile();
@@ -129,6 +129,7 @@ public class SearchResponse<T>
             propertyExpression = Expression.Property(propertyExpression, propInfo);
             type = propInfo.PropertyType;
         }
+
         return true;
     }
 }

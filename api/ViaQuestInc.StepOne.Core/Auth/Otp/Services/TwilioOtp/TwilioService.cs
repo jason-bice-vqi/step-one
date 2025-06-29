@@ -9,7 +9,8 @@ namespace ViaQuestInc.StepOne.Core.Auth.Otp.Services.TwilioOtp;
 public class TwilioService(
     CandidateService candidateService,
     JwtService jwtService,
-    AuthConfig authConfig) : IOtpService
+    AuthConfig authConfig
+) : IOtpService
 {
     public async Task<bool> SendOtpAsync(string phoneNumber, CancellationToken cancellationToken)
     {
@@ -39,7 +40,9 @@ public class TwilioService(
         return false;
     }
 
-    public async Task<bool> ValidateOtpTokenAsync(string phoneNumber, string otp,
+    public async Task<bool> ValidateOtpTokenAsync(
+        string phoneNumber,
+        string otp,
         CancellationToken cancellationToken)
     {
         var fullPhoneNumber = $"+1{phoneNumber}";
@@ -54,7 +57,9 @@ public class TwilioService(
                 pathServiceSid: authConfig.Twilio.VerifyServiceSid
             );
 
-            Log.Information("Twilio OTP Verification Result for {Phone}: {Result}", fullPhoneNumber,
+            Log.Information(
+                "Twilio OTP Verification Result for {Phone}: {Result}",
+                fullPhoneNumber,
                 verification.Status);
 
             return verification.Status == "approved";
@@ -74,7 +79,7 @@ public class TwilioService(
         var candidate = (await candidateService.GetByPhoneNumberAsync(phoneNumber, cancellationToken))!;
 
         await candidateService.RecordAuthenticatedAsync(candidate, cancellationToken);
-            
+
         var tokenStr = jwtService.GenerateToken(candidate);
 
         return tokenStr;

@@ -1,5 +1,5 @@
-﻿using ViaQuestInc.StepOne.Core.Organization;
-using ViaQuestInc.StepOne.Kernel.Entity;
+﻿using ViaQuestInc.StepOne.Core.Data.Entity;
+using ViaQuestInc.StepOne.Core.Organization;
 
 namespace ViaQuestInc.StepOne.Core.Workflows;
 
@@ -9,14 +9,14 @@ namespace ViaQuestInc.StepOne.Core.Workflows;
 public class JobTitleWorkflow : EntityBase<int>
 {
     public required int JobTitleId { get; set; }
-    
+
     /// <summary>
     /// The job title to which this relationship belongs.
     /// </summary>
     public JobTitle JobTitle { get; set; }
-    
+
     public required int WorkflowId { get; set; }
-    
+
     /// <summary>
     /// The workflow to which this relationship belongs.
     /// </summary>

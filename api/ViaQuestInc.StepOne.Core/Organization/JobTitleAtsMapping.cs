@@ -1,5 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
-using ViaQuestInc.StepOne.Kernel.Entity;
+using ViaQuestInc.StepOne.Core.Data.Entity;
 
 namespace ViaQuestInc.StepOne.Core.Organization;
 
@@ -10,9 +10,9 @@ namespace ViaQuestInc.StepOne.Core.Organization;
 public class JobTitleAtsMapping : EntityBase<int>
 {
     public int JobTitleId { get; set; }
-    
+
     public JobTitle JobTitle { get; set; }
-    
+
     /// <summary>
     /// The job title name as it appears in the ATS.
     /// </summary>

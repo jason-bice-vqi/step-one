@@ -1,11 +1,14 @@
-﻿using ViaQuestInc.StepOne.Kernel.Data;
-using ViaQuestInc.StepOne.Kernel.Entity;
+﻿using ViaQuestInc.StepOne.Core.Data;
+using ViaQuestInc.StepOne.Core.Data.Entity;
 
 namespace ViaQuestInc.StepOne.Core.Workflows.Steps.Populators;
 
 public class StepPopulator : IDataPopulator
 {
-    public async Task PopulateAsync(IRepository repository, IServiceProvider serviceProvider, int batchSize,
+    public async Task PopulateAsync(
+        IRepository<StepOneDbContext> repository,
+        IServiceProvider serviceProvider,
+        int batchSize,
         CancellationToken cancellationToken)
     {
         var steps = new[]
@@ -60,7 +63,7 @@ public class StepPopulator : IDataPopulator
                 NameDefault = "Submit Social Security Card",
                 StepType = StepTypes.FileSubmission
             },
-            
+
             // External Tasks
             new Step
             {

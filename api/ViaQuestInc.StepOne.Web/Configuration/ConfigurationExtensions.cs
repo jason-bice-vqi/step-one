@@ -2,7 +2,8 @@
 
 public static class ConfigurationExtensions
 {
-    public static IServiceCollection AddStepOneConfigurations(this IServiceCollection services,
+    public static IServiceCollection AddStepOneConfigurations(
+        this IServiceCollection services,
         IWebHostEnvironment env,
         IConfiguration configuration)
     {

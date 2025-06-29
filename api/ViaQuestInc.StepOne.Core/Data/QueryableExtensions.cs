@@ -1,7 +1,7 @@
 ﻿using System.Linq.Expressions;
 using Microsoft.EntityFrameworkCore;
 
-namespace ViaQuestInc.StepOne.Infrastructure.Data;
+namespace ViaQuestInc.StepOne.Core.Data;
 
 public static class QueryableExtensions
 {
@@ -9,9 +9,7 @@ public static class QueryableExtensions
         where T : class
     {
         if (includes != null && includes.Length > 0)
-        {
             query = includes.Aggregate(query, (current, include) => current.Include(include).AsNoTracking());
-        }
 
         return query;
     }
