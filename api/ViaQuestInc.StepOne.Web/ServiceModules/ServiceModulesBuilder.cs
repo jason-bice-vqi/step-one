@@ -25,9 +25,14 @@ public class ServiceModulesBuilder(
     {
         var module = new TModule();
 
-        if (!string.IsNullOrEmpty(configSectionName)) Configuration.GetSection(configSectionName).Bind(module);
+        if (!string.IsNullOrEmpty(configSectionName))
+            Configuration.GetSection(configSectionName)
+                .Bind(module);
 
-        Log.Information("Loading {Module} module:", module.GetType().Name);
+        Log.Information(
+            "Loading {Module} module:",
+            module.GetType()
+                .Name);
 
         module.Configure(Configuration, Services, Environment);
 

@@ -43,7 +43,9 @@ public abstract class SearchRequestBase
     public int Limit
     {
         get => limit;
-        set => limit = SinglePage ? int.MaxValue : Math.Min(value, MaxLimit);
+        set => limit = SinglePage
+            ? int.MaxValue
+            : Math.Min(value, MaxLimit);
     }
 
     /// <summary>

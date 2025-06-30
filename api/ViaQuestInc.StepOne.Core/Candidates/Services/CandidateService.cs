@@ -27,8 +27,12 @@ public class CandidateService(
 
         var hireDateBegin = new DateTime(2025, 3, 1);
 
-        var rawCandidateDataRows = dataSet.Tables[0].AsEnumerable()
-            .Where(x => DateTime.Parse(x["Date Hired"].ToString()!) >= hireDateBegin);
+        var rawCandidateDataRows = dataSet.Tables[0]
+            .AsEnumerable()
+            .Where(
+                x => DateTime.Parse(
+                    x["Date Hired"]
+                        .ToString()!) >= hireDateBegin);
 
         await candidateImportEngine.ImportAsync(rawCandidateDataRows, cancellationToken);
 

@@ -37,19 +37,23 @@ public abstract class EntityBase<TId>
 
     public override int GetHashCode()
     {
-        return (Actual.GetType().ToString() + Id).GetHashCode();
+        return (Actual.GetType()
+            .ToString() + Id).GetHashCode();
     }
 
-    public T Copy<T>() where T : EntityBase<TId>
+    public T Copy<T>()
+        where T : EntityBase<TId>
     {
         return JsonSerializer.Deserialize<T>(JsonSerializer.Serialize(this as T));
     }
 
-    public bool IsEquivalentTo<T>(T other) where T : EntityBase<TId>
+    public bool IsEquivalentTo<T>(T other)
+        where T : EntityBase<TId>
     {
         if (other == null || !other.Id.Equals(Id)) return false;
 
-        return ToJson().Equals(other.ToJson());
+        return ToJson()
+            .Equals(other.ToJson());
     }
 
     public string ToJson()

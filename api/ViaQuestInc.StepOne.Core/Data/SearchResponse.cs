@@ -25,7 +25,10 @@ public class SearchResponse<T>
     public int TotalPages { get; }
 
     public SearchResponse(IEnumerable<T> allItems, SearchRequestBase searchRequest)
-        : this(allItems.ToArray().AsQueryable(), searchRequest)
+        : this(
+            allItems.ToArray()
+                .AsQueryable(),
+            searchRequest)
     {
     }
 
@@ -75,7 +78,8 @@ public class SearchResponse<T>
     {
         sortByProperty = SearchRequest.SortBy!;
         if (string.IsNullOrEmpty(sortByProperty) &&
-            typeof(TSource).GetProperties().Any(p => p.Name == "Id") &&
+            typeof(TSource).GetProperties()
+                .Any(p => p.Name == "Id") &&
             !SearchRequest.DisableDefaultSortById)
             sortByProperty = "Id";
 
@@ -102,7 +106,8 @@ public class SearchResponse<T>
                 nameof(sortBy));
 
         var boxedProperty = Expression.Convert(property, typeof(object));
-        var expression = Expression.Lambda(boxedProperty, parameterExpression).Compile();
+        var expression = Expression.Lambda(boxedProperty, parameterExpression)
+            .Compile();
 
         return (Func<TSource, dynamic>)expression;
     }

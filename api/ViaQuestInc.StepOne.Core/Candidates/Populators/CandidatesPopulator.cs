@@ -23,7 +23,9 @@ public class CandidatesPopulator : IDataPopulator
                 JobId = 1,
                 JobTitle = "Software Architect",
                 LastName = "Bice",
-                PaycorCandidateId = Guid.NewGuid().ToString().Replace("-", string.Empty),
+                PaycorCandidateId = Guid.NewGuid()
+                    .ToString()
+                    .Replace("-", string.Empty),
                 PhoneNumber = "6144588078",
                 StartDate = null
             }

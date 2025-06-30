@@ -8,7 +8,8 @@ public class CandidateWorkflowStep : EntityBase<int>
 {
     public required int CandidateWorkflowId { get; set; }
 
-    [JsonIgnore] public CandidateWorkflow? CandidateWorkflow { get; set; }
+    [JsonIgnore]
+    public CandidateWorkflow? CandidateWorkflow { get; set; }
 
     public required int WorkflowStepId { get; set; }
 

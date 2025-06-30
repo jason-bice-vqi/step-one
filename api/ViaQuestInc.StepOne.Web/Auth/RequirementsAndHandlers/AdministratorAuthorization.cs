@@ -33,7 +33,10 @@ public class AdministratorHandler : AuthorizationHandler<AdministratorRequiremen
 
         foreach (var otherRequirement in otherRequirements)
         {
-            Log.Verbose("    Succeeding {Requirement}", otherRequirement.GetType().Name);
+            Log.Verbose(
+                "    Succeeding {Requirement}",
+                otherRequirement.GetType()
+                    .Name);
 
             context.Succeed(otherRequirement);
         }

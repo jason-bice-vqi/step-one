@@ -19,7 +19,8 @@ public class JwtService(AuthConfig authConfig)
 
     public string GenerateToken(ClaimsPrincipal fromAdClaimsPrincipal)
     {
-        var claims = fromAdClaimsPrincipal.Claims.Where(x => CopyAzureAdClaimNames.Contains(x.Type)).ToList();
+        var claims = fromAdClaimsPrincipal.Claims.Where(x => CopyAzureAdClaimNames.Contains(x.Type))
+            .ToList();
 
         claims.Add(new(ClaimTypes.Role, Roles.Internal));
 

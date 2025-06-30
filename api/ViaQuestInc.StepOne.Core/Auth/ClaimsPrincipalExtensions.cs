@@ -18,7 +18,9 @@ public static class ClaimsPrincipalExtensions
     {
         var candidateIdClaim = claimsPrincipal.FindFirstValue(Claims.CandidateId);
 
-        return candidateIdClaim == null ? null : int.Parse(candidateIdClaim);
+        return candidateIdClaim == null
+            ? null
+            : int.Parse(candidateIdClaim);
     }
 
     public static string? GetNameIdentifier(this ClaimsPrincipal claimsPrincipal)

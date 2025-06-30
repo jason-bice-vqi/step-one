@@ -3,6 +3,8 @@ using Microsoft.EntityFrameworkCore.Diagnostics;
 using Serilog;
 using ViaQuestInc.StepOne.Core.Data;
 using ViaQuestInc.StepOne.Core.Data.Entity;
+using ViaQuestInc.StepOne.Core.Organization;
+using ViaQuestInc.StepOne.Core.Organization.HrTracker;
 using ViaQuestInc.StepOne.Core.Organization.Synchronizers;
 using ViaQuestInc.StepOne.Web.StartupActions;
 using ViaQuestInc.StepOne.Web.StartupActions.Data;
@@ -22,7 +24,8 @@ public class DatabaseModule : IServiceModule
     public void Configure(IConfiguration configuration, IServiceCollection services, IWebHostEnvironment env)
     {
         Log.Information("  Registering database config");
-        var databaseConfig = configuration.GetSection("Database").Get<DatabaseConfig>() ??
+        var databaseConfig = configuration.GetSection("Database")
+                                 .Get<DatabaseConfig>() ??
                              throw new InvalidOperationException("Database configuration is missing");
 
         services.AddSingleton(databaseConfig);
@@ -39,27 +42,34 @@ public class DatabaseModule : IServiceModule
             .AddTransient<IStartupAction, WarnOfPendingMigrationsAction>(); // Must be last AcesDbContext action
 
         Log.Information("  Registering StepOne database context");
-        services.AddHealthChecks().Services.AddSqlServer<StepOneDbContext>(
-            ConnectionString,
-            o => o.MigrationsAssembly("ViaQuestInc.StepOne.Infrastructure").CommandTimeout(CommandTimeout),
-            o => o
-                .UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking)
-                .ConfigureWarnings(w => w.Ignore(SqlServerEventId.SavepointsDisabledBecauseOfMARS))
-                .EnableSensitiveDataLogging(EnableSensitiveDataLogging));
+        services.AddHealthChecks()
+            .Services.AddSqlServer<StepOneDbContext>(
+                ConnectionString,
+                o => o.MigrationsAssembly("ViaQuestInc.StepOne.Infrastructure")
+                    .CommandTimeout(CommandTimeout),
+                o => o
+                    .UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking)
+                    .ConfigureWarnings(w => w.Ignore(SqlServerEventId.SavepointsDisabledBecauseOfMARS))
+                    .EnableSensitiveDataLogging(EnableSensitiveDataLogging));
 
         Log.Information("  Registering HR Tracker database services");
         services.AddScoped<IRepository<HrtDbContext>, Repository<HrtDbContext>>();
 
         Log.Information("  Registering HR Tracker database context");
-        services.AddHealthChecks().Services.AddSqlServer<HrtDbContext>(
-            HrtConnectionString,
-            null,
-            o => o
-                .UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking)
-                .ConfigureWarnings(w => w.Ignore(SqlServerEventId.SavepointsDisabledBecauseOfMARS))
-                .EnableSensitiveDataLogging(EnableSensitiveDataLogging));
-        
+        services.AddHealthChecks()
+            .Services.AddSqlServer<HrtDbContext>(
+                HrtConnectionString,
+                null,
+                o => o
+                    .UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking)
+                    .ConfigureWarnings(w => w.Ignore(SqlServerEventId.SavepointsDisabledBecauseOfMARS))
+                    .EnableSensitiveDataLogging(EnableSensitiveDataLogging));
+
         Log.Information("  Registering HRT-to-StepOne Synchronizers");
-        services.AddTransient<IDataSynchronizer, CompanySynchronizer>();
+        services.AddTransient<IDataSynchronizer, HrtSynchronizer<HrtCompany, Company, int>>();
+        services.AddTransient<IDataSynchronizer, HrtSynchronizer<HrtRegion, Region, int>>();
+        services.AddTransient<IDataSynchronizer, HrtSynchronizer<HrtBranch, Branch, int>>();
+        // Requires Companies to be current:
+        services.AddTransient<IDataSynchronizer, HrtSynchronizer<HrtJobTitle, JobTitle, int>>();
     }
 }

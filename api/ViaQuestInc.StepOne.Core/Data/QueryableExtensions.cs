@@ -9,7 +9,10 @@ public static class QueryableExtensions
         where T : class
     {
         if (includes != null && includes.Length > 0)
-            query = includes.Aggregate(query, (current, include) => current.Include(include).AsNoTracking());
+            query = includes.Aggregate(
+                query,
+                (current, include) => current.Include(include)
+                    .AsNoTracking());
 
         return query;
     }

@@ -6,29 +6,38 @@ using Microsoft.EntityFrameworkCore.Metadata;
 
 namespace ViaQuestInc.StepOne.Core.Data;
 
-public class Repository<TContext>(TContext context) : IRepository<TContext> where TContext : DbContext
+public class Repository<TContext>(TContext context) : IRepository<TContext>
+    where TContext : DbContext
 {
     private const string WildcardIncludes = "*";
     private const string TerminatingWildcardIncludes = $".{WildcardIncludes}";
 
-    public IQueryable<T> All<T>(params Expression<Func<T, object>>[]? includes) where T : class
+    public IQueryable<T> All<T>(params Expression<Func<T, object>>[]? includes)
+        where T : class
     {
-        var query = context.Set<T>().AsQueryable();
+        var query = context.Set<T>()
+            .AsQueryable();
 
         if (includes != null && includes.Length != 0) query = query.Includes(includes);
 
         return query;
     }
 
-    public IQueryable<T> AllWithChildren<T>(params string[]? includes) where T : class
+    public IQueryable<T> AllWithChildren<T>(params string[]? includes)
+        where T : class
     {
-        var validatedIncludes = ValidateRequestedIncludes<T>(includes).ToArray();
+        var validatedIncludes = ValidateRequestedIncludes<T>(includes)
+            .ToArray();
 
-        if (validatedIncludes.Length == 0) return context.Set<T>().AsQueryable();
+        if (validatedIncludes.Length == 0)
+            return context.Set<T>()
+                .AsQueryable();
 
-        var query = context.Set<T>().Include(validatedIncludes.First());
+        var query = context.Set<T>()
+            .Include(validatedIncludes.First());
 
-        query = validatedIncludes.Skip(1).Aggregate(query, (current, include) => current.Include(include));
+        query = validatedIncludes.Skip(1)
+            .Aggregate(query, (current, include) => current.Include(include));
 
         return query.AsQueryable();
     }
@@ -42,70 +51,92 @@ public class Repository<TContext>(TContext context) : IRepository<TContext> wher
     public async Task<T?> GetWithChildrenAsync<T>(
         Expression<Func<T, bool>> expression,
         CancellationToken cancellationToken,
-        params string[]? includes) where T : class
+        params string[]? includes)
+        where T : class
     {
-        return await FilterWithChildren(expression, includes).SingleOrDefaultAsync(cancellationToken);
+        return await FilterWithChildren(expression, includes)
+            .SingleOrDefaultAsync(cancellationToken);
     }
 
     public async Task<T?> GetWithChildrenAsync<T>(
         Expression<Func<T, bool>> expression,
         CancellationToken cancellationToken,
-        params Expression<Func<T, object>>[]? includes) where T : class
+        params Expression<Func<T, object>>[]? includes)
+        where T : class
     {
-        return await All(includes).SingleOrDefaultAsync(expression, cancellationToken);
+        return await All(includes)
+            .SingleOrDefaultAsync(expression, cancellationToken);
     }
 
-    public async Task<T?> FindAsync<T>(object key, CancellationToken cancellationToken) where T : class
+    public async Task<T?> FindAsync<T>(object key, CancellationToken cancellationToken)
+        where T : class
     {
         var entity = await context.FindAsync<T>([key], cancellationToken);
 
         if (entity != null && context.ChangeTracker.QueryTrackingBehavior == QueryTrackingBehavior.NoTracking)
-            context.Entry(entity).State = EntityState.Detached;
+            context.Entry(entity)
+                .State = EntityState.Detached;
 
         return entity;
     }
 
     public IQueryable<T> Filter<T>(
         Expression<Func<T, bool>> expression,
-        params Expression<Func<T, object>>[]? includes) where T : class
+        params Expression<Func<T, object>>[]? includes)
+        where T : class
     {
-        return All(includes).Where(expression);
+        return All(includes)
+            .Where(expression);
     }
 
     public IQueryable<T> FilterWithChildren<T>(
         Expression<Func<T, bool>> predicate,
-        params string[]? includes) where T : class
+        params string[]? includes)
+        where T : class
     {
-        var validatedIncludes = ValidateRequestedIncludes<T>(includes).ToArray();
+        var validatedIncludes = ValidateRequestedIncludes<T>(includes)
+            .ToArray();
 
-        if (validatedIncludes.Length == 0) return context.Set<T>().Where(predicate).AsQueryable();
+        if (validatedIncludes.Length == 0)
+            return context.Set<T>()
+                .Where(predicate)
+                .AsQueryable();
 
-        var query = context.Set<T>().Include(validatedIncludes.First());
+        var query = context.Set<T>()
+            .Include(validatedIncludes.First());
 
         query = validatedIncludes
             .Skip(1)
             .Aggregate(query, (current, include) => current.Include(include));
 
-        return query.Where(predicate).AsQueryable();
+        return query.Where(predicate)
+            .AsQueryable();
     }
 
     public async Task<bool> ContainsAsync<T>(
         Expression<Func<T, bool>> predicate,
-        CancellationToken cancellationToken) where T : class
+        CancellationToken cancellationToken)
+        where T : class
     {
-        return await context.Set<T>().CountAsync(predicate, cancellationToken) > 0;
+        return await context.Set<T>()
+            .CountAsync(predicate, cancellationToken) > 0;
     }
 
-    public T CreateNoSave<T>(T tObject) where T : class
+    public T CreateNoSave<T>(T tObject)
+        where T : class
     {
-        return context.Set<T>().Add(tObject).Entity;
+        return context.Set<T>()
+            .Add(tObject)
+            .Entity;
     }
 
-    public async Task<T> CreateAsync<T>(T tObject, CancellationToken cancellationToken) where T : class
+    public async Task<T> CreateAsync<T>(T tObject, CancellationToken cancellationToken)
+        where T : class
     {
         StripNavigationProperties(tObject);
 
-        var newEntry = (await context.Set<T>().AddAsync(tObject, cancellationToken)).Entity;
+        var newEntry = (await context.Set<T>()
+            .AddAsync(tObject, cancellationToken)).Entity;
 
         try
         {
@@ -117,13 +148,15 @@ public class Repository<TContext>(TContext context) : IRepository<TContext> wher
         }
         finally
         {
-            context.Entry(tObject).State = EntityState.Detached;
+            context.Entry(tObject)
+                .State = EntityState.Detached;
         }
 
         return newEntry;
     }
 
-    public async Task CreateRangeAsync<T>(IList<T> entities, CancellationToken cancellationToken) where T : class
+    public async Task CreateRangeAsync<T>(IList<T> entities, CancellationToken cancellationToken)
+        where T : class
     {
         if (!entities.Any()) return;
 
@@ -142,28 +175,35 @@ public class Repository<TContext>(TContext context) : IRepository<TContext> wher
         }
     }
 
-    public async Task<int> DeleteAsync<T>(T? entity, CancellationToken cancellationToken) where T : class
+    public async Task<int> DeleteAsync<T>(T? entity, CancellationToken cancellationToken)
+        where T : class
     {
         if (entity == null) return 0;
 
-        context.Entry(entity).State = EntityState.Deleted;
-        context.Set<T>().Remove(entity);
+        context.Entry(entity)
+            .State = EntityState.Deleted;
+        context.Set<T>()
+            .Remove(entity);
 
         return await context.SaveChangesAsync(cancellationToken);
     }
 
     public async Task<int> DeleteAsync<T>(
         Expression<Func<T, bool>> predicate,
-        CancellationToken cancellationToken) where T : class
+        CancellationToken cancellationToken)
+        where T : class
     {
-        var entities = Filter(predicate).ToArray();
+        var entities = Filter(predicate)
+            .ToArray();
 
-        context.Set<T>().RemoveRange(entities);
+        context.Set<T>()
+            .RemoveRange(entities);
 
         return await context.SaveChangesAsync(cancellationToken);
     }
 
-    public async Task DeleteRangeAsync<T>(IList<T> entities, CancellationToken cancellationToken) where T : class
+    public async Task DeleteRangeAsync<T>(IList<T> entities, CancellationToken cancellationToken)
+        where T : class
     {
         if (!entities.Any()) return;
 
@@ -174,7 +214,8 @@ public class Repository<TContext>(TContext context) : IRepository<TContext> wher
         await context.SaveChangesAsync(cancellationToken);
     }
 
-    public async Task ClearAsync<T>(CancellationToken cancellationToken) where T : class
+    public async Task ClearAsync<T>(CancellationToken cancellationToken)
+        where T : class
     {
         try
         {
@@ -208,7 +249,8 @@ public class Repository<TContext>(TContext context) : IRepository<TContext> wher
         return itemsUpdated;
     }
 
-    public async Task<int> UpdateAsync<T>(T entity, CancellationToken cancellationToken) where T : class
+    public async Task<int> UpdateAsync<T>(T entity, CancellationToken cancellationToken)
+        where T : class
     {
         int itemsUpdated;
         StripNavigationProperties(entity);
@@ -225,7 +267,8 @@ public class Repository<TContext>(TContext context) : IRepository<TContext> wher
         finally
         {
             if (context.ChangeTracker.QueryTrackingBehavior == QueryTrackingBehavior.NoTracking)
-                context.Entry(entity).State = EntityState.Detached;
+                context.Entry(entity)
+                    .State = EntityState.Detached;
         }
 
         return itemsUpdated;
@@ -239,9 +282,12 @@ public class Repository<TContext>(TContext context) : IRepository<TContext> wher
         return context.Database.ExecuteSqlRawAsync(procedureCommand, cancellationToken, sqlParams);
     }
 
-    public Task<List<T>> RawSqlQueryAsync<T>(string query, CancellationToken cancellationToken) where T : class
+    public Task<List<T>> RawSqlQueryAsync<T>(string query, CancellationToken cancellationToken)
+        where T : class
     {
-        return context.Set<T>().FromSqlRaw(query).ToListAsync(cancellationToken);
+        return context.Set<T>()
+            .FromSqlRaw(query)
+            .ToListAsync(cancellationToken);
     }
 
     public Task<int> ExecuteSqlRawAsync(string sql, CancellationToken cancellationToken)
@@ -264,10 +310,12 @@ public class Repository<TContext>(TContext context) : IRepository<TContext> wher
     {
         return t.IsGenericType
             ? GetNavigationProperties(t.GenericTypeArguments[0])
-            : context.Model.FindEntityType(t)!.GetNavigations().Where(x => !x.TargetEntityType.IsOwned());
+            : context.Model.FindEntityType(t)!.GetNavigations()
+                .Where(x => !x.TargetEntityType.IsOwned());
     }
 
-    public IEnumerable<string> ValidateRequestedIncludes<T>(string[]? requestedIncludes) where T : class
+    public IEnumerable<string> ValidateRequestedIncludes<T>(string[]? requestedIncludes)
+        where T : class
     {
         if (requestedIncludes == null || requestedIncludes.Length == 0) return Array.Empty<string>();
 
@@ -275,13 +323,16 @@ public class Repository<TContext>(TContext context) : IRepository<TContext> wher
             requestedIncludes
                 .Where(r => !r.EndsWith(WildcardIncludes))
                 .ToList();
-        var wildcardIncludes = requestedIncludes.Except(explicitRequestedIncludes).ToList();
+        var wildcardIncludes = requestedIncludes.Except(explicitRequestedIncludes)
+            .ToList();
 
         // Handle [WildcardIncludes] at the root of the type
         if (wildcardIncludes.Contains(WildcardIncludes))
         {
             wildcardIncludes.Remove(WildcardIncludes);
-            explicitRequestedIncludes.AddRange(GetNavigationProperties(typeof(T)).Select(n => n.Name));
+            explicitRequestedIncludes.AddRange(
+                GetNavigationProperties(typeof(T))
+                    .Select(n => n.Name));
         }
 
         // Handle nested/deep [WildcardIncludes]
@@ -296,17 +347,23 @@ public class Repository<TContext>(TContext context) : IRepository<TContext> wher
             explicitRequestedIncludes.AddRange(navPropNames.Select(n => $"{wildcardInclude}.{n}"));
         }
 
-        var validIncludes = explicitRequestedIncludes.Where(r => GetProperty(typeof(T), r) != null).ToArray();
-        var invalidIncludes = explicitRequestedIncludes.Except(validIncludes).ToArray();
+        var validIncludes = explicitRequestedIncludes.Where(r => GetProperty(typeof(T), r) != null)
+            .ToArray();
+        var invalidIncludes = explicitRequestedIncludes.Except(validIncludes)
+            .ToArray();
 
         if (invalidIncludes.Any()) throw new($"Invalid includes: {string.Join(',', invalidIncludes)}");
 
         return validIncludes;
     }
 
-    public T StripNavigationProperties<T>(T entity) where T : class
+    public T StripNavigationProperties<T>(T entity)
+        where T : class
     {
-        if (context.Entry(entity).State != EntityState.Detached) context.Entry(entity).State = EntityState.Detached;
+        if (context.Entry(entity)
+                .State != EntityState.Detached)
+            context.Entry(entity)
+                .State = EntityState.Detached;
 
         var type = typeof(T);
         var navigationProperties = GetNavigationProperties(type);
@@ -321,19 +378,23 @@ public class Repository<TContext>(TContext context) : IRepository<TContext> wher
         return entity;
     }
 
-    public string GetTableName<T>() where T : class
+    public string GetTableName<T>()
+        where T : class
     {
         return context.Model.FindEntityType(typeof(T))!.GetTableName()!;
     }
 
-    public async Task<bool> AnyAsync<T>(CancellationToken cancellationToken) where T : class
+    public async Task<bool> AnyAsync<T>(CancellationToken cancellationToken)
+        where T : class
     {
-        return await context.Set<T>().FirstOrDefaultAsync(cancellationToken) != null;
+        return await context.Set<T>()
+            .FirstOrDefaultAsync(cancellationToken) != null;
     }
 
     private void ResetChangeTracker()
     {
-        foreach (var entry in context.ChangeTracker.Entries().ToList()) entry.State = EntityState.Detached;
+        foreach (var entry in context.ChangeTracker.Entries()
+                     .ToList()) entry.State = EntityState.Detached;
     }
 
     /// <summary>
@@ -356,7 +417,10 @@ public class Repository<TContext>(TContext context) : IRepository<TContext> wher
         }
 
         return parts.Length > 1 && propertyInfo != null
-            ? GetProperty(propertyInfo.PropertyType, parts.Skip(1).Aggregate((a, i) => a + "." + i))
+            ? GetProperty(
+                propertyInfo.PropertyType,
+                parts.Skip(1)
+                    .Aggregate((a, i) => a + "." + i))
             : propertyInfo;
     }
 }

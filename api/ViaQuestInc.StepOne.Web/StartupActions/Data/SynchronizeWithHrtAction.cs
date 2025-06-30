@@ -1,5 +1,4 @@
 ﻿using Microsoft.Extensions.Options;
-using Serilog;
 using ViaQuestInc.StepOne.Core.Data;
 using ViaQuestInc.StepOne.Core.Data.Entity;
 
@@ -15,7 +14,7 @@ public class SynchronizeWithHrtAction(
     public async Task OnStartupAsync(WebApplication webApplication, CancellationToken cancellationToken = default)
     {
         using var scope = serviceProvider.CreateScope();
-        
+
         var batchSize = scope.ServiceProvider
             .GetRequiredService<IOptions<DatabaseConfig>>()
             .Value.RowValueExpressionLimit;
@@ -31,8 +30,6 @@ public class SynchronizeWithHrtAction(
 
             if (!shouldSync) continue;
 
-            Log.Information("    Executing {SyncName}", dataSynchronizer.GetType().Name);
-            
             await dataSynchronizer.SyncAsync(
                 stepOneRepository,
                 hrtRepository,

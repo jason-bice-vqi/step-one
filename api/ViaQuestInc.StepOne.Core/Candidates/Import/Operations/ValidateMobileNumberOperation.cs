@@ -11,7 +11,9 @@ public class ValidateMobileNumberOperation : ICandidateImportOperation
 
     public Task ExecuteAsync(CandidateImportOptions options, CancellationToken cancellationToken)
     {
-        var rawMobileNumber = options.CurrentRawCandidateDataRow["Mobile Phone"].ToString()?.ToUnformattedPhoneNumber();
+        var rawMobileNumber = options.CurrentRawCandidateDataRow["Mobile Phone"]
+            .ToString()
+            ?.ToUnformattedPhoneNumber();
 
         if (rawMobileNumber == null) options.Abort = true;
 

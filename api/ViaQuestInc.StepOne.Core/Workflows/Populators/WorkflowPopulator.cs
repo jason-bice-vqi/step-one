@@ -13,7 +13,8 @@ public class WorkflowPopulator : IDataPopulator
         int batchSize,
         CancellationToken cancellationToken)
     {
-        var steps = await repository.All<Step>().ToArrayAsync(cancellationToken);
+        var steps = await repository.All<Step>()
+            .ToArrayAsync(cancellationToken);
 
         // Arrange steps in display order, as StepIndex will be established based on this order.
         var workflows = new[]
@@ -25,27 +26,33 @@ public class WorkflowPopulator : IDataPopulator
                 {
                     new WorkflowStep
                     {
-                        StepId = steps.Single(x => x.NameDefault == "Submit Signed Offer Letter").Id
+                        StepId = steps.Single(x => x.NameDefault == "Submit Signed Offer Letter")
+                            .Id
                     },
                     new WorkflowStep
                     {
-                        StepId = steps.Single(x => x.NameDefault == "Complete Employment Application").Id
+                        StepId = steps.Single(x => x.NameDefault == "Complete Employment Application")
+                            .Id
                     },
                     new WorkflowStep
                     {
-                        StepId = steps.Single(x => x.NameDefault == "Submit Signed Verification of Compliance Form").Id
+                        StepId = steps.Single(x => x.NameDefault == "Submit Signed Verification of Compliance Form")
+                            .Id
                     },
                     new WorkflowStep
                     {
-                        StepId = steps.Single(x => x.NameDefault == "Complete Pre-Employment Form").Id
+                        StepId = steps.Single(x => x.NameDefault == "Complete Pre-Employment Form")
+                            .Id
                     },
                     new WorkflowStep
                     {
-                        StepId = steps.Single(x => x.NameDefault == "Submit Signed W9").Id
+                        StepId = steps.Single(x => x.NameDefault == "Submit Signed W9")
+                            .Id
                     },
                     new WorkflowStep
                     {
-                        StepId = steps.Single(x => x.NameDefault == "Submit Proof of Highest Form of Education").Id
+                        StepId = steps.Single(x => x.NameDefault == "Submit Proof of Highest Form of Education")
+                            .Id
                     }
                 }
             },
@@ -56,35 +63,43 @@ public class WorkflowPopulator : IDataPopulator
                 {
                     new WorkflowStep
                     {
-                        StepId = steps.Single(x => x.NameDefault == "Submit Signed Offer Letter").Id
+                        StepId = steps.Single(x => x.NameDefault == "Submit Signed Offer Letter")
+                            .Id
                     },
                     new WorkflowStep
                     {
-                        StepId = steps.Single(x => x.NameDefault == "Complete Employment Application").Id
+                        StepId = steps.Single(x => x.NameDefault == "Complete Employment Application")
+                            .Id
                     },
                     new WorkflowStep
                     {
-                        StepId = steps.Single(x => x.NameDefault == "Submit Signed Verification of Compliance Form").Id
+                        StepId = steps.Single(x => x.NameDefault == "Submit Signed Verification of Compliance Form")
+                            .Id
                     },
                     new WorkflowStep
                     {
-                        StepId = steps.Single(x => x.NameDefault == "Complete Pre-Employment Form").Id
+                        StepId = steps.Single(x => x.NameDefault == "Complete Pre-Employment Form")
+                            .Id
                     },
                     new WorkflowStep
                     {
-                        StepId = steps.Single(x => x.NameDefault == "Submit Signed W9").Id
+                        StepId = steps.Single(x => x.NameDefault == "Submit Signed W9")
+                            .Id
                     },
                     new WorkflowStep
                     {
-                        StepId = steps.Single(x => x.NameDefault == "Submit Proof of Highest Form of Education").Id
+                        StepId = steps.Single(x => x.NameDefault == "Submit Proof of Highest Form of Education")
+                            .Id
                     },
                     new WorkflowStep
                     {
-                        StepId = steps.Single(x => x.NameDefault == "Submit Driver's License").Id
+                        StepId = steps.Single(x => x.NameDefault == "Submit Driver's License")
+                            .Id
                     },
                     new WorkflowStep
                     {
-                        StepId = steps.Single(x => x.NameDefault == "Submit Social Security Card").Id
+                        StepId = steps.Single(x => x.NameDefault == "Submit Social Security Card")
+                            .Id
                     }
                 }
             },
@@ -95,23 +110,28 @@ public class WorkflowPopulator : IDataPopulator
                 {
                     new WorkflowStep
                     {
-                        StepId = steps.Single(x => x.NameDefault == "Submit Signed Offer Letter").Id
+                        StepId = steps.Single(x => x.NameDefault == "Submit Signed Offer Letter")
+                            .Id
                     },
                     new WorkflowStep
                     {
-                        StepId = steps.Single(x => x.NameDefault == "Complete Employment Application").Id
+                        StepId = steps.Single(x => x.NameDefault == "Complete Employment Application")
+                            .Id
                     },
                     new WorkflowStep
                     {
-                        StepId = steps.Single(x => x.NameDefault == "Submit Signed Verification of Compliance Form").Id
+                        StepId = steps.Single(x => x.NameDefault == "Submit Signed Verification of Compliance Form")
+                            .Id
                     },
                     new WorkflowStep
                     {
-                        StepId = steps.Single(x => x.NameDefault == "Complete Pre-Employment Form").Id
+                        StepId = steps.Single(x => x.NameDefault == "Complete Pre-Employment Form")
+                            .Id
                     },
                     new WorkflowStep
                     {
-                        StepId = steps.Single(x => x.NameDefault == "Submit Signed W9").Id
+                        StepId = steps.Single(x => x.NameDefault == "Submit Signed W9")
+                            .Id
                     }
                 }
             }

@@ -16,18 +16,30 @@ public class InitializeCandidateEntityOperation : ICandidateImportOperation
         if (options.CurrentRawCandidateDataRow == null)
             throw new ArgumentNullException(nameof(options.CurrentRawCandidateDataRow));
 
-        var firstName = options.CurrentRawCandidateDataRow["Candidate First Name"].ToString()!.ToLower().Titleize();
-        var lastName = options.CurrentRawCandidateDataRow["Candidate Last Name"].ToString()!.ToLower().Titleize();
+        var firstName = options.CurrentRawCandidateDataRow["Candidate First Name"]
+            .ToString()!.ToLower()
+            .Titleize();
+        var lastName = options.CurrentRawCandidateDataRow["Candidate Last Name"]
+            .ToString()!.ToLower()
+            .Titleize();
 
         options.InitializedCandidateEntity = new()
         {
-            AddressLine1 = options.CurrentRawCandidateDataRow["Address 1:"].ToString().NullifyEmptyOrWhitespace()
+            AddressLine1 = options.CurrentRawCandidateDataRow["Address 1:"]
+                .ToString()
+                .NullifyEmptyOrWhitespace()
                 ?.ToLower()
                 .Titleize(),
-            AddressLine2 = options.CurrentRawCandidateDataRow["Address 2:"].ToString().NullifyEmptyOrWhitespace()
+            AddressLine2 = options.CurrentRawCandidateDataRow["Address 2:"]
+                .ToString()
+                .NullifyEmptyOrWhitespace()
                 ?.ToLower()
                 .Titleize(),
-            City = options.CurrentRawCandidateDataRow["City"].ToString().NullifyEmptyOrWhitespace().OnlyLetters()?
+            City = options.CurrentRawCandidateDataRow["City"]
+                .ToString()
+                .NullifyEmptyOrWhitespace()
+                .OnlyLetters()
+                ?
                 .ToLower()
                 .Titleize(),
             EntityStatus = EntityStatuses.Active,
@@ -35,18 +47,30 @@ public class InitializeCandidateEntityOperation : ICandidateImportOperation
             FullName = $"{lastName}, {firstName}",
             ImportedAt = DateTime.UtcNow,
             LastName = lastName,
-            HireDate = DateOnly.Parse(options.CurrentRawCandidateDataRow["Date Hired"].ToString()!),
-            JobId = int.Parse(options.CurrentRawCandidateDataRow["Job ID"].ToString()!),
-            JobTitle = options.CurrentRawCandidateDataRow["Job Title"].ToString()!,
-            PaycorCandidateId = options.CurrentRawCandidateDataRow["Candidate ID"].ToString()!,
-            PhoneNumber = options.CurrentRawCandidateDataRow["Mobile Phone"].ToString()!.ToUnformattedPhoneNumber()!,
-            PostalCode = options.CurrentRawCandidateDataRow["Postal Code"].ToString().NullifyEmptyOrWhitespace(),
+            HireDate = DateOnly.Parse(
+                options.CurrentRawCandidateDataRow["Date Hired"]
+                    .ToString()!),
+            JobId = int.Parse(
+                options.CurrentRawCandidateDataRow["Job ID"]
+                    .ToString()!),
+            JobTitle = options.CurrentRawCandidateDataRow["Job Title"]
+                .ToString()!,
+            PaycorCandidateId = options.CurrentRawCandidateDataRow["Candidate ID"]
+                .ToString()!,
+            PhoneNumber = options.CurrentRawCandidateDataRow["Mobile Phone"]
+                .ToString()!.ToUnformattedPhoneNumber()!,
+            PostalCode = options.CurrentRawCandidateDataRow["Postal Code"]
+                .ToString()
+                .NullifyEmptyOrWhitespace(),
             StartDate = DateOnly.TryParse(
-                options.CurrentRawCandidateDataRow["Start Date"].ToString()!,
+                options.CurrentRawCandidateDataRow["Start Date"]
+                    .ToString()!,
                 out var startDate)
                 ? startDate
                 : null,
-            State = options.CurrentRawCandidateDataRow["State"].ToString().NullifyEmptyOrWhitespace()
+            State = options.CurrentRawCandidateDataRow["State"]
+                .ToString()
+                .NullifyEmptyOrWhitespace()
         };
 
         if (options.InitializedCandidateEntity.State?.Length > 2)

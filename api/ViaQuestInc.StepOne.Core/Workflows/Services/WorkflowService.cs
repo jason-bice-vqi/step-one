@@ -39,7 +39,8 @@ public class WorkflowService(IRepository<StepOneDbContext> repository)
 
     public async Task<IEnumerable<Workflow>> IndexAsync(CancellationToken cancellationToken)
     {
-        return await repository.AllWithChildren<Workflow>(DefaultIncludes).ToArrayAsync(cancellationToken);
+        return await repository.AllWithChildren<Workflow>(DefaultIncludes)
+            .ToArrayAsync(cancellationToken);
     }
 
     public async Task<Workflow> ShowAsync(int workflowId, CancellationToken cancellationToken)
@@ -52,7 +53,8 @@ public class WorkflowService(IRepository<StepOneDbContext> repository)
 
     public async Task<Workflow> ShowWithJobTitleWorkflowsAsync(int workflowId, CancellationToken cancellationToken)
     {
-        var includes = DefaultIncludes.Concat(new[] { nameof(Workflow.JobTitleWorkflows) }).ToArray();
+        var includes = DefaultIncludes.Concat(new[] { nameof(Workflow.JobTitleWorkflows) })
+            .ToArray();
 
         return (await repository.GetWithChildrenAsync<Workflow>(x => x.Id == workflowId, cancellationToken, includes))!;
     }

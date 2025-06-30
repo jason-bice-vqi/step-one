@@ -26,6 +26,8 @@ public class CandidateWorkflowsController(
             candidateWithWorkflow.CandidateWorkflow,
             Policies.CandidateWorkflows.CanAccessCandidateWorkflow);
 
-        return authorization.Succeeded ? Ok(candidateWithWorkflow) : Forbid(authorization);
+        return authorization.Succeeded
+            ? Ok(candidateWithWorkflow)
+            : Forbid(authorization);
     }
 }

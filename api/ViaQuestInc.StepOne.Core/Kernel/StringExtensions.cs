@@ -22,7 +22,8 @@ public static partial class StringExtensions
 
     public static string? ToUnformattedPhoneNumber(this string input)
     {
-        var match = CompiledFormattedPhoneNumberRegex().Match(input);
+        var match = CompiledFormattedPhoneNumberRegex()
+            .Match(input);
 
         if (match.Success) return match.Groups[2].Value + match.Groups[3].Value + match.Groups[4].Value;
 
@@ -31,7 +32,9 @@ public static partial class StringExtensions
 
     public static string? NullifyEmptyOrWhitespace(this string? input)
     {
-        return string.IsNullOrWhiteSpace(input) ? null : input;
+        return string.IsNullOrWhiteSpace(input)
+            ? null
+            : input;
     }
 
     public static string? OnlyLetters(this string? input)

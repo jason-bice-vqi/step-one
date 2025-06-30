@@ -22,7 +22,6 @@
     </ItemGroup>
 
     <ItemGroup>
-        <Folder Include="Organization\Populators\" />
         <Folder Include="Workflows\Preemployment\" />
     </ItemGroup>
 

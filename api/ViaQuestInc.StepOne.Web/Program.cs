@@ -31,7 +31,9 @@ try
         new WebApplicationOptions
         {
             EnvironmentName = environmentName,
-            ApplicationName = Assembly.GetExecutingAssembly().GetName().Name
+            ApplicationName = Assembly.GetExecutingAssembly()
+                .GetName()
+                .Name
         }
     );
 
@@ -48,16 +50,20 @@ try
     var configuration = configurationBuilder.Build();
 
     var excludedExceptions =
-        configuration.GetSection("ExcludeExceptionsFromLogging").Get<string[]>() ?? Array.Empty<string>();
+        configuration.GetSection("ExcludeExceptionsFromLogging")
+            .Get<string[]>() ?? Array.Empty<string>();
 
-    var excludedExceptionMessages = configuration.GetSection("ExcludeExceptionMessagesFromLogging").Get<string[]>() ??
+    var excludedExceptionMessages = configuration.GetSection("ExcludeExceptionMessagesFromLogging")
+                                        .Get<string[]>() ??
                                     Array.Empty<string>();
 
     Log.Logger = new LoggerConfiguration()
         .ReadFrom.Configuration(configuration)
         .Filter.ByExcluding(
             x => x.Exception != null &&
-                 (excludedExceptions.Contains(x.Exception.GetType().FullName) ||
+                 (excludedExceptions.Contains(
+                      x.Exception.GetType()
+                          .FullName) ||
                   excludedExceptionMessages.Any(m => x.Exception.Message.Contains(m)))
         )
         .Enrich.FromLogContext()
@@ -93,7 +99,8 @@ try
             //     https://stackoverflow.com/questions/70247187/microsoft-extensions-hosting-hostfactoryresolverhostinglistenerstopthehostexce
             // We're using a slightly different workaround in order to remove exception information from the log output
             // when performing EF migrations.
-            var type = ex.GetType().Name;
+            var type = ex.GetType()
+                .Name;
 
             if (!type.Equals("StopTheHostException", StringComparison.Ordinal) &&
                 !type.Equals("HostAbortedException", StringComparison.Ordinal))
@@ -191,7 +198,8 @@ try
     app.UseCors(stepOneCorsPolicy);
     app.UseAuthentication();
     app.UseAuthorization();
-    app.MapControllers().RequireAuthorization();
+    app.MapControllers()
+        .RequireAuthorization();
 
     // Startup Actions
     using (var scope = app.Services.CreateScope())
@@ -201,7 +209,10 @@ try
             if (!await startupAction.ShouldExecuteAsync(app)) continue;
 
             Log.Information("");
-            Log.Information("Executing Start-Up Action {StartUpAction}", startupAction.GetType().Name);
+            Log.Information(
+                "Executing Start-Up Action {StartUpAction}",
+                startupAction.GetType()
+                    .Name);
 
             await startupAction.OnStartupAsync(app);
         }

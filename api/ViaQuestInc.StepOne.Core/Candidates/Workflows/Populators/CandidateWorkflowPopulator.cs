@@ -18,7 +18,8 @@ public class CandidateWorkflowPopulator : IDataPopulator
         int batchSize,
         CancellationToken cancellationToken)
     {
-        var candidate = await repository.All<Candidate>().SingleAsync(cancellationToken);
+        var candidate = await repository.All<Candidate>()
+            .SingleAsync(cancellationToken);
 
         using var scope = serviceProvider.CreateScope();
         var workflowService = scope.ServiceProvider.GetRequiredService<WorkflowService>();

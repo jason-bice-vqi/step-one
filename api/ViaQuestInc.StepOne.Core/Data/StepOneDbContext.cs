@@ -47,8 +47,11 @@ public class StepOneDbContext(DbContextOptions<StepOneDbContext> options) : DbCo
             .HasForeignKey<CandidateWorkflow>(cw => cw.CandidateId)
             .OnDelete(DeleteBehavior.Cascade); // Deleting Candidate deletes CandidateWorkflow
 
-        modelBuilder.Entity<Candidate>().HasIndex(x => x.PaycorCandidateId).IsUnique();
-        modelBuilder.Entity<Candidate>().HasIndex(x => x.PhoneNumber);
+        modelBuilder.Entity<Candidate>()
+            .HasIndex(x => x.PaycorCandidateId)
+            .IsUnique();
+        modelBuilder.Entity<Candidate>()
+            .HasIndex(x => x.PhoneNumber);
 
         // CandidateWorkflow to Workflow (Many-to-One)
         modelBuilder.Entity<CandidateWorkflow>()
@@ -144,7 +147,8 @@ public class StepOneDbContext(DbContextOptions<StepOneDbContext> options) : DbCo
 
                 // Must use Wait() and avoid using an async lambda, which is converted to async void
                 // See https://docs.microsoft.com/en-us/archive/msdn-magazine/2013/march/async-await-best-practices-in-asynchronous-programming#avoid-async-void
-                PopulateEntity(databasePopulator, repository, serviceProvider, batchSize).Wait();
+                PopulateEntity(databasePopulator, repository, serviceProvider, batchSize)
+                    .Wait();
             }
         );
     }

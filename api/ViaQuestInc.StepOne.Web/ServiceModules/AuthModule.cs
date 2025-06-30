@@ -21,7 +21,8 @@ public class AuthModule : IServiceModule
         services.AddScoped<IOtpService, TwilioService>();
 
         Log.Information("  Registering authentication config");
-        var authConfig = configuration.GetSection("Auth").Get<AuthConfig>() ??
+        var authConfig = configuration.GetSection("Auth")
+                             .Get<AuthConfig>() ??
                          throw new InvalidOperationException("Auth configuration is missing");
 
         services.AddSingleton(authConfig);
@@ -146,20 +147,24 @@ public class AuthModule : IServiceModule
             .AddPolicy(
                 Policies.AzureAdJwtAuthPolicy,
                 x =>
-                    x.RequireAuthenticatedUser().AddAuthenticationSchemes(Schemes.InitialAzureAdJwtAuthScheme))
+                    x.RequireAuthenticatedUser()
+                        .AddAuthenticationSchemes(Schemes.InitialAzureAdJwtAuthScheme))
             .AddPolicy(
                 Policies.NativeJwtAuthPolicy,
                 x =>
-                    x.RequireAuthenticatedUser().AddAuthenticationSchemes(Schemes.NativeJwtAuthScheme))
+                    x.RequireAuthenticatedUser()
+                        .AddAuthenticationSchemes(Schemes.NativeJwtAuthScheme))
             .AddPolicy(
                 Policies.InternalUserPolicy,
                 x =>
-                    x.RequireAuthenticatedUser().RequireRole(Roles.Internal)
+                    x.RequireAuthenticatedUser()
+                        .RequireRole(Roles.Internal)
                         .AddAuthenticationSchemes(Schemes.NativeJwtAuthScheme))
             .AddPolicy(
                 Policies.ExternalUserPolicy,
                 x =>
-                    x.RequireAuthenticatedUser().RequireRole(Roles.External)
+                    x.RequireAuthenticatedUser()
+                        .RequireRole(Roles.External)
                         .AddAuthenticationSchemes(Schemes.NativeJwtAuthScheme));
 
         Log.Information("  Registering custom authorization handler-requirement policies");

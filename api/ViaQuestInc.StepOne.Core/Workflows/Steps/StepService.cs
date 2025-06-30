@@ -12,7 +12,8 @@ public class StepService(IRepository<StepOneDbContext> repository)
 
     public async Task<IEnumerable<Step>> IndexAsync(CancellationToken cancellationToken)
     {
-        return await repository.All<Step>().ToArrayAsync(cancellationToken);
+        return await repository.All<Step>()
+            .ToArrayAsync(cancellationToken);
     }
 
     public async Task<Step?> ShowAsync(int stepId, CancellationToken cancellationToken)

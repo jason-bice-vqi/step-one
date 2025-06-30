@@ -10,7 +10,8 @@ public class CandidateWorkflow
 {
     public required int CandidateId { get; set; }
 
-    [JsonIgnore] public Candidate Candidate { get; set; }
+    [JsonIgnore]
+    public Candidate Candidate { get; set; }
 
     public required int WorkflowId { get; set; }
 

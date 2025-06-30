@@ -31,13 +31,14 @@ public class CandidateWorkflowService(IRepository<StepOneDbContext> repository)
         await repository.CreateAsync(candidateWorkflow, cancellationToken);
 
         var candidateWorkflowSteps = workflow.WorkflowSteps.Select(
-            x =>
-                new CandidateWorkflowStep
-                {
-                    CandidateWorkflowId = candidateWorkflow.Id,
-                    WorkflowStepId = x.Id
-                }
-        ).ToArray();
+                x =>
+                    new CandidateWorkflowStep
+                    {
+                        CandidateWorkflowId = candidateWorkflow.Id,
+                        WorkflowStepId = x.Id
+                    }
+            )
+            .ToArray();
 
         await repository.CreateRangeAsync(candidateWorkflowSteps, cancellationToken);
 

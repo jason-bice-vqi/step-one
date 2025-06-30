@@ -3,7 +3,14 @@ using ViaQuestInc.StepOne.Core.Data.Entity;
 
 namespace ViaQuestInc.StepOne.Core.Organization;
 
-public class Region : EntityBase<int>
+public class Region : EntityBase<int>,
+    IHrtDerivedEntity
 {
-    [MaxLength(50)] [Required] public required string Name { get; set; }
+    [MaxLength(50)]
+    [Required]
+    public required string Name { get; set; }
+
+    public required Guid HrtId { get; set; }
+
+    public required EntityStatuses EntityStatus { get; set; }
 }

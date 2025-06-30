@@ -21,7 +21,8 @@ public class Workflow : EntityBase<int>
     [NotMapped]
     public int? CopiedFromWorkflowId { get; set; }
 
-    [JsonIgnore] public Workflow? CopiedFromWorkflow { get; set; }
+    [JsonIgnore]
+    public Workflow? CopiedFromWorkflow { get; set; }
 
     /// <summary>
     /// Whether the job assignments should be copied to this workflow when copied from <see cref="CopiedFromWorkflow"/>.
