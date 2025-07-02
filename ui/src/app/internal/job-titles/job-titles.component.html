@@ -1,0 +1,58 @@
+<div class="container">
+  <!-- Left Column: Company & Job Title -->
+  <mat-card class="column">
+    <mat-card-header>
+      <mat-card-title>Select Job Title</mat-card-title>
+    </mat-card-header>
+    <mat-card-content>
+      <!-- Company Dropdown -->
+      <mat-form-field appearance="fill" class="full-width">
+        <mat-label>Company</mat-label>
+        <mat-select [(value)]="selectedCompany" (selectionChange)="onCompanyChange()">
+          <mat-option *ngFor="let company of companies"
+                      [value]="company.id">{{ company.abbreviation }} - {{ company.name }}</mat-option>
+        </mat-select>
+      </mat-form-field>
+
+      <!-- Job Title Dropdown -->
+      <mat-form-field appearance="fill" class="full-width">
+        <mat-label>Job Title</mat-label>
+        <mat-select [(value)]="selectedJobTitle" (selectionChange)="onJobTitleChange()">
+          <mat-option *ngFor="let jobTitle of filteredJobTitles"
+                      [value]="jobTitle.id">{{ jobTitle.displayTitle }}</mat-option>
+        </mat-select>
+      </mat-form-field>
+    </mat-card-content>
+  </mat-card>
+
+  <!-- Right Column: Aliases -->
+  <mat-card class="column">
+    <mat-card-header>
+      <mat-card-title>Manage Aliases</mat-card-title>
+    </mat-card-header>
+    <mat-card-content>
+      <!-- Alias List -->
+      <mat-list *ngIf="selectedJobTitle; else noJobTitleSelected">
+        <mat-list-item *ngFor="let alias of jobTitleAliases">
+          {{ alias.name }}
+          <button mat-icon-button color="warn" (click)="deleteAlias(alias)">
+            <mat-icon>delete</mat-icon>
+          </button>
+        </mat-list-item>
+      </mat-list>
+
+      <ng-template #noJobTitleSelected>
+        <p>Please select a job title to manage aliases.</p>
+      </ng-template>
+
+      <!-- Add New Alias -->
+      <div *ngIf="selectedJobTitle" class="add-alias">
+        <mat-form-field appearance="fill" class="full-width">
+          <mat-label>New Alias</mat-label>
+          <input matInput [(ngModel)]="newAlias" (keyup.enter)="addAlias()">
+        </mat-form-field>
+        <button mat-raised-button color="primary" (click)="addAlias()">Add Alias</button>
+      </div>
+    </mat-card-content>
+  </mat-card>
+</div>

@@ -3,6 +3,7 @@ using ViaQuestInc.StepOne.Core.Candidates.Import.Operations;
 using ViaQuestInc.StepOne.Core.Candidates.Services;
 using ViaQuestInc.StepOne.Core.Candidates.Workflows.Services;
 using ViaQuestInc.StepOne.Core.Kernel.Services;
+using ViaQuestInc.StepOne.Core.Organization.Services;
 using ViaQuestInc.StepOne.Core.Workflows.Persistence;
 using ViaQuestInc.StepOne.Core.Workflows.Persistence.Operations;
 using ViaQuestInc.StepOne.Core.Workflows.Services;
@@ -21,7 +22,9 @@ public static class StepOneServices
             // General services
             .AddScoped<CandidateService>()
             .AddScoped<CandidateWorkflowService>()
+            .AddScoped<CompanyService>()
             .AddScoped<ExcelService>()
+            .AddScoped<JobTitlesService>()
             .AddScoped<StepService>()
             .AddScoped<WorkflowService>()
 

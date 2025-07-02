@@ -8,7 +8,7 @@ public class HrtRegion : EntityBase<Guid>,
     IHrtSourceEntity<Region, int>
 {
     [Column("RegionID")]
-    public override Guid Id { get; set; }
+    public override required Guid Id { get; set; }
 
     [Column("RegionName")]
     public string Name { get; set; }
@@ -22,6 +22,7 @@ public class HrtRegion : EntityBase<Guid>,
     {
         var region = new Region
         {
+            Id = default,
             Name = Name,
             HrtId = Id,
             EntityStatus = EntityStatus

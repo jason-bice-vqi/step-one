@@ -21,5 +21,5 @@ public class JobTitle : EntityBase<int>,
     
     public required EntityStatuses EntityStatus { get; set; }
 
-    public ICollection<JobTitleAtsMapping> JobTitleAtsMappings { get; set; }
+    public ICollection<JobTitleAlias> JobTitleAliases { get; set; }
 }

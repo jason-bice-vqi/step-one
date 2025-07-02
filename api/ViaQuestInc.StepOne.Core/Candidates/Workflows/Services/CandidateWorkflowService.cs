@@ -22,6 +22,7 @@ public class CandidateWorkflowService(IRepository<StepOneDbContext> repository)
 
         var candidateWorkflow = new CandidateWorkflow
         {
+            Id = default,
             CandidateId = candidate.Id,
             WorkflowId = workflow.Id,
             CreatedAt = DateTime.UtcNow,
@@ -34,6 +35,7 @@ public class CandidateWorkflowService(IRepository<StepOneDbContext> repository)
                 x =>
                     new CandidateWorkflowStep
                     {
+                        Id = default,
                         CandidateWorkflowId = candidateWorkflow.Id,
                         WorkflowStepId = x.Id
                     }

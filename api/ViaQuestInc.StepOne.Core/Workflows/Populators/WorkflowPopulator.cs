@@ -21,36 +21,43 @@ public class WorkflowPopulator : IDataPopulator
         {
             new Workflow
             {
+                Id = default,
                 Name = "PBS w/ Credentialing (Non-Nursing)",
                 WorkflowSteps = new[]
                 {
                     new WorkflowStep
                     {
+                        Id = default,
                         StepId = steps.Single(x => x.NameDefault == "Submit Signed Offer Letter")
                             .Id
                     },
                     new WorkflowStep
                     {
+                        Id = default,
                         StepId = steps.Single(x => x.NameDefault == "Complete Employment Application")
                             .Id
                     },
                     new WorkflowStep
                     {
+                        Id = default,
                         StepId = steps.Single(x => x.NameDefault == "Submit Signed Verification of Compliance Form")
                             .Id
                     },
                     new WorkflowStep
                     {
+                        Id = default,
                         StepId = steps.Single(x => x.NameDefault == "Complete Pre-Employment Form")
                             .Id
                     },
                     new WorkflowStep
                     {
+                        Id = default,
                         StepId = steps.Single(x => x.NameDefault == "Submit Signed W9")
                             .Id
                     },
                     new WorkflowStep
                     {
+                        Id = default,
                         StepId = steps.Single(x => x.NameDefault == "Submit Proof of Highest Form of Education")
                             .Id
                     }
@@ -58,46 +65,55 @@ public class WorkflowPopulator : IDataPopulator
             },
             new Workflow
             {
+                Id = default,
                 Name = "PBS w/ Credentialing (Nursing)",
                 WorkflowSteps = new[]
                 {
                     new WorkflowStep
                     {
+                        Id = default,
                         StepId = steps.Single(x => x.NameDefault == "Submit Signed Offer Letter")
                             .Id
                     },
                     new WorkflowStep
                     {
+                        Id = default,
                         StepId = steps.Single(x => x.NameDefault == "Complete Employment Application")
                             .Id
                     },
                     new WorkflowStep
                     {
+                        Id = default,
                         StepId = steps.Single(x => x.NameDefault == "Submit Signed Verification of Compliance Form")
                             .Id
                     },
                     new WorkflowStep
                     {
+                        Id = default,
                         StepId = steps.Single(x => x.NameDefault == "Complete Pre-Employment Form")
                             .Id
                     },
                     new WorkflowStep
                     {
+                        Id = default,
                         StepId = steps.Single(x => x.NameDefault == "Submit Signed W9")
                             .Id
                     },
                     new WorkflowStep
                     {
+                        Id = default,
                         StepId = steps.Single(x => x.NameDefault == "Submit Proof of Highest Form of Education")
                             .Id
                     },
                     new WorkflowStep
                     {
+                        Id = default,
                         StepId = steps.Single(x => x.NameDefault == "Submit Driver's License")
                             .Id
                     },
                     new WorkflowStep
                     {
+                        Id = default,
                         StepId = steps.Single(x => x.NameDefault == "Submit Social Security Card")
                             .Id
                     }
@@ -105,31 +121,37 @@ public class WorkflowPopulator : IDataPopulator
             },
             new Workflow
             {
+                Id = default,
                 Name = "PBS (no Credentialing)",
                 WorkflowSteps = new[]
                 {
                     new WorkflowStep
                     {
+                        Id = default,
                         StepId = steps.Single(x => x.NameDefault == "Submit Signed Offer Letter")
                             .Id
                     },
                     new WorkflowStep
                     {
+                        Id = default,
                         StepId = steps.Single(x => x.NameDefault == "Complete Employment Application")
                             .Id
                     },
                     new WorkflowStep
                     {
+                        Id = default,
                         StepId = steps.Single(x => x.NameDefault == "Submit Signed Verification of Compliance Form")
                             .Id
                     },
                     new WorkflowStep
                     {
+                        Id = default,
                         StepId = steps.Single(x => x.NameDefault == "Complete Pre-Employment Form")
                             .Id
                     },
                     new WorkflowStep
                     {
+                        Id = default,
                         StepId = steps.Single(x => x.NameDefault == "Submit Signed W9")
                             .Id
                     }

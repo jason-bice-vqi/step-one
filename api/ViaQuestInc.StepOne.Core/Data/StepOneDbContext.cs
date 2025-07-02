@@ -23,7 +23,7 @@ public class StepOneDbContext(DbContextOptions<StepOneDbContext> options) : DbCo
     public DbSet<CandidateWorkflow> CandidateWorkflows { get; set; }
     public DbSet<CandidateWorkflowStep> CandidateWorkflowSteps { get; set; }
     public DbSet<Company> Companies { get; set; }
-    public DbSet<JobTitleAtsMapping> JobTitleAtsMappings { get; set; }
+    public DbSet<JobTitleAlias> JobTitleAliases { get; set; }
     public DbSet<JobTitle> JobTitles { get; set; }
     public DbSet<JobTitleWorkflow> JobTitleWorkflows { get; set; }
     public DbSet<Region> Regions { get; set; }

@@ -25,6 +25,7 @@ public class InitializeCandidateEntityOperation : ICandidateImportOperation
 
         options.InitializedCandidateEntity = new()
         {
+            Id = default,
             AddressLine1 = options.CurrentRawCandidateDataRow["Address 1:"]
                 .ToString()
                 .NullifyEmptyOrWhitespace()

@@ -17,7 +17,7 @@ public class HrtSynchronizer<THrtEntity, TStepOneEntity, TId> : IDataSynchronize
         CancellationToken cancellationToken)
     {
         Log.Information(
-            "    Synchronizing {StepOneEntity} entities with HR Tracker via {HrtEntity} entities",
+            "  Synchronizing {StepOneEntity} entities with HR Tracker via {HrtEntity} entities",
             typeof(TStepOneEntity).Name,
             typeof(THrtEntity).Name);
 

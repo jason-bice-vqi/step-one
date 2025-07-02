@@ -7,7 +7,7 @@ namespace ViaQuestInc.StepOne.Core.Organization;
 /// Establishes a relationship between a formal/proper job title known to a company at ViaQuest, and a free-form title
 /// as listed in the Paycor ATS, Indeed job listing, etc.
 /// </summary>
-public class JobTitleAtsMapping : EntityBase<int>
+public class JobTitleAlias : EntityBase<int>
 {
     public int JobTitleId { get; set; }
 
@@ -18,5 +18,5 @@ public class JobTitleAtsMapping : EntityBase<int>
     /// </summary>
     [MaxLength(255)]
     [Required]
-    public string AtsJobTitle { get; set; }
+    public string Alias { get; set; }
 }

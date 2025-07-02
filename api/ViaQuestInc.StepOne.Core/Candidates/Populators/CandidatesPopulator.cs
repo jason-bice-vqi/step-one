@@ -15,6 +15,7 @@ public class CandidatesPopulator : IDataPopulator
         {
             new()
             {
+                Id = default,
                 EntityStatus = EntityStatuses.Active,
                 FirstName = "Jason",
                 FullName = "Bice, Jason",

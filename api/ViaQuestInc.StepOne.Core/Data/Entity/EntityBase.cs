@@ -4,11 +4,11 @@ namespace ViaQuestInc.StepOne.Core.Data.Entity;
 
 public abstract class EntityBase<TId>
 {
-    public virtual TId Id { get; set; }
+    public virtual required TId Id { get; set; }
 
     protected virtual object Actual => this;
 
-    public override bool Equals(object obj)
+    public override bool Equals(object? obj)
     {
         if (obj is not EntityBase<TId> other) return false;
 
@@ -16,12 +16,12 @@ public abstract class EntityBase<TId>
 
         if (Actual.GetType() != other.Actual.GetType()) return false;
 
-        if (Id.Equals(default(TId)) || other.Id.Equals(default(TId))) return false;
+        if (Id!.Equals(default(TId)) || other.Id!.Equals(default(TId))) return false;
 
         return Id.Equals(other.Id);
     }
 
-    public static bool operator ==(EntityBase<TId> a, EntityBase<TId> b)
+    public static bool operator ==(EntityBase<TId>? a, EntityBase<TId>? b)
     {
         if (a is null && b is null) return true;
 

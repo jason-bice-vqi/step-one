@@ -8,7 +8,7 @@ public class HrtBranch : EntityBase<Guid>,
     IHrtSourceEntity<Branch, int>
 {
     [Column("BranchID")]
-    public override Guid Id { get; set; }
+    public override required Guid Id { get; set; }
 
     [Column("BranchName")]
     public string Name { get; set; }
@@ -22,6 +22,7 @@ public class HrtBranch : EntityBase<Guid>,
     {
         var branch = new Branch
         {
+            Id = default,
             Name = Name,
             HrtId = Id,
             EntityStatus = EntityStatus

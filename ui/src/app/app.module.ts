@@ -48,6 +48,7 @@ import { WorkflowStepNamePipe } from './pipes/workflows/workflow-step-name.pipe'
 import { LoadingSpinnerComponent } from './shared/loading-spinner/loading-spinner.component';
 import {MatProgressSpinnerModule} from "@angular/material/progress-spinner";
 import { WarnUnsavedDialogComponent } from './shared/warn-unsaved-dialog/warn-unsaved-dialog.component';
+import { JobTitlesComponent } from './internal/job-titles/job-titles.component';
 
 export function MSALInstanceFactory(): PublicClientApplication {
   return new PublicClientApplication({
@@ -103,7 +104,8 @@ export function MSALInstanceFactory(): PublicClientApplication {
     WorkflowStepNamePipe,
     WorkflowStepNamePipe,
     LoadingSpinnerComponent,
-    WarnUnsavedDialogComponent
+    WarnUnsavedDialogComponent,
+    JobTitlesComponent
   ],
   imports: [
     BrowserModule,

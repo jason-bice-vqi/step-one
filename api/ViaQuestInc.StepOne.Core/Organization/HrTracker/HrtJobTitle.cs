@@ -8,7 +8,7 @@ public class HrtJobTitle : EntityBase<Guid>,
     IHrtSourceEntity<JobTitle, int>
 {
     [Column("JobTitleID")]
-    public override Guid Id { get; set; }
+    public override required Guid Id { get; set; }
 
     [Column("CompanyID")]
     public Guid CompanyId { get; set; }
@@ -34,6 +34,7 @@ public class HrtJobTitle : EntityBase<Guid>,
 
         var jobTitle = new JobTitle
         {
+            Id = default,
             Title = Title,
             DisplayTitle = DisplayTitle ?? Title,
             CompanyId = company.Id,
