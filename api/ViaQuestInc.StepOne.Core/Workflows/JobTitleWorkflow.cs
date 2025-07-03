@@ -1,4 +1,5 @@
-﻿using ViaQuestInc.StepOne.Core.Data.Entity;
+﻿using Microsoft.EntityFrameworkCore;
+using ViaQuestInc.StepOne.Core.Data.Entity;
 using ViaQuestInc.StepOne.Core.Organization;
 
 namespace ViaQuestInc.StepOne.Core.Workflows;
@@ -6,6 +7,7 @@ namespace ViaQuestInc.StepOne.Core.Workflows;
 /// <summary>
 /// Relates a <see cref="JobTitle"/> and <see cref="Workflow"/>.
 /// </summary>
+[Index(nameof(JobTitleId), IsUnique = true)]
 public class JobTitleWorkflow : EntityBase<int>
 {
     public required int JobTitleId { get; set; }

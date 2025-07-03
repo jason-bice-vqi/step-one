@@ -1,13 +1,13 @@
 import {Component, OnInit} from '@angular/core';
 import {OrgService} from "../../services/org.service";
-import {take} from "rxjs";
+import {take, tap} from "rxjs";
 import {Company} from "../../models/org/company";
 import {JobTitle} from "../../models/org/job-title";
-
-interface Alias {
-  id: number;
-  name: string;
-}
+import {JobTitleAlias} from "../../models/org/job-title-alias";
+import {WorkflowService} from "../../services/workflows/workflow.service";
+import {Workflow} from "../../models/workflows/workflow";
+import {JobTitleWorkflowService} from "../../services/workflows/job-title-workflow.service";
+import {NotificationService} from "../../services/notification.service";
 
 @Component({
   selector: 'app-job-titles',
@@ -15,60 +15,91 @@ interface Alias {
   styleUrls: ['./job-titles.component.scss']
 })
 export class JobTitlesComponent implements OnInit {
+
+  selectedCompanyId: number | null = null;
+  selectedJobTitleId: number | null = null;
+  selectedWorkflowId: number | null = null;
+
   companies: Company[] = [];
-
   jobTitles: JobTitle[] = [];
+  jobTitleAliases: JobTitleAlias[] = [];
+  workflows: Workflow[] = [];
 
-  aliases: { [key: number]: Alias[] } = {
-    1: [{id: 1, name: 'Dev'}, {id: 2, name: 'Programmer'}],
-    2: [{id: 3, name: 'PM'}, {id: 4, name: 'Product Owner'}]
-  };
-
-  selectedCompany: number | null = null;
-  selectedJobTitle: number | null = null;
-  filteredJobTitles: JobTitle[] = [];
-  jobTitleAliases: Alias[] = [];
   newAlias: string = '';
 
-  constructor(private orgService: OrgService) {
+  isWorkflowAssignmentDirty = false;
+
+  constructor(private jobTitleWorkflowService: JobTitleWorkflowService,
+              private notificationService: NotificationService,
+              private orgService: OrgService,
+              private workflowService: WorkflowService) {
   }
 
   ngOnInit(): void {
     this.orgService.getCompanies().pipe(take(1)).subscribe((x) => this.companies = x);
+    this.workflowService.get().pipe(take(1)).subscribe((x) => this.workflows = x);
   }
 
   onCompanyChange(): void {
-    if (this.selectedCompany) {
-      this.orgService.getJobTitles(this.selectedCompany).pipe(take(1)).subscribe((x) => this.filteredJobTitles = x);
+    if (this.selectedCompanyId) {
+      this.orgService.getJobTitles(this.selectedCompanyId).pipe(take(1)).subscribe((x) => this.jobTitles = x);
     }
   }
 
   onJobTitleChange(): void {
-    if (this.selectedJobTitle) {
-      // Fetch the aliases for the selected job title
-      this.jobTitleAliases = this.aliases[this.selectedJobTitle] || [];
-    }
+    if (!this.selectedJobTitleId) return;
+
+    this.orgService.getJobTitleAliases(this.selectedJobTitleId)
+      .pipe(take(1))
+      .subscribe((x) => this.jobTitleAliases = x);
+
+    this.jobTitleWorkflowService.showByJobTitle(this.selectedJobTitleId)
+      .pipe(take(1))
+      .subscribe(x => {
+        this.selectedWorkflowId = x?.workflowId ?? null;
+      });
+
+    this.isWorkflowAssignmentDirty = false;
   }
 
   addAlias(): void {
-    if (this.selectedJobTitle && this.newAlias.trim()) {
-      const newAlias: Alias = {
-        id: this.jobTitleAliases.length + 1, // Simple ID generator
-        name: this.newAlias.trim()
-      };
-      this.jobTitleAliases.push(newAlias);
-      this.newAlias = '';
-      //this.snackBar.open('Alias added successfully!', '', { duration: 2000 });
-    } else {
-      //this.snackBar.open('Please select a job title and enter a valid alias.', '', { duration: 2000 });
+    if (!this.selectedJobTitleId || !this.newAlias.trim()) {
+      return;
     }
+
+    this.orgService.createJobTitleAlias(this.selectedJobTitleId, this.newAlias)
+      .pipe(take(1), tap((x) => {
+        this.jobTitleAliases.push(x);
+        this.newAlias = '';
+
+        this.notificationService.success(`The alias '${x.alias}' has been added.`);
+      }))
+      .subscribe();
   }
 
-  deleteAlias(alias: Alias): void {
-    const index = this.jobTitleAliases.indexOf(alias);
-    if (index > -1) {
+  deleteAlias(jobTitleAlias: JobTitleAlias): void {
+    const index = this.jobTitleAliases.indexOf(jobTitleAlias);
+
+    if (index === -1) return;
+
+    this.orgService.deleteJobTitleAlias(jobTitleAlias.id).pipe(take(1), tap((_) => {
       this.jobTitleAliases.splice(index, 1);
-      //this.snackBar.open('Alias deleted successfully!', '', { duration: 2000 });
-    }
+
+      this.notificationService.success(`The alias '${jobTitleAlias.alias}' has been deleted.`);
+    })).subscribe();
+  }
+
+  onWorkflowChange() {
+    this.isWorkflowAssignmentDirty = true;
+  }
+
+  saveWorkflowAssignment() {
+    this.jobTitleWorkflowService.create(this.selectedJobTitleId!, this.selectedWorkflowId!)
+      .pipe(take(1), tap(_ => {
+        this.isWorkflowAssignmentDirty = false;
+
+        this.notificationService.success("The workflow assignment has been updated.");
+      }))
+      .subscribe();
   }
 }

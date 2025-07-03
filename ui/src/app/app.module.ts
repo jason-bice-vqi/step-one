@@ -49,6 +49,7 @@ import { LoadingSpinnerComponent } from './shared/loading-spinner/loading-spinne
 import {MatProgressSpinnerModule} from "@angular/material/progress-spinner";
 import { WarnUnsavedDialogComponent } from './shared/warn-unsaved-dialog/warn-unsaved-dialog.component';
 import { JobTitlesComponent } from './internal/job-titles/job-titles.component';
+import {MatSnackBarModule} from "@angular/material/snack-bar";
 
 export function MSALInstanceFactory(): PublicClientApplication {
   return new PublicClientApplication({
@@ -131,7 +132,8 @@ export function MSALInstanceFactory(): PublicClientApplication {
     MatToolbarModule,
     MatDialogModule,
     MatSlideToggleModule,
-    MatProgressSpinnerModule
+    MatProgressSpinnerModule,
+    MatSnackBarModule
   ],
   providers: [
     {provide: MSAL_INSTANCE, useFactory: MSALInstanceFactory},

@@ -2,26 +2,53 @@
   <!-- Left Column: Company & Job Title -->
   <mat-card class="column">
     <mat-card-header>
-      <mat-card-title>Select Job Title</mat-card-title>
+      <mat-card-title>
+        {{
+        !selectedCompanyId
+          ? 'Select a Company'
+          : !selectedJobTitleId
+            ? 'Select a Job Title'
+            : 'Managing Job Title'
+        }}
+      </mat-card-title>
     </mat-card-header>
+
     <mat-card-content>
       <!-- Company Dropdown -->
       <mat-form-field appearance="fill" class="full-width">
         <mat-label>Company</mat-label>
-        <mat-select [(value)]="selectedCompany" (selectionChange)="onCompanyChange()">
+        <mat-select [(value)]="selectedCompanyId" (selectionChange)="onCompanyChange()">
           <mat-option *ngFor="let company of companies"
-                      [value]="company.id">{{ company.abbreviation }} - {{ company.name }}</mat-option>
+                      [value]="company.id">{{ company.name }}</mat-option>
         </mat-select>
       </mat-form-field>
 
       <!-- Job Title Dropdown -->
-      <mat-form-field appearance="fill" class="full-width">
+      <mat-form-field appearance="fill" class="full-width" *ngIf="selectedCompanyId">
         <mat-label>Job Title</mat-label>
-        <mat-select [(value)]="selectedJobTitle" (selectionChange)="onJobTitleChange()">
-          <mat-option *ngFor="let jobTitle of filteredJobTitles"
+        <mat-select [(value)]="selectedJobTitleId" (selectionChange)="onJobTitleChange()">
+          <mat-option *ngFor="let jobTitle of jobTitles"
                       [value]="jobTitle.id">{{ jobTitle.displayTitle }}</mat-option>
         </mat-select>
       </mat-form-field>
+
+      <!-- Assigned Workflow Dropdown -->
+      <div class="workflow-row" *ngIf="selectedJobTitleId">
+        <mat-form-field appearance="fill" class="workflow-select">
+          <mat-label>Workflow</mat-label>
+          <mat-select [(value)]="selectedWorkflowId" (selectionChange)="onWorkflowChange()">
+            <mat-option *ngFor="let workflow of workflows" [value]="workflow.id">
+              {{ workflow.name }}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+
+        <button mat-raised-button color="primary" (click)="saveWorkflowAssignment()"
+                [disabled]="!isWorkflowAssignmentDirty">
+          <mat-icon>save</mat-icon>
+          Save
+        </button>
+      </div>
     </mat-card-content>
   </mat-card>
 
@@ -31,28 +58,34 @@
       <mat-card-title>Manage Aliases</mat-card-title>
     </mat-card-header>
     <mat-card-content>
-      <!-- Alias List -->
-      <mat-list *ngIf="selectedJobTitle; else noJobTitleSelected">
-        <mat-list-item *ngFor="let alias of jobTitleAliases">
-          {{ alias.name }}
-          <button mat-icon-button color="warn" (click)="deleteAlias(alias)">
-            <mat-icon>delete</mat-icon>
-          </button>
-        </mat-list-item>
-      </mat-list>
-
-      <ng-template #noJobTitleSelected>
-        <p>Please select a job title to manage aliases.</p>
-      </ng-template>
-
       <!-- Add New Alias -->
-      <div *ngIf="selectedJobTitle" class="add-alias">
-        <mat-form-field appearance="fill" class="full-width">
+      <div *ngIf="selectedJobTitleId" class="add-alias-inline">
+        <mat-form-field appearance="fill" class="alias-input">
           <mat-label>New Alias</mat-label>
           <input matInput [(ngModel)]="newAlias" (keyup.enter)="addAlias()">
         </mat-form-field>
-        <button mat-raised-button color="primary" (click)="addAlias()">Add Alias</button>
+        <button mat-raised-button color="primary" (click)="addAlias()">
+          <mat-icon>add_circle</mat-icon>
+          Add Alias
+        </button>
       </div>
+      <!-- Alias List -->
+      <div *ngIf="selectedJobTitleId; else noJobTitleSelected">
+        <hr *ngIf="jobTitleAliases.length">
+        <mat-list>
+          <mat-list-item *ngFor="let jobTitleAlias of jobTitleAliases">
+            <div class="alias-row">
+              <span class="alias-text">{{ jobTitleAlias.alias }}</span>
+              <button mat-icon-button color="warn" (click)="deleteAlias(jobTitleAlias)">
+                <mat-icon>delete</mat-icon>
+              </button>
+            </div>
+          </mat-list-item>
+        </mat-list>
+      </div>
+      <ng-template #noJobTitleSelected>
+        <p>Please select a job title to manage aliases.</p>
+      </ng-template>
     </mat-card-content>
   </mat-card>
 </div>

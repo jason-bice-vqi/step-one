@@ -178,3 +178,26 @@ body.internal-area .content {
 .glow-red {
   animation: glow-pulse-red 1.5s ease-out;
 }
+
+/* Snackbar styles */
+
+.snack-success {
+  background-color: #4caf50;
+  color: white;
+}
+
+.snack-error {
+  background-color: #f44336 !important;
+  color: white !important;
+  font-size: 100px !important;
+}
+
+.snack-info {
+  background-color: $vqi-blue;
+  color: white;
+}
+
+.snack-warn {
+  background-color: #ff9800;
+  color: black;
+}

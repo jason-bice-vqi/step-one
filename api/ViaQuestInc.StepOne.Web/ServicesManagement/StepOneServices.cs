@@ -24,7 +24,9 @@ public static class StepOneServices
             .AddScoped<CandidateWorkflowService>()
             .AddScoped<CompanyService>()
             .AddScoped<ExcelService>()
+            .AddScoped<JobTitleAliasService>()
             .AddScoped<JobTitlesService>()
+            .AddScoped<JobTitleWorkflowService>()
             .AddScoped<StepService>()
             .AddScoped<WorkflowService>()
 

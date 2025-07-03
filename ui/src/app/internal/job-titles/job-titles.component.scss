@@ -1,18 +1,69 @@
+@import "variables";
+
 .container {
   display: flex;
-  gap: 20px;
-  padding: 20px;
+  gap: $margin;
+  padding: $margin;
+  margin: $margin;
 }
 
 .column {
   flex: 1;
   min-width: 300px;
+  margin: $margin auto;
 }
 
 .full-width {
   width: 100%;
 }
 
+mat-card-content > mat-form-field:first-of-type {
+  margin-top: 16px;
+}
+
 .add-alias {
   margin-top: 16px;
 }
+
+.add-alias-inline {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-top: 16px;
+}
+
+.add-alias-inline button {
+  margin-bottom: $mat-raised-button-height-full-margin-bottom;
+  height: $mat-raised-button-height-full;
+}
+
+.alias-input {
+  flex: 1;
+}
+
+.alias-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+}
+
+.alias-text {
+  font-size: 16px; /* match list item text size */
+}
+
+.workflow-row {
+  display: flex;
+  align-items: center; /* Aligns button with bottom of form field */
+  gap: 10px;
+}
+
+.workflow-select {
+  flex: 1;
+}
+
+.workflow-row button {
+  height: $mat-raised-button-height-full;
+  margin-bottom: $mat-raised-button-height-full-margin-bottom;
+}
+
