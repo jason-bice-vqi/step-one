@@ -38,6 +38,8 @@ export class JobTitlesComponent implements OnInit {
   ngOnInit(): void {
     this.orgService.getCompanies().pipe(take(1)).subscribe((x) => this.companies = x);
     this.workflowService.get().pipe(take(1)).subscribe((x) => this.workflows = x);
+
+    this.notificationService.custom('Here you can manage aliases for job titles. Select a Company, then select a Job Title within that Company. Once a Job Title has been selected, you can manage its aliases as well as assign its Workflow.', {duration: 15000});
   }
 
   onCompanyChange(): void {

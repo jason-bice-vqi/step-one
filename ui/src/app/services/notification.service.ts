@@ -12,35 +12,35 @@ export class NotificationService {
   constructor(private snackBar: MatSnackBar) {}
 
   success(message: string): void {
-    this.snackBar.open(message, '', {
+    this.snackBar.open(message, 'Dismiss', {
       ...this.defaultConfig,
       panelClass: ['snack-success']
     });
   }
 
   error(message: string): void {
-    this.snackBar.open(message, '', {
+    this.snackBar.open(message, 'Dismiss', {
       ...this.defaultConfig,
       panelClass: ['snack-error']
     });
   }
 
   info(message: string): void {
-    this.snackBar.open(message, '', {
+    this.snackBar.open(message, 'Dismiss', {
       ...this.defaultConfig,
       panelClass: ['snack-info']
     });
   }
 
   warn(message: string): void {
-    this.snackBar.open(message, '', {
+    this.snackBar.open(message, 'Dismiss', {
       ...this.defaultConfig,
       panelClass: ['snack-warn']
     });
   }
 
-  custom(message: string, action: string = '', config: MatSnackBarConfig = {}): void {
-    this.snackBar.open(message, action, {
+  custom(message: string, config: MatSnackBarConfig = {}): void {
+    this.snackBar.open(message, 'Dismiss', {
       ...this.defaultConfig,
       ...config
     });

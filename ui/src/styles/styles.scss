@@ -179,25 +179,24 @@ body.internal-area .content {
   animation: glow-pulse-red 1.5s ease-out;
 }
 
-/* Snackbar styles */
+/* Snackbar styles - Cannot use variables... ... ... */
 
 .snack-success {
-  background-color: #4caf50;
-  color: white;
+  --mdc-snackbar-container-color: #007300;
+  --mat-mdc-snack-bar-button-color: white;
 }
 
 .snack-error {
-  background-color: #f44336 !important;
-  color: white !important;
-  font-size: 100px !important;
+  --mdc-snackbar-container-color: #8d0700;
+  --mat-mdc-snack-bar-button-color: white;
 }
 
 .snack-info {
-  background-color: $vqi-blue;
-  color: white;
+  --mdc-snackbar-container-color: #004772;
+  --mat-mdc-snack-bar-button-color: white;
 }
 
 .snack-warn {
-  background-color: #ff9800;
-  color: black;
+  --mdc-snackbar-container-color: #c07300;
+  --mat-mdc-snack-bar-button-color: white;
 }

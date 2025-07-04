@@ -35,6 +35,7 @@ mat-card-content > mat-form-field:first-of-type {
 .add-alias-inline button {
   margin-bottom: $mat-raised-button-height-full-margin-bottom;
   height: $mat-raised-button-height-full;
+  font-size: $font-size;
 }
 
 .alias-input {
@@ -65,5 +66,6 @@ mat-card-content > mat-form-field:first-of-type {
 .workflow-row button {
   height: $mat-raised-button-height-full;
   margin-bottom: $mat-raised-button-height-full-margin-bottom;
+  font-size: $font-size;
 }
 
