@@ -16,9 +16,9 @@ import {NotificationService} from "../../services/notification.service";
 })
 export class JobTitlesComponent implements OnInit {
 
-  selectedCompanyId: number | null = null;
-  selectedJobTitleId: number | null = null;
-  selectedWorkflowId: number | null = null;
+  selectedCompany: Company | null = null;
+  selectedJobTitle: JobTitle | null = null;
+  selectedWorkflow: Workflow | null = null;
 
   companies: Company[] = [];
   jobTitles: JobTitle[] = [];
@@ -39,42 +39,40 @@ export class JobTitlesComponent implements OnInit {
     this.orgService.getCompanies().pipe(take(1)).subscribe((x) => this.companies = x);
     this.workflowService.get().pipe(take(1)).subscribe((x) => this.workflows = x);
 
-    this.notificationService.custom('Here you can manage aliases for job titles. Select a Company, then select a Job Title within that Company. Once a Job Title has been selected, you can manage its aliases as well as assign its Workflow.', {duration: 15000});
+    this.notificationService.intro('Here you can manage aliases for job titles. Select a <strong>Company</strong>, then select a <strong>Job Title</strong> within that Company. Once a Job Title has been selected, you can manage its <strong>Aliases</strong> as well as assign its assigned <strong>Workflow</strong>.');
   }
 
   onCompanyChange(): void {
-    if (this.selectedCompanyId) {
-      this.orgService.getJobTitles(this.selectedCompanyId).pipe(take(1)).subscribe((x) => this.jobTitles = x);
+    if (this.selectedCompany) {
+      this.orgService.getJobTitles(this.selectedCompany.id).pipe(take(1)).subscribe((x) => this.jobTitles = x);
     }
   }
 
   onJobTitleChange(): void {
-    if (!this.selectedJobTitleId) return;
+    if (!this.selectedJobTitle) return;
 
-    this.orgService.getJobTitleAliases(this.selectedJobTitleId)
+    this.orgService.getJobTitleAliases(this.selectedJobTitle.id)
       .pipe(take(1))
       .subscribe((x) => this.jobTitleAliases = x);
 
-    this.jobTitleWorkflowService.showByJobTitle(this.selectedJobTitleId)
+    this.jobTitleWorkflowService.showByJobTitle(this.selectedJobTitle.id)
       .pipe(take(1))
       .subscribe(x => {
-        this.selectedWorkflowId = x?.workflowId ?? null;
+        this.selectedWorkflow = x?.workflow ?? null;
       });
 
     this.isWorkflowAssignmentDirty = false;
   }
 
   addAlias(): void {
-    if (!this.selectedJobTitleId || !this.newAlias.trim()) {
-      return;
-    }
+    if (!this.selectedJobTitle?.id || !this.newAlias.trim()) return;
 
-    this.orgService.createJobTitleAlias(this.selectedJobTitleId, this.newAlias)
+    this.orgService.createJobTitleAlias(this.selectedJobTitle.id, this.newAlias)
       .pipe(take(1), tap((x) => {
         this.jobTitleAliases.push(x);
         this.newAlias = '';
 
-        this.notificationService.success(`The alias '${x.alias}' has been added.`);
+        this.notificationService.success(`The alias <strong>${x.alias}</strong> has been added.`);
       }))
       .subscribe();
   }
@@ -87,7 +85,7 @@ export class JobTitlesComponent implements OnInit {
     this.orgService.deleteJobTitleAlias(jobTitleAlias.id).pipe(take(1), tap((_) => {
       this.jobTitleAliases.splice(index, 1);
 
-      this.notificationService.success(`The alias '${jobTitleAlias.alias}' has been deleted.`);
+      this.notificationService.success(`The alias <strong>${jobTitleAlias.alias}</strong> has been removed.`);
     })).subscribe();
   }
 
@@ -96,11 +94,11 @@ export class JobTitlesComponent implements OnInit {
   }
 
   saveWorkflowAssignment() {
-    this.jobTitleWorkflowService.create(this.selectedJobTitleId!, this.selectedWorkflowId!)
+    this.jobTitleWorkflowService.create(this.selectedJobTitle!.id, this.selectedWorkflow!.id)
       .pipe(take(1), tap(_ => {
         this.isWorkflowAssignmentDirty = false;
 
-        this.notificationService.success("The workflow assignment has been updated.");
+        this.notificationService.success(`The workflow assignment for <strong>${this.selectedJobTitle?.displayTitle}</strong> at <strong>${this.selectedCompany?.name}</strong> has been assigned to the <strong>${this.selectedWorkflow?.name}</strong> workflow.`, 10000);
       }))
       .subscribe();
   }

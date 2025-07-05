@@ -50,6 +50,7 @@ import {MatProgressSpinnerModule} from "@angular/material/progress-spinner";
 import { WarnUnsavedDialogComponent } from './shared/warn-unsaved-dialog/warn-unsaved-dialog.component';
 import { JobTitlesComponent } from './internal/job-titles/job-titles.component';
 import {MatSnackBarModule} from "@angular/material/snack-bar";
+import { HtmlSnackbarComponent } from './shared/html-snackbar/html-snackbar.component';
 
 export function MSALInstanceFactory(): PublicClientApplication {
   return new PublicClientApplication({
@@ -106,7 +107,8 @@ export function MSALInstanceFactory(): PublicClientApplication {
     WorkflowStepNamePipe,
     LoadingSpinnerComponent,
     WarnUnsavedDialogComponent,
-    JobTitlesComponent
+    JobTitlesComponent,
+    HtmlSnackbarComponent
   ],
   imports: [
     BrowserModule,

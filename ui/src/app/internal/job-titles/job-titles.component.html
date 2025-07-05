@@ -4,9 +4,9 @@
     <mat-card-header>
       <mat-card-title>
         {{
-        !selectedCompanyId
+        !selectedCompany
           ? 'Select a Company'
-          : !selectedJobTitleId
+          : !selectedJobTitle
             ? 'Select a Job Title'
             : 'Manage Job Title Aliases & Workflow'
         }}
@@ -17,27 +17,27 @@
       <!-- Company Dropdown -->
       <mat-form-field appearance="fill" class="full-width">
         <mat-label>Company</mat-label>
-        <mat-select [(value)]="selectedCompanyId" (selectionChange)="onCompanyChange()">
+        <mat-select [(value)]="selectedCompany" (selectionChange)="onCompanyChange()">
           <mat-option *ngFor="let company of companies"
-                      [value]="company.id">{{ company.name }}</mat-option>
+                      [value]="company">{{ company.name }}</mat-option>
         </mat-select>
       </mat-form-field>
 
       <!-- Job Title Dropdown -->
-      <mat-form-field appearance="fill" class="full-width" *ngIf="selectedCompanyId">
+      <mat-form-field appearance="fill" class="full-width" *ngIf="selectedCompany">
         <mat-label>Job Title</mat-label>
-        <mat-select [(value)]="selectedJobTitleId" (selectionChange)="onJobTitleChange()">
+        <mat-select [(value)]="selectedJobTitle" (selectionChange)="onJobTitleChange()">
           <mat-option *ngFor="let jobTitle of jobTitles"
-                      [value]="jobTitle.id">{{ jobTitle.displayTitle }}</mat-option>
+                      [value]="jobTitle">{{ jobTitle.displayTitle }}</mat-option>
         </mat-select>
       </mat-form-field>
 
       <!-- Assigned Workflow Dropdown -->
-      <div class="workflow-row" *ngIf="selectedJobTitleId">
+      <div class="workflow-row" *ngIf="selectedJobTitle">
         <mat-form-field appearance="fill" class="workflow-select">
           <mat-label>Workflow</mat-label>
-          <mat-select [(value)]="selectedWorkflowId" (selectionChange)="onWorkflowChange()">
-            <mat-option *ngFor="let workflow of workflows" [value]="workflow.id">
+          <mat-select [(value)]="selectedWorkflow" (selectionChange)="onWorkflowChange()">
+            <mat-option *ngFor="let workflow of workflows" [value]="workflow">
               {{ workflow.name }}
             </mat-option>
           </mat-select>
@@ -59,7 +59,7 @@
     </mat-card-header>
     <mat-card-content>
       <!-- Add New Alias -->
-      <div *ngIf="selectedJobTitleId" class="add-alias-inline">
+      <div *ngIf="selectedJobTitle" class="add-alias-inline">
         <mat-form-field appearance="fill" class="alias-input">
           <mat-label>New Alias</mat-label>
           <input matInput [(ngModel)]="newAlias" (keyup.enter)="addAlias()">
@@ -70,7 +70,7 @@
         </button>
       </div>
       <!-- Alias List -->
-      <div *ngIf="selectedJobTitleId; else noJobTitleSelected">
+      <div *ngIf="selectedJobTitle; else noJobTitleSelected">
         <hr *ngIf="jobTitleAliases.length">
         <mat-list>
           <mat-list-item *ngFor="let jobTitleAlias of jobTitleAliases">

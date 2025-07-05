@@ -184,19 +184,44 @@ body.internal-area .content {
 .snack-success {
   --mdc-snackbar-container-color: #007300;
   --mat-mdc-snack-bar-button-color: white;
+
+  .mdc-snackbar__surface {
+    min-width: unset !important;
+  }
 }
 
 .snack-error {
   --mdc-snackbar-container-color: #8d0700;
   --mat-mdc-snack-bar-button-color: white;
+
+  .mdc-snackbar__surface {
+    min-width: unset !important;
+  }
 }
 
 .snack-info {
   --mdc-snackbar-container-color: #004772;
   --mat-mdc-snack-bar-button-color: white;
+
+  .mdc-snackbar__surface {
+    min-width: unset !important;
+  }
+}
+
+.snack-intro {
+  --mdc-snackbar-container-color: #444;
+  --mat-mdc-snack-bar-button-color: white;
+
+  .mdc-snackbar__surface {
+    min-width: unset !important;
+  }
 }
 
 .snack-warn {
   --mdc-snackbar-container-color: #c07300;
   --mat-mdc-snack-bar-button-color: white;
+
+  .mdc-snackbar__surface {
+    min-width: unset !important;
+  }
 }
