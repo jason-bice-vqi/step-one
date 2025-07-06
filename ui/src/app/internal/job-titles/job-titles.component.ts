@@ -19,6 +19,7 @@ export class JobTitlesComponent implements OnInit {
   selectedCompany: Company | null = null;
   selectedJobTitle: JobTitle | null = null;
   selectedWorkflow: Workflow | null = null;
+  selectedWorkflowId: number | null = null;
 
   companies: Company[] = [];
   jobTitles: JobTitle[] = [];
@@ -59,6 +60,7 @@ export class JobTitlesComponent implements OnInit {
       .pipe(take(1))
       .subscribe(x => {
         this.selectedWorkflow = x?.workflow ?? null;
+        this.selectedWorkflowId = x?.workflowId ?? null;
       });
 
     this.isWorkflowAssignmentDirty = false;
@@ -94,7 +96,7 @@ export class JobTitlesComponent implements OnInit {
   }
 
   saveWorkflowAssignment() {
-    this.jobTitleWorkflowService.create(this.selectedJobTitle!.id, this.selectedWorkflow!.id)
+    this.jobTitleWorkflowService.create(this.selectedJobTitle!.id, this.selectedWorkflowId!)
       .pipe(take(1), tap(_ => {
         this.isWorkflowAssignmentDirty = false;
 

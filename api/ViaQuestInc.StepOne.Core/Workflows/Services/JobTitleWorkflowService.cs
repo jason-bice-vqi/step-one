@@ -6,7 +6,18 @@ public class JobTitleWorkflowService(IRepository<StepOneDbContext> repository)
 {
     public async Task<JobTitleWorkflow?> GetByJobTitleIdAsync(int jobTitleId, CancellationToken cancellationToken)
     {
-        return await repository.GetAsync<JobTitleWorkflow>(x => x.JobTitleId == jobTitleId, cancellationToken);
+        var jobTitleWorkflow = await repository.GetWithChildrenAsync<JobTitleWorkflow>(
+            x => x.JobTitleId == jobTitleId,
+            cancellationToken,
+            nameof(JobTitleWorkflow.JobTitle),
+            nameof(JobTitleWorkflow.Workflow));
+
+        if (jobTitleWorkflow == null) return null;
+
+        // Prevent JSON serialization cycles; can't use JsonIgnore on Workflow.JobTitleWorkflows
+        jobTitleWorkflow.Workflow.JobTitleWorkflows = null;
+
+        return jobTitleWorkflow;
     }
 
     public async Task<JobTitleWorkflow> CreateAsync(int jobTitleId, int workflowId, CancellationToken cancellationToken)

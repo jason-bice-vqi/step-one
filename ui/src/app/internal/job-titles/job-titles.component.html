@@ -36,8 +36,8 @@
       <div class="workflow-row" *ngIf="selectedJobTitle">
         <mat-form-field appearance="fill" class="workflow-select">
           <mat-label>Workflow</mat-label>
-          <mat-select [(value)]="selectedWorkflow" (selectionChange)="onWorkflowChange()">
-            <mat-option *ngFor="let workflow of workflows" [value]="workflow">
+          <mat-select [(value)]="selectedWorkflowId" (selectionChange)="onWorkflowChange()">
+            <mat-option *ngFor="let workflow of workflows" [value]="workflow.id">
               {{ workflow.name }}
             </mat-option>
           </mat-select>
