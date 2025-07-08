@@ -9,7 +9,8 @@ import {JobTitle} from "../../models/org/job-title";
 import {JobTitleService} from "../../services/job-title.service";
 import {ConfirmDeleteDialogComponent} from "../../shared/confirm-delete-dialog/confirm-delete-dialog.component";
 import {MatDialog} from "@angular/material/dialog";
-
+import {MatCheckboxChange} from "@angular/material/checkbox";
+import {NotificationService} from "../../services/notification.service";
 
 @Component({
   selector: 'app-workflow-assignments',
@@ -28,11 +29,16 @@ export class WorkflowAssignmentsComponent implements OnInit {
               private dialog: MatDialog,
               private orgService: OrgService,
               private jobTitleService: JobTitleService,
+              private notificationService: NotificationService,
               private router: Router,
               private workflowService: WorkflowService) {
   }
 
   ngOnInit(): void {
+    this.loadDataFromRoute();
+  }
+
+  loadDataFromRoute() {
     this.activatedRoute.paramMap.subscribe(params => {
       this.activeWorkflowId = +params.get('id')!;
       this.orgService.getJobTitlesGroupedByCompany().pipe(take(1)).subscribe(x => this.companyJobTitles = x);
@@ -61,7 +67,9 @@ export class WorkflowAssignmentsComponent implements OnInit {
     return this.expandedCompanies.has(companyId);
   }
 
-  setJobTitleWorkflow(jobTitle: JobTitle) {
+  setJobTitleWorkflow(event: MatCheckboxChange, jobTitle: JobTitle) {
+    const workflowId = event.checked ? this.activeWorkflowId! : null;
+
     if (jobTitle.workflowId !== null && jobTitle.workflowId !== this.activeWorkflowId) {
       this.dialog.open(ConfirmDeleteDialogComponent, {
         data: {
@@ -72,14 +80,36 @@ export class WorkflowAssignmentsComponent implements OnInit {
         }
       }).afterClosed().pipe(
         take(1),
-        filter(result => !!result),
-        switchMap(() => this.jobTitleService.updateWorkflow(jobTitle.id, this.activeWorkflowId!)),
-        tap(x => jobTitle.workflowId = x.workflowId)
+        tap(x => {
+          if (!x) {
+            // User cancelled, so reload state. This is the easiest solution to cancelling the check. Alternatively, can
+            // use (click) with EventArgs.preventDefault, but then the checked state for each item needs to be tracked.
+            // This is simpler.
+            this.loadDataFromRoute();
+          }
+        }),
+        filter(x => !!x),
+        switchMap(() => this.jobTitleService.updateWorkflow(jobTitle.id, workflowId)),
+        tap(x => {
+          jobTitle.workflowId = x.workflowId;
+          this.notifyOfAssignmentChange(jobTitle);
+        })
       ).subscribe();
     } else {
-      this.jobTitleService.updateWorkflow(jobTitle.id, this.activeWorkflowId!)
-        .pipe(take(1), tap(x => jobTitle.workflowId = x.workflowId))
+      this.jobTitleService.updateWorkflow(jobTitle.id, workflowId)
+        .pipe(take(1), tap(x => {
+          jobTitle.workflowId = x.workflowId;
+          this.notifyOfAssignmentChange(jobTitle);
+        }))
         .subscribe();
+    }
+  }
+
+  private notifyOfAssignmentChange(jobTitle: JobTitle) {
+    if (jobTitle.workflowId) {
+      this.notificationService.success(`<strong>${jobTitle.displayTitle}</strong> has been assigned to the <strong>${this.activeWorkflow!.name}</strong> workflow.`);
+    } else {
+      this.notificationService.warn(`<strong>${jobTitle.displayTitle}</strong> is no longer assigned to the <strong>${this.activeWorkflow!.name}</strong> workflow.`);
     }
   }
 }

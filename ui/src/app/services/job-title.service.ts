@@ -11,7 +11,7 @@ export class JobTitleService {
 
   constructor(private httpClient: HttpClient) { }
 
-  updateWorkflow(jobTitleId: number, workflowId?: number): Observable<JobTitle> {
+  updateWorkflow(jobTitleId: number, workflowId?: number | null): Observable<JobTitle> {
     const endpoint = `${environment.apiUrl}/job-titles/${jobTitleId}`;
 
     const updateJobTitleRequest = {

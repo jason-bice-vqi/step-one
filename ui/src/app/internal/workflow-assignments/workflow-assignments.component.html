@@ -26,10 +26,10 @@
       <!-- Job Titles -->
       <ng-container *ngIf="isExpanded(companyJobTitle.company.id)">
         <div class="job-title" *ngFor="let jobTitle of companyJobTitle.jobTitles">
-          <mat-checkbox [checked]="jobTitle.workflowId === activeWorkflow?.id" (click)="setJobTitleWorkflow(jobTitle)">
+          <mat-checkbox [checked]="jobTitle.workflowId === activeWorkflow?.id" (change)="setJobTitleWorkflow($event, jobTitle)">
             {{ jobTitle.displayTitle }}
             <div *ngIf="jobTitle.workflowId != null && jobTitle.workflowId !== activeWorkflow?.id">
-              <small>Assigned to <strong>{{ jobTitle.workflow?.name }}</strong> workflow</small>
+              <small class="alt-assignment">Assigned to <strong>{{ jobTitle.workflow?.name }}</strong> workflow</small>
             </div>
           </mat-checkbox>
         </div>
