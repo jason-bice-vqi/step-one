@@ -48,3 +48,8 @@ footer {
 .alpha {
   color: lightgray;
 }
+
+footer a {
+  color: $text-color;
+  text-decoration: none;
+}

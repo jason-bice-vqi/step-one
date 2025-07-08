@@ -25,7 +25,6 @@ public class StepOneDbContext(DbContextOptions<StepOneDbContext> options) : DbCo
     public DbSet<Company> Companies { get; set; }
     public DbSet<JobTitleAlias> JobTitleAliases { get; set; }
     public DbSet<JobTitle> JobTitles { get; set; }
-    public DbSet<JobTitleWorkflow> JobTitleWorkflows { get; set; }
     public DbSet<Region> Regions { get; set; }
     public DbSet<Step> Steps { get; set; }
     public DbSet<Workflow> Workflows { get; set; }

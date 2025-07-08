@@ -51,6 +51,8 @@ import { WarnUnsavedDialogComponent } from './shared/warn-unsaved-dialog/warn-un
 import { JobTitlesComponent } from './internal/job-titles/job-titles.component';
 import {MatSnackBarModule} from "@angular/material/snack-bar";
 import { HtmlSnackbarComponent } from './shared/html-snackbar/html-snackbar.component';
+import { WorkflowAssignmentsComponent } from './internal/workflow-assignments/workflow-assignments.component';
+import {MatTreeModule} from "@angular/material/tree";
 
 export function MSALInstanceFactory(): PublicClientApplication {
   return new PublicClientApplication({
@@ -108,35 +110,37 @@ export function MSALInstanceFactory(): PublicClientApplication {
     LoadingSpinnerComponent,
     WarnUnsavedDialogComponent,
     JobTitlesComponent,
-    HtmlSnackbarComponent
+    HtmlSnackbarComponent,
+    WorkflowAssignmentsComponent
   ],
-  imports: [
-    BrowserModule,
-    AppRoutingModule,
-    BrowserAnimationsModule,
-    MatCardModule,
-    MatInputModule,
-    MatListModule,
-    MatButtonModule,
-    ReactiveFormsModule,
-    NgOptimizedImage,
-    FormsModule,
-    HttpClientModule,
-    MatTableModule,
-    MatProgressBarModule,
-    MatIconModule,
-    MatPaginatorModule,
-    MatTooltipModule,
-    MatSelectModule,
-    MatCheckboxModule,
-    MatSortModule,
-    MatMenuModule,
-    MatToolbarModule,
-    MatDialogModule,
-    MatSlideToggleModule,
-    MatProgressSpinnerModule,
-    MatSnackBarModule
-  ],
+    imports: [
+        BrowserModule,
+        AppRoutingModule,
+        BrowserAnimationsModule,
+        MatCardModule,
+        MatInputModule,
+        MatListModule,
+        MatButtonModule,
+        ReactiveFormsModule,
+        NgOptimizedImage,
+        FormsModule,
+        HttpClientModule,
+        MatTableModule,
+        MatProgressBarModule,
+        MatIconModule,
+        MatPaginatorModule,
+        MatTooltipModule,
+        MatSelectModule,
+        MatCheckboxModule,
+        MatSortModule,
+        MatMenuModule,
+        MatToolbarModule,
+        MatDialogModule,
+        MatSlideToggleModule,
+        MatProgressSpinnerModule,
+        MatSnackBarModule,
+        MatTreeModule
+    ],
   providers: [
     {provide: MSAL_INSTANCE, useFactory: MSALInstanceFactory},
     MsalService,

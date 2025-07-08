@@ -7,6 +7,7 @@ import {InternalDashboardComponent} from "./internal/internal-dashboard/internal
 import {internalUserAuthGuard} from "./internal/guards/internal-user-auth.guard";
 import {WorkflowsComponent} from "./internal/workflows/workflows.component";
 import {JobTitlesComponent} from "./internal/job-titles/job-titles.component";
+import {WorkflowAssignmentsComponent} from "./internal/workflow-assignments/workflow-assignments.component";
 
 const routes: Routes = [
   {path: 'login', component: LoginComponent},
@@ -16,9 +17,10 @@ const routes: Routes = [
     path: 'internal',
     canActivate: [internalUserAuthGuard],
     children: [
-      { path: 'dashboard', component: InternalDashboardComponent },
-      { path: 'workflows', component: WorkflowsComponent },
-      { path: 'job-titles', component: JobTitlesComponent }
+      {path: 'dashboard', component: InternalDashboardComponent},
+      {path: 'workflows', component: WorkflowsComponent},
+      {path: 'job-titles', component: JobTitlesComponent},
+      {path: 'workflows/:id/assignments', component: WorkflowAssignmentsComponent}
     ]
   },
   {path: 'intermediate', redirectTo: '/internal-user-dashboard'},

@@ -18,8 +18,7 @@ public class WorkflowService(IRepository<StepOneDbContext> repository)
 
         if (workflow.CopiedFromWorkflowId == null) return createdWorkflow;
 
-        var copiedFromWorkflow =
-            await ShowWithJobTitleWorkflowsAsync(workflow.CopiedFromWorkflowId.Value, cancellationToken);
+        var copiedFromWorkflow = await ShowAsync(workflow.CopiedFromWorkflowId.Value, cancellationToken);
 
         if (workflow.CopySteps)
         {
@@ -40,6 +39,7 @@ public class WorkflowService(IRepository<StepOneDbContext> repository)
     public async Task<IEnumerable<Workflow>> IndexAsync(CancellationToken cancellationToken)
     {
         return await repository.AllWithChildren<Workflow>(DefaultIncludes)
+            .OrderBy(x => x.Name)
             .ToArrayAsync(cancellationToken);
     }
 
@@ -49,14 +49,6 @@ public class WorkflowService(IRepository<StepOneDbContext> repository)
             x => x.Id == workflowId,
             cancellationToken,
             DefaultIncludes))!;
-    }
-
-    public async Task<Workflow> ShowWithJobTitleWorkflowsAsync(int workflowId, CancellationToken cancellationToken)
-    {
-        var includes = DefaultIncludes.Concat(new[] { nameof(Workflow.JobTitleWorkflows) })
-            .ToArray();
-
-        return (await repository.GetWithChildrenAsync<Workflow>(x => x.Id == workflowId, cancellationToken, includes))!;
     }
 
     public async Task<int> DeleteAsync(Workflow workflow, CancellationToken cancellationToken)

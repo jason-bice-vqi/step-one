@@ -1,0 +1,35 @@
+@import "variables";
+
+.container {
+  display: flex;
+  justify-content: center;
+  gap: $margin;
+  padding: $margin;
+  flex-wrap: wrap;
+}
+
+.column {
+  flex: 0 1 auto;
+  padding: $margin;
+  min-width: 500px;
+  max-width: 800px;
+}
+
+.company-block {
+  margin-top: 16px;
+}
+
+.company-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.job-title {
+  padding-left: 40px;
+  margin: 4px 0;
+}
+
+.company-text {
+  cursor: pointer;
+}

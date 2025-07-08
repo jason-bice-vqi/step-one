@@ -1,0 +1,40 @@
+<div class="container">
+
+  <mat-card class="column">
+    <mat-card-title>Workflows</mat-card-title>
+    <mat-selection-list [multiple]="false" [(ngModel)]="selectedWorkflows" (selectionChange)="onWorkflowSelected()">
+      <mat-list-option *ngFor="let workflow of workflows" [value]="workflow">
+        {{ workflow.name }}
+      </mat-list-option>
+    </mat-selection-list>
+  </mat-card>
+
+  <mat-card class="column">
+    <mat-card-title>Job Titles by Company</mat-card-title>
+    <div *ngFor="let companyJobTitle of companyJobTitles" class="company-block">
+      <div class="company-header">
+        <!-- Expand/Collapse Button -->
+        <button mat-icon-button (click)="toggleCompany(companyJobTitle.company.id)">
+          <mat-icon>
+            {{ isExpanded(companyJobTitle.company.id) ? 'expand_more' : 'chevron_right' }}
+          </mat-icon>
+        </button>
+        <span class="company-text"
+              (click)="toggleCompany(companyJobTitle.company.id)">{{ companyJobTitle.company.name }}</span>
+      </div>
+
+      <!-- Job Titles -->
+      <ng-container *ngIf="isExpanded(companyJobTitle.company.id)">
+        <div class="job-title" *ngFor="let jobTitle of companyJobTitle.jobTitles">
+          <mat-checkbox [checked]="jobTitle.workflowId === activeWorkflow?.id" (click)="setJobTitleWorkflow(jobTitle)">
+            {{ jobTitle.displayTitle }}
+            <div *ngIf="jobTitle.workflowId != null && jobTitle.workflowId !== activeWorkflow?.id">
+              <small>Assigned to <strong>{{ jobTitle.workflow?.name }}</strong> workflow</small>
+            </div>
+          </mat-checkbox>
+        </div>
+      </ng-container>
+    </div>
+  </mat-card>
+
+</div>

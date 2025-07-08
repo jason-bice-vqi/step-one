@@ -1,5 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using ViaQuestInc.StepOne.Core.Data.Entity;
+using ViaQuestInc.StepOne.Core.Workflows;
 
 namespace ViaQuestInc.StepOne.Core.Organization;
 
@@ -18,6 +19,10 @@ public class JobTitle : EntityBase<int>,
     public Company Company { get; set; }
     
     public required Guid HrtId { get; set; }
+    
+    public int? WorkflowId { get; set; }
+    
+    public Workflow? Workflow { get; set; }
     
     public required EntityStatuses EntityStatus { get; set; }
 

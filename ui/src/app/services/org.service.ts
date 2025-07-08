@@ -1,10 +1,11 @@
 import {Injectable} from '@angular/core';
 import {HttpClient} from "@angular/common/http";
-import {Observable, tap} from "rxjs";
+import {map, Observable, tap} from "rxjs";
 import {environment} from "../../environments/environment";
 import {Company} from "../models/org/company";
 import {JobTitle} from "../models/org/job-title";
 import {JobTitleAlias} from "../models/org/job-title-alias";
+import {CompanyJobTitle} from "../models/org/company-job-title";
 
 @Injectable({
   providedIn: 'root'
@@ -21,11 +22,41 @@ export class OrgService {
       .pipe(tap(x => console.info('Companies Retrieved', x)));
   }
 
-  getJobTitles(companyId: number): Observable<JobTitle[]> {
-    const endpoint = `${environment.apiUrl}/companies/${companyId}/job-titles`;
+  getJobTitles() : Observable<JobTitle[]> {
+    const endpoint = `${environment.apiUrl}/job-titles`;
 
     return this.httpClient.get<JobTitle[]>(endpoint)
       .pipe(tap(x => console.info('Job Titles Retrieved', x)));
+  }
+
+  getJobTitlesGroupedByCompany(): Observable<CompanyJobTitle[]> {
+    return this.getJobTitles().pipe(
+      map((jobTitles: JobTitle[]) => {
+        const grouped = new Map<number, CompanyJobTitle>();
+
+        for (const jobTitle of jobTitles.sort((a, b) => a.displayTitle.localeCompare(b.displayTitle))) {
+          const companyId = jobTitle.company.id;
+
+          if (!grouped.has(companyId)) {
+            grouped.set(companyId, {
+              company: jobTitle.company,
+              jobTitles: []
+            });
+          }
+
+          grouped.get(companyId)!.jobTitles.push(jobTitle);
+        }
+
+        return Array.from(grouped.values()).sort((a, b) => a.company.name.localeCompare(b.company.name));
+      })
+    );
+  }
+
+  getJobTitlesByCompany(companyId: number): Observable<JobTitle[]> {
+    const endpoint = `${environment.apiUrl}/companies/${companyId}/job-titles`;
+
+    return this.httpClient.get<JobTitle[]>(endpoint)
+      .pipe(tap(x => console.info('Job Titles By Company Retrieved', x)));
   }
 
   getJobTitleAliases(jobTitleId: number): Observable<JobTitleAlias[]> {

@@ -11,6 +11,7 @@ import {Step} from "../../models/workflows/step";
 import {StepDialogComponent} from "../step-dialog/step-dialog.component";
 import {WorkflowDialogComponent} from "../workflow-dialog/workflow-dialog.component";
 import {sortWorkflows, sortWorkflowSteps} from "../../functions/workflow.functions";
+import {Router} from "@angular/router";
 
 @Component({
   selector: 'app-workflows',
@@ -33,7 +34,10 @@ export class WorkflowsComponent implements OnInit {
   /** Whether the configuration of the currently selected workflow's steps contains unsaved changes. **/
   workflowStepsDirty = false;
 
-  constructor(private dialog: MatDialog, private stepService: StepService, private workflowService: WorkflowService) {
+  constructor(private dialog: MatDialog,
+              private router: Router,
+              private stepService: StepService,
+              private workflowService: WorkflowService) {
   }
 
   ngOnInit(): void {
@@ -291,5 +295,9 @@ export class WorkflowsComponent implements OnInit {
         this.loadWorkflows();
       })
     ).subscribe();
+  }
+
+  manageJobAssignments(workflow: Workflow) {
+    this.router.navigate(['/internal', 'workflows', workflow.id, 'assignments']);
   }
 }

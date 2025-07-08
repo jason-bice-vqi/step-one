@@ -41,9 +41,9 @@
 
 .nav-bar a:hover {
   padding: 6px $margin -6px $margin;
-  font-weight: 400;
-  border-top: 6px solid white;
-  border-bottom: 6px solid #ccc;
-  background-color: white;
-  color: $vqi-blue;
+  font-weight: 500;
+  border-top: 6px solid $vqi-blue;
+  border-bottom: 6px solid $vqi-blue;
+  background-color: $vqi-blue;
+  color: white;
 }

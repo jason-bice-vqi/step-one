@@ -6,8 +6,8 @@ import {JobTitle} from "../../models/org/job-title";
 import {JobTitleAlias} from "../../models/org/job-title-alias";
 import {WorkflowService} from "../../services/workflows/workflow.service";
 import {Workflow} from "../../models/workflows/workflow";
-import {JobTitleWorkflowService} from "../../services/workflows/job-title-workflow.service";
 import {NotificationService} from "../../services/notification.service";
+import {JobTitleService} from "../../services/job-title.service";
 
 @Component({
   selector: 'app-job-titles',
@@ -30,7 +30,7 @@ export class JobTitlesComponent implements OnInit {
 
   isWorkflowAssignmentDirty = false;
 
-  constructor(private jobTitleWorkflowService: JobTitleWorkflowService,
+  constructor(private jobTitleService: JobTitleService,
               private notificationService: NotificationService,
               private orgService: OrgService,
               private workflowService: WorkflowService) {
@@ -45,7 +45,7 @@ export class JobTitlesComponent implements OnInit {
 
   onCompanyChange(): void {
     if (this.selectedCompany) {
-      this.orgService.getJobTitles(this.selectedCompany.id).pipe(take(1)).subscribe((x) => this.jobTitles = x);
+      this.orgService.getJobTitlesByCompany(this.selectedCompany.id).pipe(take(1)).subscribe((x) => this.jobTitles = x);
     }
   }
 
@@ -56,13 +56,8 @@ export class JobTitlesComponent implements OnInit {
       .pipe(take(1))
       .subscribe((x) => this.jobTitleAliases = x);
 
-    this.jobTitleWorkflowService.showByJobTitle(this.selectedJobTitle.id)
-      .pipe(take(1))
-      .subscribe(x => {
-        this.selectedWorkflow = x?.workflow ?? null;
-        this.selectedWorkflowId = x?.workflowId ?? null;
-      });
-
+    this.selectedWorkflow = this.selectedJobTitle.workflow ?? null;
+    this.selectedWorkflowId = this.selectedJobTitle.workflowId ?? null;
     this.isWorkflowAssignmentDirty = false;
   }
 
@@ -96,7 +91,7 @@ export class JobTitlesComponent implements OnInit {
   }
 
   saveWorkflowAssignment() {
-    this.jobTitleWorkflowService.create(this.selectedJobTitle!.id, this.selectedWorkflowId!)
+    this.jobTitleService.updateWorkflow(this.selectedJobTitle!.id, this.selectedWorkflowId!)
       .pipe(take(1), tap(_ => {
         this.isWorkflowAssignmentDirty = false;
 
