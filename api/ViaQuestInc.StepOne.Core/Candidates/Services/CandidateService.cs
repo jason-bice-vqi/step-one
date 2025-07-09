@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using ViaQuestInc.StepOne.Core.Candidates.Import;
 using ViaQuestInc.StepOne.Core.Data;
 using ViaQuestInc.StepOne.Core.Kernel.Services;
+using ViaQuestInc.StepOne.Core.Organization;
 
 namespace ViaQuestInc.StepOne.Core.Candidates.Services;
 
@@ -13,6 +14,9 @@ public class CandidateService(
 )
 {
     private const int HeaderRow = 7;
+
+    private static readonly string[] DefaultIncludes =
+        [nameof(Candidate.JobTitle), $"{nameof(Candidate.JobTitle)}.{nameof(JobTitle.Company)}"];
 
     public async Task<Candidate?> GetByPhoneNumberAsync(string phoneNumber, CancellationToken cancellationToken)
     {
@@ -58,7 +62,7 @@ public class CandidateService(
         CancellationToken cancellationToken)
     {
         var candidates = await repository
-            .Filter<Candidate>(
+            .FilterWithChildren<Candidate>(
                 x =>
                     // Name
                     (searchRequest.Name == null || x.FirstName.Contains(searchRequest.Name) ||
@@ -69,7 +73,8 @@ public class CandidateService(
                     (searchRequest.CandidateWorkflowStepStatus == null ||
                      (x.CandidateWorkflowId != null && x.CandidateWorkflow!.CandidateWorkflowSteps.Any(
                          w =>
-                             w.CandidateWorkflowStepStatus == searchRequest.CandidateWorkflowStepStatus))))
+                             w.CandidateWorkflowStepStatus == searchRequest.CandidateWorkflowStepStatus))),
+                DefaultIncludes)
             .ToArrayAsync(cancellationToken);
 
         return new(candidates, searchRequest);

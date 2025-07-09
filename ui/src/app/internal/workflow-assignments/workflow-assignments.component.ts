@@ -117,7 +117,7 @@ export class WorkflowAssignmentsComponent implements OnInit {
     if (companyJobTitle === null) {
       return this.companyJobTitles.flatMap(x => x.jobTitles).filter(x => x.workflowId == this.activeWorkflowId).length;
     }
-    
+
     return companyJobTitle.jobTitles.filter(x => x.workflowId === this.activeWorkflowId).length;
   }
 }

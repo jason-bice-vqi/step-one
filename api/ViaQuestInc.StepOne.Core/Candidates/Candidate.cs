@@ -2,6 +2,7 @@
 using Humanizer;
 using ViaQuestInc.StepOne.Core.Candidates.Workflows;
 using ViaQuestInc.StepOne.Core.Data.Entity;
+using ViaQuestInc.StepOne.Core.Organization;
 
 namespace ViaQuestInc.StepOne.Core.Candidates;
 
@@ -58,9 +59,13 @@ public class Candidate
 
     [MaxLength(255)]
     [Required]
-    public required string JobTitle { get; set; }
+    public required string AtsJobTitle { get; set; }
 
-    public required int JobId { get; set; }
+    public required int AtsJobId { get; set; }
+    
+    public int? JobTitleId { get; set; }
+    
+    public JobTitle JobTitle { get; set; }
 
     /// <summary>
     /// When the last OTP was requested.

@@ -51,10 +51,10 @@ public class InitializeCandidateEntityOperation : ICandidateImportOperation
             HireDate = DateOnly.Parse(
                 options.CurrentRawCandidateDataRow["Date Hired"]
                     .ToString()!),
-            JobId = int.Parse(
+            AtsJobId = int.Parse(
                 options.CurrentRawCandidateDataRow["Job ID"]
                     .ToString()!),
-            JobTitle = options.CurrentRawCandidateDataRow["Job Title"]
+            AtsJobTitle = options.CurrentRawCandidateDataRow["Job Title"]
                 .ToString()!,
             PaycorCandidateId = options.CurrentRawCandidateDataRow["Candidate ID"]
                 .ToString()!,

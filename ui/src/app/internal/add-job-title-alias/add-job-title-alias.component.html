@@ -1,0 +1,29 @@
+<h2 mat-dialog-title>Add Job Title Alias</h2>
+
+<mat-dialog-content class="form-container">
+  {{ atsJobTitle }}
+  <mat-form-field appearance="fill" class="full-width">
+    <mat-label>Company</mat-label>
+    <mat-select [(value)]="selectedCompanyId">
+      <mat-option *ngFor="let company of companies" [value]="company.id">
+        {{ company.name }}
+      </mat-option>
+    </mat-select>
+  </mat-form-field>
+
+  <mat-form-field appearance="fill" class="full-width">
+    <mat-label>Job Title</mat-label>
+    <mat-select [(value)]="selectedJobTitleId">
+      <mat-option *ngFor="let title of filteredJobTitles" [value]="title.id">
+        {{ title.displayTitle }}
+      </mat-option>
+    </mat-select>
+  </mat-form-field>
+</mat-dialog-content>
+
+<mat-dialog-actions align="end">
+  <button mat-button (click)="cancel()">Cancel</button>
+  <button mat-raised-button color="primary" (click)="createAlias()" [disabled]="!selectedCompanyId || !selectedJobTitleId">
+    Create Alias
+  </button>
+</mat-dialog-actions>

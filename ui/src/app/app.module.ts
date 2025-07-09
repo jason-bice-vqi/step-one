@@ -53,6 +53,7 @@ import {WorkflowAssignmentsComponent} from './internal/workflow-assignments/work
 import {MatTreeModule} from "@angular/material/tree";
 import {ProgressBarComponent} from "./shared/progress-bar/progress-bar.component";
 import {FileUploadComponent} from "./shared/file-upload/file-upload.component";
+import { AddJobTitleAliasComponent } from './internal/add-job-title-alias/add-job-title-alias.component';
 
 export function MSALInstanceFactory(): PublicClientApplication {
   return new PublicClientApplication({
@@ -111,7 +112,8 @@ export function MSALInstanceFactory(): PublicClientApplication {
     WarnUnsavedDialogComponent,
     JobTitlesComponent,
     HtmlSnackbarComponent,
-    WorkflowAssignmentsComponent
+    WorkflowAssignmentsComponent,
+    AddJobTitleAliasComponent
   ],
   imports: [
     BrowserModule,

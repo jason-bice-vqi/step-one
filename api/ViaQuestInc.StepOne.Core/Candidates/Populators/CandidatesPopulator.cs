@@ -21,8 +21,8 @@ public class CandidatesPopulator : IDataPopulator
                 FullName = "Bice, Jason",
                 HireDate = new(2012, 04, 29),
                 ImportedAt = DateTime.UtcNow,
-                JobId = 1,
-                JobTitle = "Software Architect",
+                AtsJobId = 1,
+                AtsJobTitle = "Software Architect",
                 LastName = "Bice",
                 PaycorCandidateId = Guid.NewGuid()
                     .ToString()

@@ -1,5 +1,6 @@
 import {CandidateWorkflow} from "../workflows/candidate.workflow";
 import {EntityStatuses} from "../entity.statuses";
+import {JobTitle} from "../org/job-title";
 
 /**
  * Represents a candidate in the system.
@@ -34,4 +35,12 @@ export interface Candidate {
 
   /** The current status of this candidate. */
   entityStatus: EntityStatuses;
+
+  atsJobTitle: string;
+
+  /** The ID of the official/formal job title associated with the candidate. */
+  jobTitleId?: number | null;
+
+  /** The official/formal job title associated with the candidate. */
+  jobTitle: JobTitle | null;
 }

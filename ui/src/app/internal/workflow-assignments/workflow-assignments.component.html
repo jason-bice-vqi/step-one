@@ -1,9 +1,9 @@
 <div class="back">
   <a href="internal/workflows">
-  <mat-icon>chevron_left</mat-icon>
-  Back to
-  <mat-icon>device_hub</mat-icon>
-  Workflows
+    <mat-icon>chevron_left</mat-icon>
+    Back to
+    <mat-icon>device_hub</mat-icon>
+    Workflows
   </a>
 </div>
 <div class="active-workflow">
@@ -18,7 +18,6 @@
       </mat-list-option>
     </mat-selection-list>
   </mat-card>
-
   <mat-card class="column">
     <mat-card-title>Job Titles by Company ({{ getAssignmentCount() }} assignments)</mat-card-title>
     <div *ngFor="let companyJobTitle of companyJobTitles" class="company-block">
@@ -32,23 +31,25 @@
         <span class="company-text"
               (click)="toggleCompany(companyJobTitle.company.id)">
           {{ companyJobTitle.company.name }}<br>
-          <small>{{ getAssignmentCount(companyJobTitle) }} {{ activeWorkflow?.name}} assignments</small>
+          <small
+            *ngIf="getAssignmentCount(companyJobTitle)">{{ getAssignmentCount(companyJobTitle) }} {{ activeWorkflow?.name}}
+            assignments</small>
         </span>
       </div>
-
-      <!-- Job Titles -->
       <ng-container *ngIf="isExpanded(companyJobTitle.company.id)">
         <div class="job-title" *ngFor="let jobTitle of companyJobTitle.jobTitles">
           <mat-checkbox [checked]="jobTitle.workflowId === activeWorkflow?.id"
                         (change)="setJobTitleWorkflow($event, jobTitle)">
-            {{ jobTitle.displayTitle }}
-            <div *ngIf="jobTitle.workflowId != null && jobTitle.workflowId !== activeWorkflow?.id">
-              <small class="alt-assignment">Assigned to <strong>{{ jobTitle.workflow?.name }}</strong> workflow</small>
+
+            <div class="alt-assignment"
+                 *ngIf="jobTitle.workflowId != null && jobTitle.workflowId !== activeWorkflow?.id; else unassigned">
+              {{ jobTitle.displayTitle }}<br>
+              <small>Assigned to <strong>{{ jobTitle.workflow?.name }}</strong> workflow</small>
             </div>
+            <ng-template #unassigned>{{ jobTitle.displayTitle }}</ng-template>
           </mat-checkbox>
         </div>
       </ng-container>
     </div>
   </mat-card>
-
 </div>

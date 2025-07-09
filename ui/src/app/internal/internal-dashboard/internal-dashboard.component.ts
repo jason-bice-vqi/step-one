@@ -6,6 +6,11 @@ import {SearchResponse} from "../../models/search/search.response";
 import {MatPaginator, PageEvent} from "@angular/material/paginator";
 import {CandidateSearchRequest} from "../../models/candidates/candidate-search.request";
 import {Sort} from '@angular/material/sort';
+import {AddJobTitleAliasComponent} from "../add-job-title-alias/add-job-title-alias.component";
+import {MatDialog} from "@angular/material/dialog";
+import {JobTitle} from "../../models/org/job-title";
+import {Company} from "../../models/org/company";
+import {OrgService} from "../../services/org.service";
 
 @Component({
   selector: 'app-internal-user-dashboard',
@@ -18,15 +23,21 @@ export class InternalDashboardComponent implements OnInit {
   private searchDebounceMilliseconds = 500;
   private defaultPageSize = 10;
 
+  companies: Company[] = [];
+  jobTitles: JobTitle[] = [];
+
   searchRequest: CandidateSearchRequest = {desc: false, limit: this.defaultPageSize, page: 0};
 
   searchResponse?: SearchResponse<Candidate>;
 
-  constructor(private candidateService: CandidateService) {
+  constructor(private candidateService: CandidateService, private dialog: MatDialog, private orgService: OrgService) {
   }
 
   ngOnInit(): void {
     this.search();
+
+    this.orgService.getCompanies().pipe(take(1)).subscribe(x => this.companies = x);
+    this.orgService.getJobTitles().pipe(take(1)).subscribe(x => this.jobTitles = x);
   }
 
   statusOptions: string[] = ['Invited - Active', 'Invited - Inactive', 'Pending'];
@@ -82,5 +93,20 @@ export class InternalDashboardComponent implements OnInit {
     this.searchRequest.desc = sort.direction.toUpperCase() == 'DESC';
 
     this.search();
+  }
+
+  addJobTitleAlias(atsJobTitle: string) {
+    this.dialog.open(AddJobTitleAliasComponent, {
+      minWidth: '500px',
+      data: {
+        atsJobTitle,
+        companies: this.companies,
+        jobTitles: this.jobTitles,
+      }
+    }).afterClosed().subscribe(result => {
+      if (result) {
+        this.search();
+      }
+    });
   }
 }
