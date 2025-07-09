@@ -20,14 +20,12 @@ import {MSAL_INSTANCE, MsalBroadcastService, MsalGuard, MsalService} from "@azur
 import {BrowserCacheLocation, LogLevel, PublicClientApplication} from "@azure/msal-browser";
 import {environment} from "../environments/environment";
 import {InternalDashboardComponent} from "./internal/internal-dashboard/internal-dashboard.component";
-import {ProgressBarComponent} from './progress-bar/progress-bar.component';
 import {MatTableModule} from "@angular/material/table";
 import {MatProgressBarModule} from "@angular/material/progress-bar";
 import {MatIconModule} from "@angular/material/icon";
 import {MatPaginatorModule} from "@angular/material/paginator";
 import {MatTooltipModule} from "@angular/material/tooltip";
 import {MatSelectModule} from "@angular/material/select";
-import {FileUploadComponent} from './file-upload/file-upload.component';
 import {CandidateWorkflowStepComponent} from './candidate-workflow-step/candidate-workflow-step.component';
 import {MatCheckboxModule} from "@angular/material/checkbox";
 import {MatSortModule} from '@angular/material/sort';
@@ -40,19 +38,21 @@ import {
 } from './internal/workflow-step-config-dialog/workflow-step-config-dialog.component';
 import {MAT_DIALOG_DEFAULT_OPTIONS, MatDialogModule} from "@angular/material/dialog";
 import {MatSlideToggleModule} from "@angular/material/slide-toggle";
-import { ConfirmDeleteDialogComponent } from './shared/confirm-delete-dialog/confirm-delete-dialog.component';
-import { StepDialogComponent } from './internal/step-dialog/step-dialog.component';
-import { WorkflowDialogComponent } from './internal/workflow-dialog/workflow-dialog.component';
-import { GlowOnInitDirective } from './directives/glow-on-init.directive';
-import { WorkflowStepNamePipe } from './pipes/workflows/workflow-step-name.pipe';
-import { LoadingSpinnerComponent } from './shared/loading-spinner/loading-spinner.component';
+import {ConfirmDeleteDialogComponent} from './shared/confirm-delete-dialog/confirm-delete-dialog.component';
+import {StepDialogComponent} from './internal/step-dialog/step-dialog.component';
+import {WorkflowDialogComponent} from './internal/workflow-dialog/workflow-dialog.component';
+import {GlowOnInitDirective} from './directives/glow-on-init.directive';
+import {WorkflowStepNamePipe} from './pipes/workflows/workflow-step-name.pipe';
+import {LoadingSpinnerComponent} from './shared/loading-spinner/loading-spinner.component';
 import {MatProgressSpinnerModule} from "@angular/material/progress-spinner";
-import { WarnUnsavedDialogComponent } from './shared/warn-unsaved-dialog/warn-unsaved-dialog.component';
-import { JobTitlesComponent } from './internal/job-titles/job-titles.component';
+import {WarnUnsavedDialogComponent} from './shared/warn-unsaved-dialog/warn-unsaved-dialog.component';
+import {JobTitlesComponent} from './internal/job-titles/job-titles.component';
 import {MatSnackBarModule} from "@angular/material/snack-bar";
-import { HtmlSnackbarComponent } from './shared/html-snackbar/html-snackbar.component';
-import { WorkflowAssignmentsComponent } from './internal/workflow-assignments/workflow-assignments.component';
+import {HtmlSnackbarComponent} from './shared/html-snackbar/html-snackbar.component';
+import {WorkflowAssignmentsComponent} from './internal/workflow-assignments/workflow-assignments.component';
 import {MatTreeModule} from "@angular/material/tree";
+import {ProgressBarComponent} from "./shared/progress-bar/progress-bar.component";
+import {FileUploadComponent} from "./shared/file-upload/file-upload.component";
 
 export function MSALInstanceFactory(): PublicClientApplication {
   return new PublicClientApplication({
@@ -113,34 +113,34 @@ export function MSALInstanceFactory(): PublicClientApplication {
     HtmlSnackbarComponent,
     WorkflowAssignmentsComponent
   ],
-    imports: [
-        BrowserModule,
-        AppRoutingModule,
-        BrowserAnimationsModule,
-        MatCardModule,
-        MatInputModule,
-        MatListModule,
-        MatButtonModule,
-        ReactiveFormsModule,
-        NgOptimizedImage,
-        FormsModule,
-        HttpClientModule,
-        MatTableModule,
-        MatProgressBarModule,
-        MatIconModule,
-        MatPaginatorModule,
-        MatTooltipModule,
-        MatSelectModule,
-        MatCheckboxModule,
-        MatSortModule,
-        MatMenuModule,
-        MatToolbarModule,
-        MatDialogModule,
-        MatSlideToggleModule,
-        MatProgressSpinnerModule,
-        MatSnackBarModule,
-        MatTreeModule
-    ],
+  imports: [
+    BrowserModule,
+    AppRoutingModule,
+    BrowserAnimationsModule,
+    MatCardModule,
+    MatInputModule,
+    MatListModule,
+    MatButtonModule,
+    ReactiveFormsModule,
+    NgOptimizedImage,
+    FormsModule,
+    HttpClientModule,
+    MatTableModule,
+    MatProgressBarModule,
+    MatIconModule,
+    MatPaginatorModule,
+    MatTooltipModule,
+    MatSelectModule,
+    MatCheckboxModule,
+    MatSortModule,
+    MatMenuModule,
+    MatToolbarModule,
+    MatDialogModule,
+    MatSlideToggleModule,
+    MatProgressSpinnerModule,
+    MatSnackBarModule,
+    MatTreeModule
+  ],
   providers: [
     {provide: MSAL_INSTANCE, useFactory: MSALInstanceFactory},
     MsalService,
@@ -155,7 +155,7 @@ export function MSALInstanceFactory(): PublicClientApplication {
         disableClose: false,
         autoFocus: true,
         maxWidth: '600px',
-        position: { top: '20vh' }
+        position: {top: '20vh'}
       }
     }
   ],

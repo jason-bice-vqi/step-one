@@ -2,9 +2,9 @@ import {Injectable} from '@angular/core';
 import {HttpClient} from "@angular/common/http";
 import {JwtService} from "./jwt.service";
 import {from, Observable, switchMap, take, tap} from "rxjs";
-import {environment} from "../../../environments/environment";
 import {AuthenticationResult} from "@azure/msal-browser";
 import {MsalService} from "@azure/msal-angular";
+import {environment} from "../../../environments/environment";
 
 @Injectable({
   providedIn: 'root'
@@ -24,7 +24,7 @@ export class AdAuthService {
       tap(response => this.msalService.instance.setActiveAccount(response.account))
     );
 
-    const acquireToken$ = (response: AuthenticationResult) =>
+    const acquireToken$ = () =>
       from(this.msalService.instance.acquireTokenSilent({
         scopes: [`api://${environment.clientId}/access_as_user`],
         account: this.msalService.instance.getAllAccounts()[0],
@@ -43,7 +43,7 @@ export class AdAuthService {
 
     return initMsalService$().pipe(
       switchMap(() => loginPopup$()),
-      switchMap(response => acquireToken$(response)),
+      switchMap(() => acquireToken$()),
       switchMap(tokenResponse => apiAuthRequest$(tokenResponse))
     );
   }

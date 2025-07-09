@@ -112,4 +112,12 @@ export class WorkflowAssignmentsComponent implements OnInit {
       this.notificationService.warn(`<strong>${jobTitle.displayTitle}</strong> is no longer assigned to the <strong>${this.activeWorkflow!.name}</strong> workflow.`);
     }
   }
+
+  getAssignmentCount(companyJobTitle: CompanyJobTitle | null = null): number {
+    if (companyJobTitle === null) {
+      return this.companyJobTitles.flatMap(x => x.jobTitles).filter(x => x.workflowId == this.activeWorkflowId).length;
+    }
+    
+    return companyJobTitle.jobTitles.filter(x => x.workflowId === this.activeWorkflowId).length;
+  }
 }

@@ -1,5 +1,15 @@
+<div class="back">
+  <a href="internal/workflows">
+  <mat-icon>chevron_left</mat-icon>
+  Back to
+  <mat-icon>device_hub</mat-icon>
+  Workflows
+  </a>
+</div>
+<div class="active-workflow">
+  Job Title Assignments for <strong>{{activeWorkflow?.name}}</strong>
+</div>
 <div class="container">
-
   <mat-card class="column">
     <mat-card-title>Workflows</mat-card-title>
     <mat-selection-list [multiple]="false" [(ngModel)]="selectedWorkflows" (selectionChange)="onWorkflowSelected()">
@@ -10,7 +20,7 @@
   </mat-card>
 
   <mat-card class="column">
-    <mat-card-title>Job Titles by Company</mat-card-title>
+    <mat-card-title>Job Titles by Company ({{ getAssignmentCount() }} assignments)</mat-card-title>
     <div *ngFor="let companyJobTitle of companyJobTitles" class="company-block">
       <div class="company-header">
         <!-- Expand/Collapse Button -->
@@ -20,13 +30,17 @@
           </mat-icon>
         </button>
         <span class="company-text"
-              (click)="toggleCompany(companyJobTitle.company.id)">{{ companyJobTitle.company.name }}</span>
+              (click)="toggleCompany(companyJobTitle.company.id)">
+          {{ companyJobTitle.company.name }}<br>
+          <small>{{ getAssignmentCount(companyJobTitle) }} {{ activeWorkflow?.name}} assignments</small>
+        </span>
       </div>
 
       <!-- Job Titles -->
       <ng-container *ngIf="isExpanded(companyJobTitle.company.id)">
         <div class="job-title" *ngFor="let jobTitle of companyJobTitle.jobTitles">
-          <mat-checkbox [checked]="jobTitle.workflowId === activeWorkflow?.id" (change)="setJobTitleWorkflow($event, jobTitle)">
+          <mat-checkbox [checked]="jobTitle.workflowId === activeWorkflow?.id"
+                        (change)="setJobTitleWorkflow($event, jobTitle)">
             {{ jobTitle.displayTitle }}
             <div *ngIf="jobTitle.workflowId != null && jobTitle.workflowId !== activeWorkflow?.id">
               <small class="alt-assignment">Assigned to <strong>{{ jobTitle.workflow?.name }}</strong> workflow</small>

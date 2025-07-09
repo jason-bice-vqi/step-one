@@ -225,3 +225,33 @@ body.internal-area .content {
     min-width: unset !important;
   }
 }
+
+/* mat-selection-list overrides */
+
+mat-list-option[aria-selected="true"] {
+  background-color: #d0ebff !important;
+}
+
+mat-list-option .mdc-radio {
+  display: none !important;
+}
+
+.back {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+
+  mat-icon {
+    font-size: 20px;
+    height: 20px;
+    width: 20px;
+    line-height: 1;
+    vertical-align: middle;
+    position: relative;
+    top: -1px;
+  }
+
+  a {
+    text-decoration: none;
+  }
+}
