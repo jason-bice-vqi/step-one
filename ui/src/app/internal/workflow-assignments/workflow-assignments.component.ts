@@ -40,14 +40,29 @@ export class WorkflowAssignmentsComponent implements OnInit {
 
   loadDataFromRoute() {
     this.activatedRoute.paramMap.subscribe(params => {
-      this.activeWorkflowId = +params.get('id')!;
       this.orgService.getJobTitlesGroupedByCompany().pipe(take(1)).subscribe(x => this.companyJobTitles = x);
 
-      this.workflowService.get().pipe(take(1)).subscribe(x => {
-        this.workflows = x;
-        this.activeWorkflow = x.filter(w => w.id == this.activeWorkflowId)[0];
-        this.selectedWorkflows = [this.activeWorkflow];
-      });
+      this.workflowService.get()
+        .pipe(
+          take(1),
+          tap((x) => {
+            this.workflows = x;
+
+            const paramWorkflowId = params.get('id');
+
+            if (!paramWorkflowId) {
+              this.notificationService.info('Please select a workflow to manage its job title assignments.');
+
+              return;
+            }
+
+            this.activeWorkflowId = +paramWorkflowId;
+          }),
+          filter(() => this.activeWorkflowId !== null))
+        .subscribe(x => {
+          this.activeWorkflow = x.filter(w => w.id == this.activeWorkflowId)[0];
+          this.selectedWorkflows = [this.activeWorkflow];
+        });
     });
   }
 
@@ -75,7 +90,7 @@ export class WorkflowAssignmentsComponent implements OnInit {
         data: {
           message: `<p>The job title <strong>${jobTitle.displayTitle}</strong> is currently assigned to the <strong>${jobTitle.workflow?.name}</strong> workflow.</p><p>Are you sure you want to reassign this job title to the <strong>${this.activeWorkflow?.name}</strong> workflow?</p>`,
           noText: 'Cancel',
-          yesText: 'Reassign to New Workflow',
+          yesText: 'Reassign',
           title: 'Job Title Already Assigned To Workflow'
         }
       }).afterClosed().pipe(

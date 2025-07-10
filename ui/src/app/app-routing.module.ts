@@ -20,7 +20,8 @@ const routes: Routes = [
       {path: 'dashboard', component: InternalDashboardComponent},
       {path: 'workflows', component: WorkflowsComponent},
       {path: 'job-titles', component: JobTitlesComponent},
-      {path: 'workflows/:id/assignments', component: WorkflowAssignmentsComponent}
+      {path: 'workflows/:id/assignments', component: WorkflowAssignmentsComponent},
+      {path: 'workflows/assignments', component: WorkflowAssignmentsComponent}
     ]
   },
   {path: 'intermediate', redirectTo: '/internal-user-dashboard'},

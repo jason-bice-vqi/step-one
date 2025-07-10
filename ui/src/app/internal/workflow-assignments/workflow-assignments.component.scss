@@ -4,7 +4,6 @@
   display: flex;
   justify-content: center;
   gap: $margin;
-  padding: $margin;
   flex-wrap: wrap;
 }
 
@@ -40,6 +39,7 @@
 }
 
 .active-workflow {
+  padding: $margin;
   font-size: $font-size-large;
   text-align: center;
 }

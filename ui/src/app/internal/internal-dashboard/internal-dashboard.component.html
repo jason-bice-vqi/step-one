@@ -71,7 +71,8 @@
           </small>
         </span>
         <span *ngIf="!element.jobTitleId">
-          <button (click)="addJobTitleAlias(element.atsJobTitle)" mat-raised-button matTooltip="This job title is not currently mapped to an official ViaQuest job title. Without this mapping, this candidate cannot be assigned to the correct workflow. Click to establish this mapping/alias.">
+          <button (click)="addJobTitleAlias(element.atsJobTitle)" mat-raised-button
+                  matTooltip="This job title is not currently mapped to an official ViaQuest job title. Without this mapping, this candidate cannot be assigned to the correct workflow. Click to establish this mapping/alias.">
             <mat-icon>add</mat-icon>
             {{ element.atsJobTitle }}
           </button>
@@ -113,9 +114,20 @@
       <th mat-header-cell *matHeaderCellDef mat-sort-header="percentComplete" class="text-center sortable">% Complete
       </th>
       <td mat-cell *matCellDef="let element">
-        <mat-progress-bar [value]="element.percentComplete" *ngIf="element.percentComplete" color="primary"
-                          matTooltip="{{element.stepsCompleted}} of {{element.totalSteps}} steps completed ({{element.percentComplete}}%)"></mat-progress-bar>
-        <button mat-button class="btn link-button" *ngIf="!element.percentComplete">Assign Workflow</button>
+        <!-- Assign Workflow is enabled if the candidate has an assigned job title but that job title does not have an
+        assigned workflow.-->
+        <button mat-button class="btn link-button"
+                matTooltip="This candidate's job title has no workflow assignment. Click to assign a workflow to ({{element.jobTitle.company.abbreviation}}) {{element.jobTitle.displayTitle}}"
+                *ngIf="element.jobTitleId && !element.jobTitle!.workflowId; else percentComplete">Assign
+          Workflow
+        </button>
+        <ng-template #percentComplete>
+          <div *ngIf="element.jobTitle?.workflowId">
+            <mat-progress-bar [value]="element.percentComplete" color="primary"
+                              matTooltip="{{element.stepsCompleted}} of {{element.totalSteps}} steps completed ({{element.percentComplete}}%)">
+            </mat-progress-bar>
+          </div>
+        </ng-template>
       </td>
     </ng-container>
 
