@@ -64,10 +64,16 @@
       <th mat-header-cell *matHeaderCellDef mat-sort-header="jobTitle" class="sortable">Job Title</th>
       <td mat-cell *matCellDef="let element">
         <span *ngIf="element.jobTitleId" matTooltip="ATS Job Title: {{ element.atsJobTitle }}">
+          ({{element.jobTitle.company.abbreviation}})
           {{ element.jobTitle.displayTitle }}<br>
-          <small>
-            ({{element.jobTitle.company.abbreviation}})
-            {{element.jobTitle.company.name}}
+          <small *ngIf="element.jobTitle.workflowId">
+            {{element.jobTitle.workflow?.name}}
+          </small>
+          <small *ngIf="element.jobTitleId && !element.jobTitle.workflowId" class="assign-workflow"
+                 matTooltip="This job title needs a workflow assigned. Click to assign a workflow.">
+            <a href="/internal/job-titles/{{element.jobTitleId}}"
+               class="urgent">Assign Workflow to ({{element.jobTitle.company.abbreviation}}
+              ) {{ element.jobTitle.displayTitle }}</a>
           </small>
         </span>
         <span *ngIf="!element.jobTitleId">

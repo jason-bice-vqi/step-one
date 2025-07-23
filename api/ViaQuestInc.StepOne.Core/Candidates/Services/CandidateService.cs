@@ -4,6 +4,8 @@ using ViaQuestInc.StepOne.Core.Candidates.Import;
 using ViaQuestInc.StepOne.Core.Data;
 using ViaQuestInc.StepOne.Core.Kernel.Services;
 using ViaQuestInc.StepOne.Core.Organization;
+using ViaQuestInc.StepOne.Core.Workflows;
+using ViaQuestInc.StepOne.Core.Workflows.Steps;
 
 namespace ViaQuestInc.StepOne.Core.Candidates.Services;
 
@@ -16,7 +18,10 @@ public class CandidateService(
     private const int HeaderRow = 7;
 
     private static readonly string[] DefaultIncludes =
-        [nameof(Candidate.JobTitle), $"{nameof(Candidate.JobTitle)}.{nameof(JobTitle.Company)}"];
+    [
+        $"{nameof(Candidate.JobTitle)}.{nameof(JobTitle.Company)}",
+        $"{nameof(Candidate.JobTitle)}.{nameof(JobTitle.Workflow)}.{nameof(Workflow.WorkflowSteps)}.{nameof(WorkflowStep.Step)}"
+    ];
 
     public async Task<Candidate?> GetByPhoneNumberAsync(string phoneNumber, CancellationToken cancellationToken)
     {

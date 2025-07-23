@@ -27,7 +27,7 @@
       <mat-form-field appearance="fill" class="full-width" *ngIf="selectedCompany">
         <mat-label>Job Title</mat-label>
         <mat-select [(value)]="selectedJobTitle" (selectionChange)="onJobTitleChange()">
-          <mat-option *ngFor="let jobTitle of jobTitles"
+          <mat-option *ngFor="let jobTitle of jobTitlesFilteredByCompany"
                       [value]="jobTitle">{{ jobTitle.displayTitle }}</mat-option>
         </mat-select>
       </mat-form-field>

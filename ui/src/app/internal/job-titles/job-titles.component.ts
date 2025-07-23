@@ -1,6 +1,6 @@
 import {Component, OnInit} from '@angular/core';
 import {OrgService} from "../../services/org.service";
-import {take, tap} from "rxjs";
+import {filter, forkJoin, map, switchMap, take, tap} from "rxjs";
 import {Company} from "../../models/org/company";
 import {JobTitle} from "../../models/org/job-title";
 import {JobTitleAlias} from "../../models/org/job-title-alias";
@@ -8,6 +8,7 @@ import {WorkflowService} from "../../services/workflows/workflow.service";
 import {Workflow} from "../../models/workflows/workflow";
 import {NotificationService} from "../../services/notification.service";
 import {JobTitleService} from "../../services/job-title.service";
+import {ActivatedRoute} from "@angular/router";
 
 @Component({
   selector: 'app-job-titles',
@@ -22,7 +23,8 @@ export class JobTitlesComponent implements OnInit {
   selectedWorkflowId: number | null = null;
 
   companies: Company[] = [];
-  jobTitles: JobTitle[] = [];
+  allJobTitles: JobTitle[] = [];
+  jobTitlesFilteredByCompany: JobTitle[] = [];
   jobTitleAliases: JobTitleAlias[] = [];
   workflows: Workflow[] = [];
 
@@ -30,20 +32,42 @@ export class JobTitlesComponent implements OnInit {
 
   isWorkflowAssignmentDirty = false;
 
-  constructor(private jobTitleService: JobTitleService,
+  constructor(private activatedRoute: ActivatedRoute,
+              private jobTitleService: JobTitleService,
               private notificationService: NotificationService,
               private orgService: OrgService,
               private workflowService: WorkflowService) {
   }
 
   ngOnInit(): void {
-    this.orgService.getCompanies().pipe(take(1)).subscribe((x) => this.companies = x);
-    this.workflowService.get().pipe(take(1)).subscribe((x) => this.workflows = x);
+    forkJoin({
+      jobTitles: this.orgService.getJobTitles().pipe(take(1)),
+      companies: this.orgService.getCompanies().pipe(take(1)),
+      workflows: this.workflowService.get().pipe(take(1)),
+    }).pipe(
+      tap(({jobTitles, companies, workflows}) => {
+        this.allJobTitles = jobTitles;
+        this.companies = companies;
+        this.workflows = workflows;
+      }),
+      switchMap(() => this.activatedRoute.paramMap),
+      map(params => params.get('id')),
+      filter((id): id is string => !!id),
+      tap((jobTitleIdStr) => {
+        const jobTitleId = parseInt(jobTitleIdStr);
+        const jobTitle = this.allJobTitles.filter(x => x.id === jobTitleId)[0];
+        const company = this.companies.filter(x => x.id === jobTitle.company.id)[0];
+
+        this.selectedCompany = company;
+        this.jobTitlesFilteredByCompany = this.allJobTitles.filter(x => x.company.id === company.id);
+        this.selectedJobTitle = jobTitle;
+      })
+    ).subscribe();
   }
 
   onCompanyChange(): void {
     if (this.selectedCompany) {
-      this.orgService.getJobTitlesByCompany(this.selectedCompany.id).pipe(take(1)).subscribe((x) => this.jobTitles = x);
+      this.jobTitlesFilteredByCompany = this.allJobTitles.filter(x => x.company.id === this.selectedCompany?.id);
     }
   }
 

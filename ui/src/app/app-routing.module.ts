@@ -19,6 +19,7 @@ const routes: Routes = [
     children: [
       {path: 'dashboard', component: InternalDashboardComponent},
       {path: 'workflows', component: WorkflowsComponent},
+      {path: 'job-titles/:id', component: JobTitlesComponent},
       {path: 'job-titles', component: JobTitlesComponent},
       {path: 'workflows/:id/assignments', component: WorkflowAssignmentsComponent},
       {path: 'workflows/assignments', component: WorkflowAssignmentsComponent}

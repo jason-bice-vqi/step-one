@@ -62,9 +62,9 @@ public class Candidate
     public required string AtsJobTitle { get; set; }
 
     public required int AtsJobId { get; set; }
-    
+
     public int? JobTitleId { get; set; }
-    
+
     public JobTitle JobTitle { get; set; }
 
     /// <summary>
@@ -85,6 +85,20 @@ public class Candidate
     public CandidateWorkflow? CandidateWorkflow { get; set; }
 
     public CandidateStatuses CandidateStatus { get; set; } = CandidateStatuses.Pending;
+
+    public CandidateWorkflowStatus? CandidateWorkflowStatus
+    {
+        get
+        {
+            if (CandidateWorkflowId == null) return Workflows.CandidateWorkflowStatus.Unassigned;
+
+            if (CandidateWorkflow?.CandidateWorkflowSteps == null) return null;
+
+            return CandidateWorkflow.CompletedSteps == CandidateWorkflow.CandidateWorkflowSteps.Count
+                ? Workflows.CandidateWorkflowStatus.Completed
+                : Workflows.CandidateWorkflowStatus.Assigned;
+        }
+    }
 
     public string CandidateStatusDesc => CandidateStatus.ToString()
         .Titleize();

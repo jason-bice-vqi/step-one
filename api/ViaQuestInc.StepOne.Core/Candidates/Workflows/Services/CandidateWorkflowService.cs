@@ -13,6 +13,31 @@ public class CandidateWorkflowService(IRepository<StepOneDbContext> repository)
         $"{nameof(CandidateWorkflow)}.{nameof(CandidateWorkflow.Workflow)}"
     ];
 
+    public async Task<CandidateWorkflow?> AssignDefaultWorkflow(int candidateId, CancellationToken cancellationToken)
+    {
+        var candidate = await repository.GetWithChildrenAsync<Candidate>(
+            x => x.Id == candidateId,
+            cancellationToken,
+            nameof(Candidate.JobTitle));
+
+        if (candidate?.JobTitle.WorkflowId == null) return null;
+
+        var candidateWorkflow = new CandidateWorkflow
+        {
+            CandidateId = candidateId,
+            WorkflowId = candidate!.JobTitle.WorkflowId!.Value,
+            CreatedAt = DateTime.UtcNow,
+            EntityStatus = EntityStatuses.Active,
+            Id = 0
+        };
+
+        await repository.CreateAsync(candidateWorkflow, cancellationToken);
+        
+        
+
+        return candidateWorkflow;
+    }
+
     public async Task CreateAsync(
         Candidate candidate,
         Workflow workflow,

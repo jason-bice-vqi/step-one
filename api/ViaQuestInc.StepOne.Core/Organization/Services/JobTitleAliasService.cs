@@ -1,5 +1,4 @@
-﻿using System.Collections;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using ViaQuestInc.StepOne.Core.Candidates;
 using ViaQuestInc.StepOne.Core.Data;
 
