@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using ViaQuestInc.StepOne.Core.Auth;
+using ViaQuestInc.StepOne.Core.Candidates.Workflows.Services;
 using ViaQuestInc.StepOne.Core.Organization;
 using ViaQuestInc.StepOne.Core.Organization.Services;
 using ViaQuestInc.StepOne.Web.Auth;
@@ -9,7 +10,10 @@ namespace ViaQuestInc.StepOne.Web.Controllers.Org;
 
 [Authorize(Policy = Policies.NativeJwtAuthPolicy, Roles = Roles.Internal)]
 [Route("job-titles")]
-public class JobTitleAliasesController(JobTitleAliasService jobTitlesAliasService) : ApiControllerBase
+public class JobTitleAliasesController(
+    CandidateWorkflowService candidateWorkflowService,
+    JobTitleAliasService jobTitlesAliasService
+) : ApiControllerBase
 {
     [HttpGet("{jobTitleId:int}/aliases")]
     public async Task<IEnumerable<JobTitleAlias>> Index(int jobTitleId, CancellationToken cancellationToken)
@@ -27,6 +31,8 @@ public class JobTitleAliasesController(JobTitleAliasService jobTitlesAliasServic
             jobTitleId,
             jobTitleAliasRequest.Alias,
             cancellationToken);
+
+        await candidateWorkflowService.CreateAsync(null, jobTitleAlias.JobTitleId, cancellationToken);
 
         return CreatedAtRoute(nameof(ShowJobTitleAlias), new { jobTitleAliasId = jobTitleAlias.Id }, jobTitleAlias);
     }

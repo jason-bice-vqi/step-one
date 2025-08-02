@@ -65,7 +65,7 @@ public class Candidate
 
     public int? JobTitleId { get; set; }
 
-    public JobTitle JobTitle { get; set; }
+    public JobTitle? JobTitle { get; set; }
 
     /// <summary>
     /// When the last OTP was requested.
@@ -96,7 +96,7 @@ public class Candidate
 
             return CandidateWorkflow.CompletedSteps == CandidateWorkflow.CandidateWorkflowSteps.Count
                 ? Workflows.CandidateWorkflowStatus.Completed
-                : Workflows.CandidateWorkflowStatus.Assigned;
+                : Workflows.CandidateWorkflowStatus.NotStarted;
         }
     }
 

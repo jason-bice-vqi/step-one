@@ -11,6 +11,7 @@ import {MatDialog} from "@angular/material/dialog";
 import {JobTitle} from "../../models/org/job-title";
 import {Company} from "../../models/org/company";
 import {OrgService} from "../../services/org.service";
+import {CandidateWorkflowStatuses} from "../../models/candidates/candidate-workflow.statuses";
 
 @Component({
   selector: 'app-internal-user-dashboard',
@@ -38,12 +39,20 @@ export class InternalDashboardComponent implements OnInit {
 
     this.orgService.getCompanies().pipe(take(1)).subscribe(x => this.companies = x);
     this.orgService.getJobTitles().pipe(take(1)).subscribe(x => this.jobTitles = x);
+
+    this.candidateWorkflowStatusOptions = Object.keys(CandidateWorkflowStatuses)
+      .filter(key => !isNaN(Number(key))) // only numeric keys
+      .map(key => ({
+        label: CandidateWorkflowStatuses[Number(key)],
+        value: Number(key)
+      }));
   }
 
   statusOptions: string[] = ['Invited - Active', 'Invited - Inactive', 'Pending'];
   companyOptions: string[] = ['ViaQuest Day & Employment Services LLC'];
   jobTitleOptions: string[] = [];
-  workflowStatusOptions: string[] = ['Assigned', 'Completed by Candidate', 'Completed and Confirmed', 'Not Started', 'In Progress', 'Unassigned'];
+  //candidateWorkflowStatusOptions: string[] = ['Completed by Candidate', 'Completed and Confirmed', 'Not Started', 'In Progress', 'Unassigned'];
+  candidateWorkflowStatusOptions: { label: string, value: number }[] = [];
 
   displayedColumns: string[] = [
     'name',
@@ -53,10 +62,6 @@ export class InternalDashboardComponent implements OnInit {
     'lastUpdatedCandidate',
     'lastUpdatedVQI',
     'percentComplete',
-    // 'review',
-    // 'downloadAll',
-    // 'offboard',
-    // 'invite',
     'actions'
   ];
 

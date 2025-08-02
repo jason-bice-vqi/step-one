@@ -31,13 +31,13 @@
               (click)="toggleCompany(companyJobTitle.company.id)">
           {{ companyJobTitle.company.name }}<br>
           <small
-            *ngIf="getAssignmentCount(companyJobTitle)">{{ getAssignmentCount(companyJobTitle) }} {{ activeWorkflow?.name}}
+            *ngIf="activeWorkflowId !== null && getAssignmentCount(companyJobTitle)">{{ getAssignmentCount(companyJobTitle) }} {{ activeWorkflow?.name}}
             assignments</small>
         </span>
       </div>
       <ng-container *ngIf="isExpanded(companyJobTitle.company.id)">
         <div class="job-title" *ngFor="let jobTitle of companyJobTitle.jobTitles">
-          <mat-checkbox [checked]="jobTitle.workflowId === activeWorkflow?.id"
+          <mat-checkbox [checked]="activeWorkflowId !== null && jobTitle.workflowId === activeWorkflow?.id"
                         (change)="setJobTitleWorkflow($event, jobTitle)" [disabled]="activeWorkflowId === null">
             <div class="alt-assignment"
                  *ngIf="jobTitle.workflowId != null && jobTitle.workflowId !== activeWorkflow?.id; else unassigned">

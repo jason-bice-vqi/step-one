@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using ViaQuestInc.StepOne.Core.Auth;
+using ViaQuestInc.StepOne.Core.Candidates.Workflows.Services;
 using ViaQuestInc.StepOne.Core.Organization;
 using ViaQuestInc.StepOne.Core.Organization.Services;
 using ViaQuestInc.StepOne.Web.Auth;
@@ -8,7 +9,8 @@ using ViaQuestInc.StepOne.Web.Auth;
 namespace ViaQuestInc.StepOne.Web.Controllers.Org;
 
 [Authorize(Policy = Policies.NativeJwtAuthPolicy, Roles = Roles.Internal)]
-public class JobTitlesController(JobTitleService jobTitleService) : ApiControllerBase
+public class JobTitlesController(CandidateWorkflowService candidateWorkflowService, JobTitleService jobTitleService)
+    : ApiControllerBase
 {
     [HttpGet("job-titles")]
     public async Task<IActionResult> Index(CancellationToken cancellationToken)
@@ -37,6 +39,8 @@ public class JobTitlesController(JobTitleService jobTitleService) : ApiControlle
         if (jobTitle == null) return NotFound($"Job title {jobTitleId} not found.");
 
         await jobTitleService.UpdateAsync(jobTitle, updateJobTitleRequest, cancellationToken);
+
+        await candidateWorkflowService.CreateAsync(null, jobTitle.Id, cancellationToken);
 
         return Ok(jobTitle);
     }

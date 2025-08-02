@@ -1,5 +1,7 @@
-﻿using ViaQuestInc.StepOne.Core.Data;
+﻿using Microsoft.EntityFrameworkCore;
+using ViaQuestInc.StepOne.Core.Data;
 using ViaQuestInc.StepOne.Core.Data.Entity;
+using ViaQuestInc.StepOne.Core.Organization;
 using ViaQuestInc.StepOne.Core.Workflows;
 using ViaQuestInc.StepOne.Core.Workflows.Steps;
 
@@ -13,29 +15,21 @@ public class CandidateWorkflowService(IRepository<StepOneDbContext> repository)
         $"{nameof(CandidateWorkflow)}.{nameof(CandidateWorkflow.Workflow)}"
     ];
 
-    public async Task<CandidateWorkflow?> AssignDefaultWorkflow(int candidateId, CancellationToken cancellationToken)
+    public async Task CreateAsync(int? candidateId, int? jobTitleId, CancellationToken cancellationToken)
     {
-        var candidate = await repository.GetWithChildrenAsync<Candidate>(
-            x => x.Id == candidateId,
-            cancellationToken,
-            nameof(Candidate.JobTitle));
+        var candidates = await repository.FilterWithChildren<Candidate>(
+                x => x.CandidateWorkflowId == null && 
+                     (candidateId == null || x.Id == candidateId) &&
+                     (jobTitleId == null || x.JobTitleId == jobTitleId) &&
+                     x.JobTitleId != null &&
+                     x.JobTitle!.WorkflowId != null,
+                $"{nameof(Candidate.JobTitle)}.{nameof(JobTitle.Workflow)}.{nameof(Workflow.WorkflowSteps)}")
+            .ToArrayAsync(cancellationToken);
 
-        if (candidate?.JobTitle.WorkflowId == null) return null;
-
-        var candidateWorkflow = new CandidateWorkflow
+        foreach (var candidate in candidates)
         {
-            CandidateId = candidateId,
-            WorkflowId = candidate!.JobTitle.WorkflowId!.Value,
-            CreatedAt = DateTime.UtcNow,
-            EntityStatus = EntityStatuses.Active,
-            Id = 0
-        };
-
-        await repository.CreateAsync(candidateWorkflow, cancellationToken);
-        
-        
-
-        return candidateWorkflow;
+            await CreateAsync(candidate, candidate.JobTitle!.Workflow!, cancellationToken);
+        }
     }
 
     public async Task CreateAsync(

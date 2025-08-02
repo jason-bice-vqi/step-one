@@ -1,8 +1,8 @@
 import {Component, Input} from '@angular/core';
-import {CandidateWorkflowStepStatuses} from "../models/workflows/candidate-workflow-step.statuses";
 import {CandidateWorkflowStep} from "../models/workflows/candidate-workflow.step";
 import {StepTypes} from "../models/workflows/step.types";
 import {animate, keyframes, style, transition, trigger} from "@angular/animations";
+import {CandidateWorkflowStepStatuses} from "../models/workflows/candidate-workflow-step.statuses";
 
 @Component({
   selector: 'app-candidate-workflow-step',

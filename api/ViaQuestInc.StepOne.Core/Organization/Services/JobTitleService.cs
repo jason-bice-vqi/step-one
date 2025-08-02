@@ -13,6 +13,7 @@ public class JobTitleService(IRepository<StepOneDbContext> repository)
         return await repository.FilterWithChildren<JobTitle>(
                 x => x.EntityStatus == EntityStatuses.Active,
                 DefaultIncludes)
+            .OrderBy(x => x.DisplayTitle)
             .ToArrayAsync(cancellationToken);
     }
 

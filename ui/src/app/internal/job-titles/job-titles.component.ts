@@ -61,6 +61,8 @@ export class JobTitlesComponent implements OnInit {
         this.selectedCompany = company;
         this.jobTitlesFilteredByCompany = this.allJobTitles.filter(x => x.company.id === company.id);
         this.selectedJobTitle = jobTitle;
+
+        this.onJobTitleChange();
       })
     ).subscribe();
   }

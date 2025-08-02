@@ -1,6 +1,7 @@
 ﻿using System.Data;
 using Microsoft.EntityFrameworkCore;
 using ViaQuestInc.StepOne.Core.Candidates.Import;
+using ViaQuestInc.StepOne.Core.Candidates.Workflows;
 using ViaQuestInc.StepOne.Core.Data;
 using ViaQuestInc.StepOne.Core.Kernel.Services;
 using ViaQuestInc.StepOne.Core.Organization;
@@ -75,10 +76,11 @@ public class CandidateService(
                     // Candidate Status
                     (searchRequest.CandidateStatus == null || x.CandidateStatus == searchRequest.CandidateStatus) &&
                     // Workflow Status
-                    (searchRequest.CandidateWorkflowStepStatus == null ||
-                     (x.CandidateWorkflowId != null && x.CandidateWorkflow!.CandidateWorkflowSteps.Any(
-                         w =>
-                             w.CandidateWorkflowStepStatus == searchRequest.CandidateWorkflowStepStatus))),
+                    (searchRequest.CandidateWorkflowStatus == null ||
+                     (searchRequest.CandidateWorkflowStatus == CandidateWorkflowStatus.NotStarted &&
+                      x.CandidateWorkflowId != null) ||
+                     (searchRequest.CandidateWorkflowStatus == CandidateWorkflowStatus.Unassigned &&
+                      x.CandidateWorkflowId == null)),
                 DefaultIncludes)
             .ToArrayAsync(cancellationToken);
 

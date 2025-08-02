@@ -3,9 +3,9 @@ import {CandidateWorkflowService} from "../services/workflows/candidate-workflow
 import {CandidateWorkflow} from "../models/workflows/candidate.workflow";
 import {take} from "rxjs";
 import {JwtService} from "../services/auth/jwt.service";
-import {CandidateWorkflowStepStatuses} from "../models/workflows/candidate-workflow-step.statuses";
 import {CandidateWorkflowStep} from "../models/workflows/candidate-workflow.step";
 import {StepTypes} from "../models/workflows/step.types";
+import {CandidateWorkflowStatuses} from "../models/candidates/candidate-workflow.statuses";
 
 @Component({
   selector: 'app-internal-user-dashboard',
@@ -26,7 +26,7 @@ export class UserDashboardComponent implements OnInit {
       .pipe(take(1)).subscribe(x => this.candidateWorkflow = x.candidateWorkflow);
   }
 
-  protected readonly CandidateWorkflowStepStatusesEnum = CandidateWorkflowStepStatuses;
+  protected readonly CandidateWorkflowStepStatusesEnum = CandidateWorkflowStatuses;
 
   onCompleteTask(cws: CandidateWorkflowStep) {
     switch(cws.workflowStep?.step.stepType) {

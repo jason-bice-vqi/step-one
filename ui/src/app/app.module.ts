@@ -54,6 +54,7 @@ import {MatTreeModule} from "@angular/material/tree";
 import {ProgressBarComponent} from "./shared/progress-bar/progress-bar.component";
 import {FileUploadComponent} from "./shared/file-upload/file-upload.component";
 import { AddJobTitleAliasComponent } from './internal/add-job-title-alias/add-job-title-alias.component';
+import { TitleCasePipePipe } from './pipes/title-case-pipe.pipe';
 
 export function MSALInstanceFactory(): PublicClientApplication {
   return new PublicClientApplication({
@@ -113,7 +114,8 @@ export function MSALInstanceFactory(): PublicClientApplication {
     JobTitlesComponent,
     HtmlSnackbarComponent,
     WorkflowAssignmentsComponent,
-    AddJobTitleAliasComponent
+    AddJobTitleAliasComponent,
+    TitleCasePipePipe
   ],
   imports: [
     BrowserModule,

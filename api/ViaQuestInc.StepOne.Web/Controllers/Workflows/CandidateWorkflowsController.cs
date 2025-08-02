@@ -10,8 +10,7 @@ namespace ViaQuestInc.StepOne.Web.Controllers.Workflows;
 public class CandidateWorkflowsController(
     CandidateWorkflowService candidateWorkflowService,
     IAuthorizationService authorizationService
-)
-    : ApiControllerBase
+) : ApiControllerBase
 {
     public async Task<IActionResult> Get([FromRoute] int candidateId, CancellationToken cancellationToken)
     {

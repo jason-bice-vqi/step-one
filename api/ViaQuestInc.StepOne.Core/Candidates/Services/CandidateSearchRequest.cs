@@ -10,6 +10,8 @@ public class CandidateSearchRequest : SearchRequestBase
     public string? JobTitle { get; set; }
 
     public CandidateStatuses? CandidateStatus { get; set; }
+    
+    public CandidateWorkflowStatus? CandidateWorkflowStatus { get; set; }
 
     public CandidateWorkflowStepStatuses? CandidateWorkflowStepStatus { get; set; }
 }
