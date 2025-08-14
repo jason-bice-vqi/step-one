@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using ViaQuestInc.StepOne.Core.Candidates;
+using ViaQuestInc.StepOne.Core.Candidates.Workflows;
 using ViaQuestInc.StepOne.Core.Data;
 
 namespace ViaQuestInc.StepOne.Core.Organization.Services;
@@ -17,24 +18,30 @@ public class JobTitleAliasService(IRepository<StepOneDbContext> repository)
         string alias,
         CancellationToken cancellationToken)
     {
+        var normalizedAlias = alias.ToUpper()
+            .Trim();
+        
         var newJobTitleAlias = new JobTitleAlias
         {
             Id = 0,
             JobTitleId = jobTitleId,
-            Alias = alias
+            Alias = normalizedAlias,
         };
 
         var jobTitleAlias = await repository.CreateAsync(newJobTitleAlias, cancellationToken);
 
-        var candidatesWithAlias = await repository.Filter<Candidate>(x => x.AtsJobTitle == alias)
-            .ToArrayAsync(cancellationToken);
-        
-        foreach (var candidateWithAlias in candidatesWithAlias)
-        {
-            candidateWithAlias.JobTitleId = jobTitleId;
-        }
-
-        await repository.UpdateRangeAsync(candidatesWithAlias, cancellationToken);
+        // TODO - determine what to do in reaction to a new alias.
+        //
+        // var candidatesWithAlias = await repository
+        //     .Filter<Candidate>(x => x.AtsJobTitle == normalizedAlias && x.JobTitleId == null)
+        //     .ToArrayAsync(cancellationToken);
+        //
+        // foreach (var candidateWithAlias in candidatesWithAlias)
+        // {
+        //     //candidateWithAlias.JobTitleId = jobTitleId;
+        // }
+        //
+        // await repository.UpdateRangeAsync(candidatesWithAlias, cancellationToken);
 
         return jobTitleAlias;
     }

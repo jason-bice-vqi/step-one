@@ -12,6 +12,8 @@ import {JobTitle} from "../../models/org/job-title";
 import {Company} from "../../models/org/company";
 import {OrgService} from "../../services/org.service";
 import {CandidateWorkflowStatuses} from "../../models/candidates/candidate-workflow.statuses";
+import {Workflow} from "../../models/workflows/workflow";
+import {WorkflowService} from "../../services/workflows/workflow.service";
 
 @Component({
   selector: 'app-internal-user-dashboard',
@@ -26,12 +28,16 @@ export class InternalDashboardComponent implements OnInit {
 
   companies: Company[] = [];
   jobTitles: JobTitle[] = [];
+  workflows: Workflow[] = [];
 
   searchRequest: CandidateSearchRequest = {desc: false, limit: this.defaultPageSize, page: 0};
 
   searchResponse?: SearchResponse<Candidate>;
 
-  constructor(private candidateService: CandidateService, private dialog: MatDialog, private orgService: OrgService) {
+  constructor(private candidateService: CandidateService,
+              private dialog: MatDialog,
+              private orgService: OrgService,
+              private workflowService: WorkflowService) {
   }
 
   ngOnInit(): void {
@@ -39,6 +45,7 @@ export class InternalDashboardComponent implements OnInit {
 
     this.orgService.getCompanies().pipe(take(1)).subscribe(x => this.companies = x);
     this.orgService.getJobTitles().pipe(take(1)).subscribe(x => this.jobTitles = x);
+    this.workflowService.get().pipe((take(1))).subscribe(x => this.workflows = x);
 
     this.candidateWorkflowStatusOptions = Object.keys(CandidateWorkflowStatuses)
       .filter(key => !isNaN(Number(key))) // only numeric keys
@@ -100,13 +107,14 @@ export class InternalDashboardComponent implements OnInit {
     this.search();
   }
 
-  addJobTitleAlias(atsJobTitle: string) {
+  onboardCandidate(candidate: Candidate) {
     this.dialog.open(AddJobTitleAliasComponent, {
-      minWidth: '500px',
+      minWidth: '750px',
       data: {
-        atsJobTitle,
+        candidate: candidate,
         companies: this.companies,
         jobTitles: this.jobTitles,
+        workflows: this.workflows
       }
     }).afterClosed().subscribe(result => {
       if (result) {

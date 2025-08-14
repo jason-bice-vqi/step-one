@@ -260,3 +260,18 @@ a.urgent {
   color: $link-urgent;
   text-decoration: none;
 }
+
+/* Slide toggle styles */
+
+.toggle-box {
+  display: inline-block;
+  padding: $padding;
+  border: 1px solid #ccc;
+  border-radius: $box-radius;
+  background-color: #fafafa;
+  margin-bottom: $margin;
+}
+
+.toggle-box:hover {
+  border-color: #999;
+}

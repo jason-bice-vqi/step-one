@@ -20,6 +20,8 @@ public class CandidateService(
 
     private static readonly string[] DefaultIncludes =
     [
+        $"{nameof(Candidate.CandidateWorkflow)}.{nameof(CandidateWorkflow.Workflow)}",
+        $"{nameof(Candidate.CandidateWorkflow)}.{nameof(CandidateWorkflow.CandidateWorkflowSteps)}",
         $"{nameof(Candidate.JobTitle)}.{nameof(JobTitle.Company)}",
         $"{nameof(Candidate.JobTitle)}.{nameof(JobTitle.Workflow)}.{nameof(Workflow.WorkflowSteps)}.{nameof(WorkflowStep.Step)}"
     ];

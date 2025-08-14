@@ -63,22 +63,16 @@
     <ng-container matColumnDef="jobTitle">
       <th mat-header-cell *matHeaderCellDef mat-sort-header="jobTitle" class="sortable">Job Title</th>
       <td mat-cell *matCellDef="let element">
-        <span *ngIf="element.jobTitleId" matTooltip="ATS Job Title: {{ element.atsJobTitle }}">
+        <span *ngIf="element.candidateWorkflow" matTooltip="ATS Job Title: {{ element.atsJobTitle }}">
           ({{element.jobTitle.company.abbreviation}})
           {{ element.jobTitle.displayTitle }}<br>
-          <small *ngIf="element.jobTitle.workflowId">
-            {{element.jobTitle.workflow?.name}}
-          </small>
-          <small *ngIf="element.jobTitleId && !element.jobTitle.workflowId" class="assign-workflow"
-                 matTooltip="This job title needs a workflow assigned. Click to assign a workflow.">
-            <a href="/internal/job-titles/{{element.jobTitleId}}"
-               class="urgent">Assign Workflow to ({{element.jobTitle.company.abbreviation}}
-              ) {{ element.jobTitle.displayTitle }}</a>
+          <small>
+            {{element.candidateWorkflow.workflow?.name}}
           </small>
         </span>
-        <span *ngIf="!element.jobTitleId">
-          <button (click)="addJobTitleAlias(element.atsJobTitle)" mat-raised-button
-                  matTooltip="This job title is not currently mapped to an official ViaQuest job title. Without this mapping, this candidate cannot be assigned to the correct workflow. Click to establish this mapping/alias.">
+        <span *ngIf="!element.candidateWorkflow">
+          <button (click)="onboardCandidate(element)" mat-raised-button
+                  matTooltip="Establish this candidate's job title, company, and assigned workflow.">
             <mat-icon>add</mat-icon>
             {{ element.atsJobTitle }}
           </button>
@@ -183,6 +177,10 @@
         </button>
 
         <mat-menu #actionsMenu="matMenu">
+          <button mat-menu-item color="primary" (click)="onboardCandidate(element)">
+            <mat-icon>edit</mat-icon>
+            <span>Edit Assignment</span>
+          </button>
           <button mat-menu-item color="primary" [disabled]="!element.stepsCompleted">
             <mat-icon>visibility</mat-icon>
             <span>Review</span>

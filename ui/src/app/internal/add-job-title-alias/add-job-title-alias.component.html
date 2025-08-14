@@ -1,29 +1,77 @@
-<h2 mat-dialog-title>Add Job Title Alias</h2>
+<h2 mat-dialog-title>Pre-Employment Checklist Onboarding</h2>
 
 <mat-dialog-content class="form-container">
-  {{ atsJobTitle }}
+  <div class="candidate-info">
+    <div class="candidate-name">{{ candidate.fullName }}</div>
+    <div class="candidate-ats-job-title">{{ candidate.atsJobTitle }}</div>
+  </div>
+
+  <!-- Company -->
   <mat-form-field appearance="fill" class="full-width">
     <mat-label>Company</mat-label>
-    <mat-select [(value)]="selectedCompanyId">
-      <mat-option *ngFor="let company of companies" [value]="company.id">
+    <mat-select [(value)]="selectedCompany">
+      <mat-option *ngFor="let company of companies" [value]="company">
         {{ company.name }}
       </mat-option>
     </mat-select>
   </mat-form-field>
 
+  <!-- Job Title (filtered by company) -->
   <mat-form-field appearance="fill" class="full-width">
     <mat-label>Job Title</mat-label>
-    <mat-select [(value)]="selectedJobTitleId">
-      <mat-option *ngFor="let title of filteredJobTitles" [value]="title.id">
+    <mat-select [(value)]="selectedJobTitle" [disabled]="!selectedCompany">
+      <mat-option *ngFor="let title of filteredJobTitles" [value]="title">
         {{ title.displayTitle }}
       </mat-option>
     </mat-select>
   </mat-form-field>
+
+  <!-- Alias toggle -->
+  <mat-slide-toggle [disabled]="!selectedJobTitle" class="toggle-box">
+    <ng-container *ngIf="selectedJobTitle as jt; else aliasPrompt">
+      Pair <strong>{{ candidate.atsJobTitle }}</strong> to this job title.
+      <br>
+      <small>This job title will be selected for you the next time {{ candidate.atsJobTitle }} appears.</small>
+    </ng-container>
+    <ng-template #aliasPrompt>Pair to this job title.</ng-template>
+  </mat-slide-toggle>
+
+  <!-- Assigned Workflow -->
+  <mat-form-field appearance="fill" class="full-width">
+    <mat-label>Assigned Workflow</mat-label>
+    <mat-select [(value)]="selectedWorkflow" [disabled]="!selectedJobTitle">
+      <mat-option *ngFor="let workflow of workflows" [value]="workflow">
+        {{ workflow.name }}
+      </mat-option>
+    </mat-select>
+  </mat-form-field>
+
+  <!-- Default workflow toggle -->
+  <mat-slide-toggle [disabled]="!selectedWorkflow" class="toggle-box">
+    <ng-container *ngIf="selectedWorkflow as workflow; else defaultWfPrompt">
+      Pair <strong>{{ workflow.name }}</strong> to this job title.
+      <br>
+      <small>This workflow will be selected for you when you select {{ selectedJobTitle?.displayTitle}} as the job
+        title.</small>
+    </ng-container>
+    <ng-template #defaultWfPrompt>Pair to this job title.</ng-template>
+  </mat-slide-toggle>
+
+  <!-- Send invite -->
+  <mat-slide-toggle [disabled]="!selectedJobTitle" class="toggle-box">
+    Send onboarding invitation to <strong>{{ candidate.fullName }}</strong>.
+    <br>
+    <small>
+      {{candidate.firstName}} will receive an email invitation to begin the onboarding process.
+    </small>
+  </mat-slide-toggle>
+
 </mat-dialog-content>
 
 <mat-dialog-actions align="end">
-  <button mat-button (click)="cancel()">Cancel</button>
-  <button mat-raised-button color="primary" (click)="createAlias()" [disabled]="!selectedCompanyId || !selectedJobTitleId">
-    Create Alias
+  <button mat-button type="button" (click)="cancel()">Cancel</button>
+  <button mat-raised-button color="primary" (click)="createAlias()"
+          [disabled]="!selectedWorkflow">
+    Onboard <strong>{{ candidate.fullName }}</strong>
   </button>
 </mat-dialog-actions>
