@@ -6,8 +6,13 @@ namespace ViaQuestInc.StepOne.Core.Organization.Services;
 
 public class JobTitleService(IRepository<StepOneDbContext> repository)
 {
-    private static readonly string[] DefaultIncludes = [nameof(JobTitle.Company), nameof(JobTitle.Workflow)];
-    
+    private static readonly string[] DefaultIncludes =
+    [
+        nameof(JobTitle.Company),
+        nameof(JobTitle.JobTitleAliases),
+        nameof(JobTitle.Workflow)
+    ];
+
     public async Task<IEnumerable<JobTitle>> IndexAsync(CancellationToken cancellationToken)
     {
         return await repository.FilterWithChildren<JobTitle>(

@@ -1,6 +1,8 @@
 ﻿using ViaQuestInc.StepOne.Core.Candidates.Import;
 using ViaQuestInc.StepOne.Core.Candidates.Import.Operations;
 using ViaQuestInc.StepOne.Core.Candidates.Services;
+using ViaQuestInc.StepOne.Core.Candidates.Workflows.Pipelines.Onboarding;
+using ViaQuestInc.StepOne.Core.Candidates.Workflows.Pipelines.Onboarding.Operations;
 using ViaQuestInc.StepOne.Core.Candidates.Workflows.Services;
 using ViaQuestInc.StepOne.Core.Kernel.Services;
 using ViaQuestInc.StepOne.Core.Organization.Services;
@@ -35,6 +37,10 @@ public static class StepOneServices
             .AddScoped<ICandidateImportOperation, InitializeCandidateEntityOperation>()
             .AddScoped<ICandidateImportOperation, AbortExistingCandidateOperation>()
             .AddScoped<ICandidateImportOperation, CreateCandidateOperation>()
+            
+            // Candidate onboarding operations (ordered)
+            .AddScoped<CandidateOnboardingEngine>()
+            .AddScoped<ICandidateOnboardingOperation, InitializeRequestOperation>()
 
             // Workflow persistence
             .AddScoped<WorkflowPersistenceEngine>()

@@ -1,37 +1,56 @@
 <h2 mat-dialog-title>Pre-Employment Checklist Onboarding</h2>
 
 <mat-dialog-content class="form-container">
-  <div class="candidate-info">
-    <div class="candidate-name">{{ candidate.fullName }}</div>
-    <div class="candidate-ats-job-title">{{ candidate.atsJobTitle }}</div>
+  <div class="modal-summary">
+    <div class="primary-summary">{{ candidate.fullName }}</div>
+    <div class="secondary-summary">{{ candidate.atsJobTitle }}</div>
   </div>
 
   <!-- Company -->
   <mat-form-field appearance="fill" class="full-width">
     <mat-label>Company</mat-label>
-    <mat-select [(value)]="selectedCompany">
+    <mat-select [(ngModel)]="selectedCompany" (ngModelChange)="updateFilteredJobTitles('company')"
+                [disabled]="showAtsMatchedJobTitles">
       <mat-option *ngFor="let company of companies" [value]="company">
         {{ company.name }}
       </mat-option>
     </mat-select>
   </mat-form-field>
+  <div class="select-hint">
+    <span>
+      {{ showAtsMatchedJobTitles
+      ? 'Company selection is unavailable while showing only ATS-matched job titles.'
+      : 'Select a company to view that organization\'s job titles.' }}
+    </span>
+  </div>
 
   <!-- Job Title (filtered by company) -->
   <mat-form-field appearance="fill" class="full-width">
     <mat-label>Job Title</mat-label>
-    <mat-select [(value)]="selectedJobTitle" [disabled]="!selectedCompany">
+    <mat-select [(ngModel)]="selectedJobTitle" [disabled]="!filteredJobTitles?.length"
+                (ngModelChange)="applyJobTitleSelection()">
       <mat-option *ngFor="let title of filteredJobTitles" [value]="title">
-        {{ title.displayTitle }}
+        ({{ title.company.abbreviation }}) {{ title.displayTitle }}
       </mat-option>
     </mat-select>
   </mat-form-field>
+  <div class="select-hint">
+    <mat-checkbox [(ngModel)]="showAtsMatchedJobTitles" (ngModelChange)="updateFilteredJobTitles()"
+                  *ngIf="atsMatchedJobTitlesExist">Show only ATS-matched job
+      titles
+    </mat-checkbox>
+    <span *ngIf="!atsMatchedJobTitlesExist">There are no known job title matches for <strong>{{ candidate.atsJobTitle }}
+      .</strong></span>
+  </div>
 
   <!-- Alias toggle -->
-  <mat-slide-toggle [disabled]="!selectedJobTitle" class="toggle-box">
+  <mat-slide-toggle [disabled]="disableJobTitleMatch"
+                    [matTooltip]="disableJobTitleMatch ? 'This match is already established and cannot be removed using this utility. To unlink the ATS job title from the official job title, use the Job Titles utility.' : ''"
+                    [(ngModel)]="candidateOnboardingRequest.matchAtsJobTitleToOfficialJobTitle" class="toggle-box">
     <ng-container *ngIf="selectedJobTitle as jt; else aliasPrompt">
-      Pair <strong>{{ candidate.atsJobTitle }}</strong> to this job title.
+      Match <strong>{{ candidate.atsJobTitle }}</strong> to this job title.
       <br>
-      <small>This job title will be selected for you the next time {{ candidate.atsJobTitle }} appears.</small>
+      <small>This job title will be pre-filtered for you the next time {{ candidate.atsJobTitle }} appears.</small>
     </ng-container>
     <ng-template #aliasPrompt>Pair to this job title.</ng-template>
   </mat-slide-toggle>
@@ -39,7 +58,7 @@
   <!-- Assigned Workflow -->
   <mat-form-field appearance="fill" class="full-width">
     <mat-label>Assigned Workflow</mat-label>
-    <mat-select [(value)]="selectedWorkflow" [disabled]="!selectedJobTitle">
+    <mat-select [(ngModel)]="selectedWorkflow" (ngModelChange)="applyWorkflowSelection()" [disabled]="!selectedJobTitle">
       <mat-option *ngFor="let workflow of workflows" [value]="workflow">
         {{ workflow.name }}
       </mat-option>
@@ -47,9 +66,11 @@
   </mat-form-field>
 
   <!-- Default workflow toggle -->
-  <mat-slide-toggle [disabled]="!selectedWorkflow" class="toggle-box">
+  <mat-slide-toggle [disabled]="disableWorkflowMatch"
+                    [matTooltip]="disableWorkflowMatch && selectedWorkflow ? 'The selected job title already has a default workflow assignment, which cannot be unassigned using this utility. Please go to Workflows -> Workflow Assignments if you wish to modify this job title\'s default workflow assignment.' : ''"
+                    [(ngModel)]="candidateOnboardingRequest.matchWorkflowToJobTitle" class="toggle-box">
     <ng-container *ngIf="selectedWorkflow as workflow; else defaultWfPrompt">
-      Pair <strong>{{ workflow.name }}</strong> to this job title.
+      Assign <strong>{{ workflow.name }}</strong> to this job title.
       <br>
       <small>This workflow will be selected for you when you select {{ selectedJobTitle?.displayTitle}} as the job
         title.</small>
@@ -58,7 +79,8 @@
   </mat-slide-toggle>
 
   <!-- Send invite -->
-  <mat-slide-toggle [disabled]="!selectedJobTitle" class="toggle-box">
+  <mat-slide-toggle [disabled]="!selectedJobTitle" class="toggle-box"
+                    [(ngModel)]="candidateOnboardingRequest.sendOnboardingInvite">
     Send onboarding invitation to <strong>{{ candidate.fullName }}</strong>.
     <br>
     <small>
@@ -70,8 +92,7 @@
 
 <mat-dialog-actions align="end">
   <button mat-button type="button" (click)="cancel()">Cancel</button>
-  <button mat-raised-button color="primary" (click)="createAlias()"
-          [disabled]="!selectedWorkflow">
+  <button mat-raised-button color="primary" [disabled]="true">
     Onboard <strong>{{ candidate.fullName }}</strong>
   </button>
 </mat-dialog-actions>

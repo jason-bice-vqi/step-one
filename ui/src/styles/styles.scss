@@ -273,5 +273,37 @@ a.urgent {
 }
 
 .toggle-box:hover {
-  border-color: #999;
+  border-color: $vqi-blue;
+}
+
+.select-hint {
+  margin-top: -36px;
+  font-size: $font-size-small;
+
+  mat-checkbox {
+    transform: scale(0.85);
+    transform-origin: left center;
+    margin-left: -8px;
+  }
+}
+
+.mat-mdc-slide-toggle-checked label {
+  color: $vqi-blue;
+}
+
+div.modal-summary {
+  border-top: solid 1px gray;
+  border-bottom: solid 1px gray;
+  padding: $padding $padding * 2;
+  margin: 0 $margin * -2 $margin $margin * -2;
+  background-color: $vqi-blue-x-light;
+  color: black;
+
+  div.primary-summary {
+    font-weight: bold;
+  }
+
+  div.secondary-summary {
+    font-size: $font-size-med;
+  }
 }
