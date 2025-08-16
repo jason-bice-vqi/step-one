@@ -5,6 +5,20 @@
     <div class="primary-summary">{{ candidate.fullName }}</div>
     <div class="secondary-summary">{{ candidate.atsJobTitle }}</div>
   </div>
+  <div class="warning-box">
+    <mat-icon class="warning-icon" color="warn">warning</mat-icon>
+    <span class="warning-text">
+      <strong>{{ candidate.fullName }}</strong> is already assigned to the
+      <strong>{{ candidate.candidateWorkflow?.workflow?.name }}</strong> workflow.
+        <ng-container *ngIf="candidate.candidateWorkflow?.percentComplete as percent; else notStarted">
+          Changing this will clear their current progress ({{ percent }}%) and they will begin under their new workflow
+          assignment.
+        </ng-container>
+        <ng-template #notStarted>
+          They have not started their current workflow, so there will not be a reset of any current progress.
+        </ng-template>
+    </span>
+  </div>
 
   <!-- Company -->
   <mat-form-field appearance="fill" class="full-width">
@@ -59,7 +73,8 @@
   <!-- Assigned Workflow -->
   <mat-form-field appearance="fill" class="full-width">
     <mat-label>Assigned Workflow</mat-label>
-    <mat-select [(ngModel)]="selectedWorkflow" (ngModelChange)="applyWorkflowSelection()" [disabled]="!selectedJobTitle">
+    <mat-select [(ngModel)]="selectedWorkflow" (ngModelChange)="applyWorkflowSelection()"
+                [disabled]="!selectedJobTitle">
       <mat-option *ngFor="let workflow of workflows" [value]="workflow">
         {{ workflow.name }}
       </mat-option>

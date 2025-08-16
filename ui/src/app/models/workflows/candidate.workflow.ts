@@ -35,4 +35,6 @@ export interface CandidateWorkflow {
 
   /** The number of steps completed. */
   completedSteps: number;
+
+  percentComplete?: number | null
 }

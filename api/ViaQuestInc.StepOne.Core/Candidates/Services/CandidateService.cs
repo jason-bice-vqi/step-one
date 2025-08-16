@@ -85,10 +85,7 @@ public class CandidateService(
                      x.LastName.Contains(searchRequest.Name) || x.FullName.Contains(searchRequest.Name)) &&
                     // Workflow Status
                     (searchRequest.CandidateWorkflowStatus == null ||
-                     (searchRequest.CandidateWorkflowStatus == CandidateWorkflowStatus.NotStarted &&
-                      x.CandidateWorkflowId != null) ||
-                     (searchRequest.CandidateWorkflowStatus == CandidateWorkflowStatus.Unassigned &&
-                      x.CandidateWorkflowId == null)),
+                     x.CandidateWorkflowStatus == searchRequest.CandidateWorkflowStatus),
                 DefaultIncludes)
             .ToArrayAsync(cancellationToken);
 
