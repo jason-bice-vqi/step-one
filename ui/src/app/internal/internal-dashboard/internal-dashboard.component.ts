@@ -14,6 +14,7 @@ import {OrgService} from "../../services/org.service";
 import {CandidateWorkflowStatuses} from "../../models/candidates/candidate-workflow.statuses";
 import {Workflow} from "../../models/workflows/workflow";
 import {WorkflowService} from "../../services/workflows/workflow.service";
+import {NotificationService} from "../../services/notification.service";
 
 @Component({
   selector: 'app-internal-user-dashboard',
@@ -36,6 +37,7 @@ export class InternalDashboardComponent implements OnInit {
 
   constructor(private candidateService: CandidateService,
               private dialog: MatDialog,
+              private notificationService: NotificationService,
               private orgService: OrgService,
               private workflowService: WorkflowService) {
   }
@@ -115,8 +117,14 @@ export class InternalDashboardComponent implements OnInit {
         jobTitles: this.jobTitles,
         workflows: this.workflows
       }
-    }).afterClosed().subscribe((result: Candidate | null) => {
+    }).afterClosed().subscribe((result: any | null) => {
       if (result) {
+        if (result.refreshJobTitles) {
+          this.orgService.getJobTitles().pipe(take(1)).subscribe(x => this.jobTitles = x)
+        }
+
+        this.notificationService.success(`<strong>${result.candidate.fullName}</strong> has been onboarded via the <strong>${result.candidate.candidateWorkflow.workflow.name}</strong> workflow.`);
+
         this.search();
       }
     });

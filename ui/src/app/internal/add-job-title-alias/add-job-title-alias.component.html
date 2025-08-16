@@ -46,7 +46,8 @@
   <!-- Alias toggle -->
   <mat-slide-toggle [disabled]="disableJobTitleMatch"
                     [matTooltip]="disableJobTitleMatch && selectedJobTitle ? 'This match is already established and cannot be removed using this utility. To unlink the ATS job title from the official job title, use the Job Titles utility.' : ''"
-                    [(ngModel)]="candidateOnboardingRequest.createJobTitleAlias" class="toggle-box">
+                    [(ngModel)]="candidateOnboardingRequest.createJobTitleAlias" class="toggle-box"
+                    (ngModelChange)="setJobTitlesAsDirty()">
     <ng-container *ngIf="selectedJobTitle as jt; else aliasPrompt">
       Match <strong>{{ candidate.atsJobTitle }}</strong> to this job title.
       <br>
@@ -68,7 +69,8 @@
   <!-- Default workflow toggle -->
   <mat-slide-toggle [disabled]="disableWorkflowMatch"
                     [matTooltip]="disableWorkflowMatch && selectedWorkflow ? 'The selected job title already has a default workflow assignment, which cannot be unassigned using this utility. Please go to Workflows -> Workflow Assignments if you wish to modify this job title\'s default workflow assignment.' : ''"
-                    [(ngModel)]="candidateOnboardingRequest.assignWorkflowToJobTitle" class="toggle-box">
+                    [(ngModel)]="candidateOnboardingRequest.assignWorkflowToJobTitle" class="toggle-box"
+                    (ngModelChange)="setJobTitlesAsDirty()">
     <ng-container *ngIf="selectedWorkflow as workflow; else defaultWfPrompt">
       Assign <strong>{{ workflow.name }}</strong> to this job title.
       <br>

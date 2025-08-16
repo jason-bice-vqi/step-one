@@ -66,6 +66,11 @@ export class AddJobTitleAliasComponent implements OnInit {
   showAtsMatchedJobTitles = false;
 
   /**
+   * Whether the dialog owner should refresh reference its job titles after this component is closed.
+   */
+  refreshJobTitles = false;
+
+  /**
    * The request object used to onboard the candidate.
    */
   candidateOnboardingRequest: CandidateOnboardingRequest = {
@@ -246,9 +251,14 @@ export class AddJobTitleAliasComponent implements OnInit {
       this.selectedJobTitle.workflowId === this.selectedWorkflow.id;
   }
 
+  setJobTitlesAsDirty(): void {
+    this.refreshJobTitles = this.candidateOnboardingRequest.assignWorkflowToJobTitle ||
+      this.candidateOnboardingRequest.createJobTitleAlias;
+  }
+
   onboardCandidate(): void {
     this.candidateWorkflowService.create(this.candidate.id, this.candidateOnboardingRequest)
       .pipe(take(1))
-      .subscribe(x => this.dialogRef.close(x));
+      .subscribe(x => this.dialogRef.close({candidate: x, refreshJobTitles: this.refreshJobTitles}));
   }
 }
