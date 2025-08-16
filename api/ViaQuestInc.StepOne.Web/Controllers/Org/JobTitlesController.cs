@@ -9,8 +9,7 @@ using ViaQuestInc.StepOne.Web.Auth;
 namespace ViaQuestInc.StepOne.Web.Controllers.Org;
 
 [Authorize(Policy = Policies.NativeJwtAuthPolicy, Roles = Roles.Internal)]
-public class JobTitlesController(CandidateWorkflowService candidateWorkflowService, JobTitleService jobTitleService)
-    : ApiControllerBase
+public class JobTitlesController(JobTitleService jobTitleService) : ApiControllerBase
 {
     [HttpGet("job-titles")]
     public async Task<IActionResult> Index(CancellationToken cancellationToken)
@@ -34,13 +33,9 @@ public class JobTitlesController(CandidateWorkflowService candidateWorkflowServi
         [FromBody] UpdateJobTitleRequest updateJobTitleRequest,
         CancellationToken cancellationToken)
     {
-        var jobTitle = await jobTitleService.GetAsync(jobTitleId, cancellationToken);
-
-        if (jobTitle == null) return NotFound($"Job title {jobTitleId} not found.");
+        var jobTitle = await jobTitleService.ShowAsync(jobTitleId, cancellationToken);
 
         await jobTitleService.UpdateAsync(jobTitle, updateJobTitleRequest, cancellationToken);
-
-        await candidateWorkflowService.CreateAsync(null, jobTitle.Id, cancellationToken);
 
         return Ok(jobTitle);
     }

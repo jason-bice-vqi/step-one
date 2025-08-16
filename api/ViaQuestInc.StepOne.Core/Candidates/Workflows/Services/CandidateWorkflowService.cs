@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Serilog;
 using ViaQuestInc.StepOne.Core.Data;
 using ViaQuestInc.StepOne.Core.Data.Entity;
 using ViaQuestInc.StepOne.Core.Organization;
@@ -15,25 +16,9 @@ public class CandidateWorkflowService(IRepository<StepOneDbContext> repository)
         $"{nameof(CandidateWorkflow)}.{nameof(CandidateWorkflow.Workflow)}"
     ];
 
-    public async Task CreateAsync(int? candidateId, int? jobTitleId, CancellationToken cancellationToken)
-    {
-        var candidates = await repository.FilterWithChildren<Candidate>(
-                x => x.CandidateWorkflowId == null && 
-                     (candidateId == null || x.Id == candidateId) &&
-                     (jobTitleId == null || x.JobTitleId == jobTitleId) &&
-                     x.JobTitleId != null &&
-                     x.JobTitle!.WorkflowId != null,
-                $"{nameof(Candidate.JobTitle)}.{nameof(JobTitle.Workflow)}.{nameof(Workflow.WorkflowSteps)}")
-            .ToArrayAsync(cancellationToken);
-
-        foreach (var candidate in candidates)
-        {
-            await CreateAsync(candidate, candidate.JobTitle!.Workflow!, cancellationToken);
-        }
-    }
-
     public async Task CreateAsync(
         Candidate candidate,
+        int jobTitleId,
         Workflow workflow,
         CancellationToken cancellationToken)
     {
@@ -64,6 +49,8 @@ public class CandidateWorkflowService(IRepository<StepOneDbContext> repository)
         await repository.CreateRangeAsync(candidateWorkflowSteps, cancellationToken);
 
         candidate.CandidateWorkflowId = candidateWorkflow.Id;
+        candidate.CandidateWorkflowStatus = CandidateWorkflowStatus.NotInvited;
+        candidate.JobTitleId = jobTitleId;
 
         await repository.UpdateAsync(candidate, cancellationToken);
     }
@@ -79,5 +66,22 @@ public class CandidateWorkflowService(IRepository<StepOneDbContext> repository)
             x => x.Id == candidateId,
             cancellationToken,
             CandidateWorkflowIncludes);
+    }
+
+    public async Task SendInviteAsync(Candidate candidate, CancellationToken cancellationToken)
+    {
+        // Only update the workflow status if this is the initial invitation. Follow-up reminders may be issued by users
+        // after the candidate has started their workflow and have a "downstream status" already assigned.
+        if (candidate.CandidateWorkflowStatus == CandidateWorkflowStatus.Unassigned)
+        {
+            candidate.CandidateWorkflowStatus = CandidateWorkflowStatus.NotStarted;
+            
+            await repository.UpdateAsync(candidate, cancellationToken);
+        }
+        
+        // TODO
+        Log.Error(
+            "{method} not yet implemented. Need to determine onboarding invite mechanism.",
+            nameof(SendInviteAsync));
     }
 }

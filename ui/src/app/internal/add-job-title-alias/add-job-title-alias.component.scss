@@ -8,5 +8,5 @@
   display: flex;
   flex-direction: column;
   gap: $margin;
-  overflow: clip;
+  overflow-x: clip;
 }

@@ -292,12 +292,12 @@ a.urgent {
 }
 
 div.modal-summary {
-  border-top: solid 1px gray;
-  border-bottom: solid 1px gray;
+  border-top: solid 1px $vqi-blue;
+  border-bottom: solid 1px  $vqi-blue;
   padding: $padding $padding * 2;
   margin: 0 $margin * -2 $margin $margin * -2;
   background-color: $vqi-blue-x-light;
-  color: black;
+  color: $vqi-blue;
 
   div.primary-summary {
     font-weight: bold;

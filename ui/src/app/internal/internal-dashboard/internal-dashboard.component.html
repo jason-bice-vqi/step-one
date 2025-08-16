@@ -81,8 +81,8 @@
     </ng-container>
 
     <ng-container matColumnDef="status">
-      <th mat-header-cell *matHeaderCellDef mat-sort-header="candidateStatusDesc">Status</th>
-      <td mat-cell *matCellDef="let element">{{ element.candidateStatusDesc }}</td>
+      <th mat-header-cell *matHeaderCellDef mat-sort-header="candidateWorkflowStatusDesc">Status</th>
+      <td mat-cell *matCellDef="let element">{{ element.candidateWorkflowStatusDesc }}</td>
     </ng-container>
 
     <ng-container matColumnDef="importedAt">
@@ -116,7 +116,7 @@
       <td mat-cell *matCellDef="let element">
         <div *ngIf="element.jobTitle?.workflowId">
           <mat-progress-bar [value]="element.percentComplete" color="primary"
-                            matTooltip="{{element.stepsCompleted}} of {{element.totalSteps}} steps completed ({{element.percentComplete}}%)">
+                            matTooltip="{{element.candidateWorkflow.completedSteps}} of {{element.candidateWorkflow.candidateWorkflowSteps.length}} steps completed ({{element.candidateWorkflow.percentComplete}}%)">
           </mat-progress-bar>
         </div>
       </td>

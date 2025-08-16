@@ -1,4 +1,5 @@
 ﻿using Humanizer;
+using ViaQuestInc.StepOne.Core.Candidates.Workflows;
 using ViaQuestInc.StepOne.Core.Data.Entity;
 using ViaQuestInc.StepOne.Core.Kernel;
 
@@ -25,7 +26,7 @@ public class InitializeCandidateEntityOperation : ICandidateImportOperation
 
         options.InitializedCandidateEntity = new()
         {
-            Id = default,
+            Id = 0,
             AddressLine1 = options.CurrentRawCandidateDataRow["Address 1:"]
                 .ToString()
                 .NullifyEmptyOrWhitespace()
@@ -36,6 +37,7 @@ public class InitializeCandidateEntityOperation : ICandidateImportOperation
                 .NullifyEmptyOrWhitespace()
                 ?.ToLower()
                 .Titleize(),
+            CandidateWorkflowStatus = CandidateWorkflowStatus.Unassigned,
             City = options.CurrentRawCandidateDataRow["City"]
                 .ToString()
                 .NullifyEmptyOrWhitespace()

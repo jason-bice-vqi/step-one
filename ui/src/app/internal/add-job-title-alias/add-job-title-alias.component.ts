@@ -5,6 +5,8 @@ import {JobTitle} from "../../models/org/job-title";
 import {Candidate} from "../../models/candidates/candidate";
 import {Workflow} from "../../models/workflows/workflow";
 import {CandidateOnboardingRequest} from "../../models/candidates/candidate-onboarding-request";
+import {CandidateWorkflowService} from "../../services/workflows/candidate-workflow.service";
+import {take} from "rxjs";
 
 @Component({
   selector: 'app-add-job-title-alias',
@@ -67,10 +69,9 @@ export class AddJobTitleAliasComponent implements OnInit {
    * The request object used to onboard the candidate.
    */
   candidateOnboardingRequest: CandidateOnboardingRequest = {
-    candidateId: 0,
     jobTitleId: 0,
-    matchAtsJobTitleToOfficialJobTitle: false,
-    matchWorkflowToJobTitle: false,
+    createJobTitleAlias: false,
+    assignWorkflowToJobTitle: false,
     sendOnboardingInvite: true,
     workflowId: 0
   };
@@ -81,7 +82,11 @@ export class AddJobTitleAliasComponent implements OnInit {
    * but cannot be removed via this component.
    */
   get disableJobTitleMatch(): boolean {
-    return this.isAtsMatchedJobTitleSelected;
+    return this.isAtsMatchedJobTitleSelected || !this.selectedJobTitle;
+  }
+
+  get disableOnboarding(): boolean {
+    return !this.candidateOnboardingRequest.jobTitleId || !this.candidateOnboardingRequest.workflowId;
   }
 
   /**
@@ -89,7 +94,7 @@ export class AddJobTitleAliasComponent implements OnInit {
    * already assigned to a job title. Such matches can be established via this component, but cannot be removed via this
    * component.
    */
-  get disableWorkflowMatch() {
+  get disableWorkflowMatch(): boolean {
     return this.selectedJobTitle?.workflowId !== null || this.selectedWorkflow === null;
   }
 
@@ -103,6 +108,7 @@ export class AddJobTitleAliasComponent implements OnInit {
   }
 
   constructor(
+    private candidateWorkflowService: CandidateWorkflowService,
     public dialogRef: MatDialogRef<AddJobTitleAliasComponent>,
     @Inject(MAT_DIALOG_DATA) public data: {
       candidate: Candidate,
@@ -115,7 +121,6 @@ export class AddJobTitleAliasComponent implements OnInit {
     this.companies = data.companies;
     this.jobTitles = data.jobTitles;
     this.workflows = data.workflows;
-    this.candidateOnboardingRequest.candidateId = this.candidate.id;
   }
 
   /**
@@ -169,12 +174,16 @@ export class AddJobTitleAliasComponent implements OnInit {
     if (filterBy === 'company') {
       this.showAtsMatchedJobTitles = false;
 
+      if (!this.selectedCompany) return;
+
       this.filteredJobTitles = this.jobTitles
         .filter(x => x.company.id === this.selectedCompany!.id)
         .sort((a, b) => a.displayTitle.localeCompare(b.displayTitle));
     } else {
       this.showAtsMatchedJobTitles = true;
       this.selectedCompany = null;
+
+      console.warn('filtered jts', this.getJobTitlesFilteredByAtsJobTitle());
 
       this.filteredJobTitles = this.getJobTitlesFilteredByAtsJobTitle();
 
@@ -185,7 +194,7 @@ export class AddJobTitleAliasComponent implements OnInit {
       this.atsMatchedJobTitlesExist = this.filteredJobTitles.length > 0;
 
       if (this.atsMatchedJobTitlesExist) {
-        this.candidateOnboardingRequest.matchAtsJobTitleToOfficialJobTitle = true;
+        this.candidateOnboardingRequest.createJobTitleAlias = true;
       } else {
         this.updateFilteredJobTitles('company');
       }
@@ -201,15 +210,17 @@ export class AddJobTitleAliasComponent implements OnInit {
    *   - Selects the job title's company.
    *   - Selects the workflow assigned to the job title, if such an assignment exists.
    */
-  applyJobTitleSelection() {
-    this.candidateOnboardingRequest.matchAtsJobTitleToOfficialJobTitle = this.isAtsMatchedJobTitleSelected;
-    this.candidateOnboardingRequest.matchWorkflowToJobTitle = false;
+  applyJobTitleSelection(): void {
+    this.candidateOnboardingRequest.createJobTitleAlias = this.isAtsMatchedJobTitleSelected;
+    this.candidateOnboardingRequest.assignWorkflowToJobTitle = false;
 
     if (this.selectedJobTitle === null) {
       this.selectedWorkflow = null;
 
       return;
     }
+
+    this.candidateOnboardingRequest.jobTitleId = this.selectedJobTitle!.id;
 
     this.selectedCompany = this.companies.find(x => x.id === this.selectedJobTitle!.company!.id)!;
 
@@ -222,14 +233,22 @@ export class AddJobTitleAliasComponent implements OnInit {
     }
   }
 
-  applyWorkflowSelection() {
+  applyWorkflowSelection(): void {
     if (this.selectedJobTitle === null || this.selectedWorkflow === null) {
-      this.candidateOnboardingRequest.matchWorkflowToJobTitle = false;
+      this.candidateOnboardingRequest.assignWorkflowToJobTitle = false;
 
       return;
     }
 
-    this.candidateOnboardingRequest.matchWorkflowToJobTitle =
+    this.candidateOnboardingRequest.workflowId = this.selectedWorkflow.id;
+
+    this.candidateOnboardingRequest.assignWorkflowToJobTitle =
       this.selectedJobTitle.workflowId === this.selectedWorkflow.id;
+  }
+
+  onboardCandidate(): void {
+    this.candidateWorkflowService.create(this.candidate.id, this.candidateOnboardingRequest)
+      .pipe(take(1))
+      .subscribe(x => this.dialogRef.close(x));
   }
 }

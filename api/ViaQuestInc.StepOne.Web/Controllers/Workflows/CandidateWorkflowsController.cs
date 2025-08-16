@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using ViaQuestInc.StepOne.Core.Candidates.Workflows.Pipelines.Onboarding;
 using ViaQuestInc.StepOne.Core.Candidates.Workflows.Services;
 using ViaQuestInc.StepOne.Web.Auth;
 
@@ -12,6 +13,21 @@ public class CandidateWorkflowsController(
     IAuthorizationService authorizationService
 ) : ApiControllerBase
 {
+    [HttpPost]
+    public async Task<IActionResult> Create(
+        [FromRoute] int candidateId,
+        [FromBody] CandidateOnboardingRequest candidateOnboardingRequest,
+        [FromServices] CandidateOnboardingEngine candidateOnboardingEngine,
+        CancellationToken cancellationToken)
+    {
+        candidateOnboardingRequest.CandidateId = candidateId;
+
+        var candidate = await candidateOnboardingEngine.ExecuteAsync(candidateOnboardingRequest, cancellationToken);
+
+        return Ok(candidate);
+    }
+    
+    [HttpGet]
     public async Task<IActionResult> Get([FromRoute] int candidateId, CancellationToken cancellationToken)
     {
         var candidateWithWorkflow = await candidateWorkflowService.GetWithWorkflowAsync(candidateId, cancellationToken);

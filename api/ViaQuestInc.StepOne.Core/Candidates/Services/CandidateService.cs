@@ -31,6 +31,14 @@ public class CandidateService(
         return await repository.GetAsync<Candidate>(x => x.PhoneNumber == phoneNumber, cancellationToken);
     }
 
+    public async Task<Candidate> ShowAsync(int candidateId, CancellationToken cancellationToken)
+    {
+        return (await repository.GetWithChildrenAsync<Candidate>(
+            x => x.Id == candidateId,
+            cancellationToken,
+            DefaultIncludes))!;
+    }
+
     public async Task<ICollection<Candidate>> ImportAsync(
         MemoryStream candidatesMemoryStream,
         CancellationToken cancellationToken)
@@ -75,8 +83,6 @@ public class CandidateService(
                     // Name
                     (searchRequest.Name == null || x.FirstName.Contains(searchRequest.Name) ||
                      x.LastName.Contains(searchRequest.Name) || x.FullName.Contains(searchRequest.Name)) &&
-                    // Candidate Status
-                    (searchRequest.CandidateStatus == null || x.CandidateStatus == searchRequest.CandidateStatus) &&
                     // Workflow Status
                     (searchRequest.CandidateWorkflowStatus == null ||
                      (searchRequest.CandidateWorkflowStatus == CandidateWorkflowStatus.NotStarted &&

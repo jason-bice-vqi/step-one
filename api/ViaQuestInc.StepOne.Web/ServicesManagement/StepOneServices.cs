@@ -41,8 +41,13 @@ public static class StepOneServices
             // Candidate onboarding operations (ordered)
             .AddScoped<CandidateOnboardingEngine>()
             .AddScoped<ICandidateOnboardingOperation, InitializeRequestOperation>()
+            .AddScoped<ICandidateOnboardingOperation, ProtectExistingWorkflowAssignmentOperation>()
+            .AddScoped<ICandidateOnboardingOperation, AssignWorkflowToJobTitleOperation>()
+            .AddScoped<ICandidateOnboardingOperation, CreateJobTitleAliasOperation>()
+            .AddScoped<ICandidateOnboardingOperation, InitializeCandidateWorkflowOperation>()
+            .AddScoped<ICandidateOnboardingOperation, SendOnboardingInviteOperation>()
 
-            // Workflow persistence
+            // Workflow persistence (ordered)
             .AddScoped<WorkflowPersistenceEngine>()
             .AddScoped<IWorkflowPersistenceOperation, DeleteWorkflowStepsOperation>()
             .AddScoped<IWorkflowPersistenceOperation, ResequenceWorkflowStepsOperation>()

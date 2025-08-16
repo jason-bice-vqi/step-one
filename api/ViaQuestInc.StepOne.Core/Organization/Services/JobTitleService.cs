@@ -32,9 +32,12 @@ public class JobTitleService(IRepository<StepOneDbContext> repository)
             .ToArrayAsync(cancellationToken);
     }
 
-    public async Task<JobTitle?> GetAsync(int jobTitleId, CancellationToken cancellationToken)
+    public async Task<JobTitle> ShowAsync(int jobTitleId, CancellationToken cancellationToken)
     {
-        return await repository.FindAsync<JobTitle>(jobTitleId, cancellationToken);
+        return (await repository.GetWithChildrenAsync<JobTitle>(
+            x => x.Id == jobTitleId,
+            cancellationToken,
+            DefaultIncludes))!;
     }
 
     public async Task UpdateAsync(

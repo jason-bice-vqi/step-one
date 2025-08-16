@@ -23,7 +23,17 @@ public class CandidateWorkflow
 
     public required EntityStatuses EntityStatus { get; set; }
 
-    public ICollection<CandidateWorkflowStep> CandidateWorkflowSteps { get; set; }
+    public ICollection<CandidateWorkflowStep>? CandidateWorkflowSteps { get; set; }
 
-    public int? CompletedSteps => CandidateWorkflowSteps.Count(x => x.IsCompleted);
+    public int? CompletedSteps => CandidateWorkflowSteps?.Count(x => x.IsCompleted);
+
+    public int? PercentComplete
+    {
+        get
+        {
+            if (CandidateWorkflowSteps == null) return null;
+
+            return Convert.ToInt32(100 * Math.Round((double)CompletedSteps! / CandidateWorkflowSteps.Count, 0));
+        }
+    } 
 }

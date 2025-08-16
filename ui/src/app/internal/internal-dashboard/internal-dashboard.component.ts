@@ -58,7 +58,6 @@ export class InternalDashboardComponent implements OnInit {
   statusOptions: string[] = ['Invited - Active', 'Invited - Inactive', 'Pending'];
   companyOptions: string[] = ['ViaQuest Day & Employment Services LLC'];
   jobTitleOptions: string[] = [];
-  //candidateWorkflowStatusOptions: string[] = ['Completed by Candidate', 'Completed and Confirmed', 'Not Started', 'In Progress', 'Unassigned'];
   candidateWorkflowStatusOptions: { label: string, value: number }[] = [];
 
   displayedColumns: string[] = [
@@ -116,7 +115,7 @@ export class InternalDashboardComponent implements OnInit {
         jobTitles: this.jobTitles,
         workflows: this.workflows
       }
-    }).afterClosed().subscribe(result => {
+    }).afterClosed().subscribe((result: Candidate | null) => {
       if (result) {
         this.search();
       }

@@ -1,4 +1,5 @@
-﻿using ViaQuestInc.StepOne.Core.Data;
+﻿using ViaQuestInc.StepOne.Core.Candidates.Workflows;
+using ViaQuestInc.StepOne.Core.Data;
 using ViaQuestInc.StepOne.Core.Data.Entity;
 
 namespace ViaQuestInc.StepOne.Core.Candidates.Populators;
@@ -15,18 +16,24 @@ public class CandidatesPopulator : IDataPopulator
         {
             new()
             {
-                Id = default,
+                Id = 0,
+                CandidateWorkflowStatus = CandidateWorkflowStatus.Unassigned,
                 EntityStatus = EntityStatuses.Active,
                 FirstName = "Jason",
                 FullName = "Bice, Jason",
-                HireDate = new(2012, 04, 29),
+                HireDate = new(
+                    2012,
+                    04,
+                    29),
                 ImportedAt = DateTime.UtcNow,
                 AtsJobId = 1,
                 AtsJobTitle = "Software Architect",
                 LastName = "Bice",
                 PaycorCandidateId = Guid.NewGuid()
                     .ToString()
-                    .Replace("-", string.Empty),
+                    .Replace(
+                        "-",
+                        string.Empty),
                 PhoneNumber = "6144588078",
                 StartDate = null
             }

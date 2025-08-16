@@ -84,24 +84,9 @@ public class Candidate
     /// </summary>
     public CandidateWorkflow? CandidateWorkflow { get; set; }
 
-    public CandidateStatuses CandidateStatus { get; set; } = CandidateStatuses.Pending;
+    public required CandidateWorkflowStatus CandidateWorkflowStatus { get; set; }
 
-    public CandidateWorkflowStatus? CandidateWorkflowStatus
-    {
-        get
-        {
-            if (CandidateWorkflowId == null) return Workflows.CandidateWorkflowStatus.Unassigned;
-
-            if (CandidateWorkflow?.CandidateWorkflowSteps == null) return null;
-
-            return CandidateWorkflow.CompletedSteps == CandidateWorkflow.CandidateWorkflowSteps.Count
-                ? Workflows.CandidateWorkflowStatus.Completed
-                : Workflows.CandidateWorkflowStatus.NotStarted;
-        }
-    }
-
-    public string CandidateStatusDesc => CandidateStatus.ToString()
-        .Titleize();
+    public string CandidateWorkflowStatusDesc => CandidateWorkflowStatus.Humanize();
 
     public required EntityStatuses EntityStatus { get; set; }
 }

@@ -2,5 +2,5 @@
 
 public class UpdateJobTitleRequest
 {
-    public int? WorkflowId { get; set; }
+    public required int? WorkflowId { get; set; }
 }

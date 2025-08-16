@@ -1,7 +1,6 @@
 export interface CandidateOnboardingRequest {
-  candidateId: number;
-  matchAtsJobTitleToOfficialJobTitle: boolean;
-  matchWorkflowToJobTitle: boolean;
+  createJobTitleAlias: boolean;
+  assignWorkflowToJobTitle: boolean;
   jobTitleId: number;
   sendOnboardingInvite: boolean;
   workflowId: number;
