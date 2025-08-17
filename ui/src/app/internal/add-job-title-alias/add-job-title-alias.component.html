@@ -116,7 +116,7 @@
 
 <mat-dialog-actions align="end">
   <button mat-button type="button" (click)="cancel()">Cancel</button>
-  <button mat-raised-button color="primary" [disabled]="disableOnboarding || true" (click)="onboardCandidate()">
+  <button mat-raised-button color="primary" [disabled]="disableOnboarding" (click)="onboardCandidate()">
     Onboard <strong>{{ candidate.fullName }}</strong>
   </button>
 </mat-dialog-actions>

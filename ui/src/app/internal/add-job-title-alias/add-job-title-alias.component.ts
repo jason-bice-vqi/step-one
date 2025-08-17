@@ -93,7 +93,8 @@ export class AddJobTitleAliasComponent implements OnInit {
   }
 
   get disableOnboarding(): boolean {
-    return !this.candidateOnboardingRequest.jobTitleId || !this.candidateOnboardingRequest.workflowId;
+    return true;
+    // return !this.candidateOnboardingRequest.jobTitleId || !this.candidateOnboardingRequest.workflowId;
   }
 
   /**

@@ -177,7 +177,8 @@
         </button>
 
         <mat-menu #actionsMenu="matMenu">
-          <button mat-menu-item color="primary" (click)="onboardCandidate(element)" disabled>
+          <button mat-menu-item color="primary" (click)="onboardCandidate(element)"
+                  [disabled]="!element.candidateWorkflowId">
             <mat-icon>edit</mat-icon>
             <span>Edit Assignment</span>
           </button>

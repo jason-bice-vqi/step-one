@@ -1,4 +1,5 @@
 ﻿using ViaQuestInc.StepOne.Core.Candidates.Workflows.Services;
+using ViaQuestInc.StepOne.Core.Data;
 
 namespace ViaQuestInc.StepOne.Core.Candidates.Workflows.Pipelines.Onboarding.Operations;
 
@@ -6,12 +7,19 @@ namespace ViaQuestInc.StepOne.Core.Candidates.Workflows.Pipelines.Onboarding.Ope
 /// An operation that resets a candidate's workflow/onboarding progress in the event they've been assigned to a new
 /// workflow after having been previously assigned to a different one.
 /// </summary>
-public class ClearPreviousWorkflowOperation(CandidateWorkflowService candidateWorkflowService)
+public class ClearPreviousWorkflowOperation(
+    CandidateWorkflowService candidateWorkflowService,
+    IRepository<StepOneDbContext> repository
+)
     : ICandidateOnboardingOperation
 {
-    public Task<bool> ShouldExecuteAsync(CandidateOnboardingOptions options, CancellationToken cancellationToken)
+    public async Task<bool> ShouldExecuteAsync(CandidateOnboardingOptions options, CancellationToken cancellationToken)
     {
-        return Task.FromResult(options.Request.Candidate!.CandidateWorkflowId != null);
+        // Get the candidate directly from the repository as cheaply as possible; the objects on the request haven't 
+        // been initialized yet, but we just need to know if the candidate already has an assigned workflow.
+        var candidate = (await repository.FindAsync<Candidate>(options.Request.CandidateId!, cancellationToken))!;
+
+        return candidate.CandidateWorkflowId != null;
     }
 
     public async Task ExecuteAsync(CandidateOnboardingOptions options, CancellationToken cancellationToken)
