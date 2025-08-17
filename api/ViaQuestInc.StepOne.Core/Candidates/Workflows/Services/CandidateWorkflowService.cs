@@ -1,8 +1,6 @@
-﻿using Microsoft.EntityFrameworkCore;
-using Serilog;
+﻿using Serilog;
 using ViaQuestInc.StepOne.Core.Data;
 using ViaQuestInc.StepOne.Core.Data.Entity;
-using ViaQuestInc.StepOne.Core.Organization;
 using ViaQuestInc.StepOne.Core.Workflows;
 using ViaQuestInc.StepOne.Core.Workflows.Steps;
 
@@ -10,7 +8,7 @@ namespace ViaQuestInc.StepOne.Core.Candidates.Workflows.Services;
 
 public class CandidateWorkflowService(IRepository<StepOneDbContext> repository)
 {
-    private static readonly string[] CandidateWorkflowIncludes =
+    private static readonly string[] DefaultIncludes =
     [
         $"{nameof(CandidateWorkflow)}.{nameof(CandidateWorkflow.CandidateWorkflowSteps)}.{nameof(CandidateWorkflowStep.WorkflowStep)}.{nameof(WorkflowStep.Step)}",
         $"{nameof(CandidateWorkflow)}.{nameof(CandidateWorkflow.Workflow)}"
@@ -65,7 +63,7 @@ public class CandidateWorkflowService(IRepository<StepOneDbContext> repository)
         return await repository.GetWithChildrenAsync<Candidate>(
             x => x.Id == candidateId,
             cancellationToken,
-            CandidateWorkflowIncludes);
+            DefaultIncludes);
     }
 
     public async Task SendInviteAsync(Candidate candidate, CancellationToken cancellationToken)
@@ -83,5 +81,14 @@ public class CandidateWorkflowService(IRepository<StepOneDbContext> repository)
         Log.Error(
             "{method} not yet implemented. Need to determine onboarding invite mechanism.",
             nameof(SendInviteAsync));
+    }
+
+    public async Task DeleteAsync(int candidateId, CancellationToken cancellationToken)
+    {
+        var candidate = (await repository.FindAsync<Candidate>(candidateId, cancellationToken))!;
+
+        if (candidate.CandidateWorkflowId == null) return;
+
+        await repository.DeleteAsync<CandidateWorkflow>(x => x.Id == candidate.CandidateWorkflowId, cancellationToken);
     }
 }

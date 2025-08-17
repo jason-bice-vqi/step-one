@@ -11,7 +11,7 @@ namespace ViaQuestInc.StepOne.Core.Candidates.Workflows.Pipelines.Onboarding.Ope
 /// assignment and a request to make that assignment permanent, the payload is no longer trustworthy. This operation
 /// will log an error and then throw an exception
 /// </summary>
-public class ProtectExistingWorkflowAssignmentOperation : ICandidateOnboardingOperation
+public class ProtectExistingJobTitleWorkflowAssignmentOperation : ICandidateOnboardingOperation
 {
     public Task<bool> ShouldExecuteAsync(CandidateOnboardingOptions options, CancellationToken cancellationToken)
     {

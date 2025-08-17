@@ -305,6 +305,12 @@ div.modal-summary {
 
   div.secondary-summary {
     font-size: $font-size-med;
+
+    mat-icon {
+      font-size: $font-size-med;
+      height: $font-size-med;
+      width: $font-size-med;
+    }
   }
 }
 
@@ -329,4 +335,27 @@ div.modal-summary {
 .warning-text {
   font-size: 12px;
   color: #b71c1c;
+}
+
+/* Info box */
+
+.info-box {
+  display: flex;
+  align-items: center;
+  padding: 8px 12px;
+  border: 1px solid $vqi-blue;
+  border-radius: 4px;
+  background-color: #e6f3ff;
+}
+
+.info-icon {
+  margin-right: 8px;
+  font-size: 24px;
+  line-height: 1;
+  flex-shrink: 0;
+}
+
+.info-text {
+  font-size: 12px;
+  color: $vqi-blue;
 }

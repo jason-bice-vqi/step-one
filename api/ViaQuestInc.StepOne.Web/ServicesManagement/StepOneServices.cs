@@ -40,8 +40,11 @@ public static class StepOneServices
             
             // Candidate onboarding operations (ordered)
             .AddScoped<CandidateOnboardingEngine>()
+            // Clear previous workflow before initializing request
+            .AddScoped<ICandidateOnboardingOperation, ClearPreviousWorkflowOperation>()
+            // All other operations should follow the initialization operation
             .AddScoped<ICandidateOnboardingOperation, InitializeRequestOperation>()
-            .AddScoped<ICandidateOnboardingOperation, ProtectExistingWorkflowAssignmentOperation>()
+            .AddScoped<ICandidateOnboardingOperation, ProtectExistingJobTitleWorkflowAssignmentOperation>()
             .AddScoped<ICandidateOnboardingOperation, AssignWorkflowToJobTitleOperation>()
             .AddScoped<ICandidateOnboardingOperation, CreateJobTitleAliasOperation>()
             .AddScoped<ICandidateOnboardingOperation, InitializeCandidateWorkflowOperation>()

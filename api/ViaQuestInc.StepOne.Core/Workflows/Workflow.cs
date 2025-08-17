@@ -36,5 +36,5 @@ public class Workflow : EntityBase<int>
     [NotMapped]
     public bool CopySteps { get; set; }
 
-    public ICollection<WorkflowStep> WorkflowSteps { get; set; }
+    public ICollection<WorkflowStep>? WorkflowSteps { get; set; }
 }

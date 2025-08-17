@@ -39,7 +39,7 @@ public class CandidateService(
             DefaultIncludes))!;
     }
 
-    public async Task<ICollection<Candidate>> ImportAsync(
+    public async Task ImportAsync(
         MemoryStream candidatesMemoryStream,
         CancellationToken cancellationToken)
     {
@@ -55,8 +55,6 @@ public class CandidateService(
                         .ToString()!) >= hireDateBegin);
 
         await candidateImportEngine.ImportAsync(rawCandidateDataRows, cancellationToken);
-
-        return null; // todo
     }
 
     public async Task RecordAuthenticatedAsync(Candidate candidate, CancellationToken cancellationToken)

@@ -7,6 +7,8 @@ import {Workflow} from "../../models/workflows/workflow";
 import {CandidateOnboardingRequest} from "../../models/candidates/candidate-onboarding-request";
 import {CandidateWorkflowService} from "../../services/workflows/candidate-workflow.service";
 import {take} from "rxjs";
+import {copyToClipboard} from "../../functions/string.functions";
+import {NotificationService} from "../../services/notification.service";
 
 @Component({
   selector: 'app-add-job-title-alias',
@@ -115,6 +117,7 @@ export class AddJobTitleAliasComponent implements OnInit {
   constructor(
     private candidateWorkflowService: CandidateWorkflowService,
     public dialogRef: MatDialogRef<AddJobTitleAliasComponent>,
+    private notificationService: NotificationService,
     @Inject(MAT_DIALOG_DATA) public data: {
       candidate: Candidate,
       companies: Company[],
@@ -144,7 +147,7 @@ export class AddJobTitleAliasComponent implements OnInit {
       this.selectedJobTitle = this.jobTitles.find(x => x.id === this.candidate.jobTitleId)!;
 
       if (this.candidate.candidateWorkflow?.workflow) {
-        this.selectedWorkflow = this.workflows.find(x => x.id === this.candidate.candidateWorkflowId)!;
+        this.selectedWorkflow = this.workflows.find(x => x.id === this.candidate.candidateWorkflow?.workflowId)!;
       }
     } else {
       this.updateFilteredJobTitles('ats-job-title');
@@ -187,9 +190,6 @@ export class AddJobTitleAliasComponent implements OnInit {
     } else {
       this.showAtsMatchedJobTitles = true;
       this.selectedCompany = null;
-
-      console.warn('filtered jts', this.getJobTitlesFilteredByAtsJobTitle());
-
       this.filteredJobTitles = this.getJobTitlesFilteredByAtsJobTitle();
 
       if (this.filteredJobTitles.length === 1) {
@@ -260,5 +260,12 @@ export class AddJobTitleAliasComponent implements OnInit {
     this.candidateWorkflowService.create(this.candidate.id, this.candidateOnboardingRequest)
       .pipe(take(1))
       .subscribe(x => this.dialogRef.close({candidate: x, refreshJobTitles: this.refreshJobTitles}));
+  }
+
+  protected readonly copyToClipboard = copyToClipboard;
+
+  copy(text: string) {
+    this.copyToClipboard(text);
+    this.notificationService.info(`Copied <strong>${text}</strong> to the clipboard.`);
   }
 }

@@ -11,11 +11,11 @@ public class CandidateWorkflow
     public required int CandidateId { get; set; }
 
     [JsonIgnore]
-    public Candidate Candidate { get; set; }
+    public Candidate? Candidate { get; set; }
 
     public required int WorkflowId { get; set; }
-
-    public Workflow Workflow { get; set; }
+    
+    public Workflow? Workflow { get; set; }
 
     public required DateTime CreatedAt { get; set; }
 

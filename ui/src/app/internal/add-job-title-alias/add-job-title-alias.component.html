@@ -3,21 +3,28 @@
 <mat-dialog-content class="form-container">
   <div class="modal-summary">
     <div class="primary-summary">{{ candidate.fullName }}</div>
-    <div class="secondary-summary">{{ candidate.atsJobTitle }}</div>
+    <div class="secondary-summary">
+      {{ candidate.atsJobTitle }}
+      <mat-icon (click)="copy(candidate.atsJobTitle)"
+                matTooltip="Copy {{ candidate.atsJobTitle }} to your clipboard.">content_copy
+      </mat-icon>
+    </div>
   </div>
-  <div class="warning-box">
-    <mat-icon class="warning-icon" color="warn">warning</mat-icon>
-    <span class="warning-text">
+
+  <!-- Info/warning messages re: previously assigned workflow -->
+  <div *ngIf="candidate.candidateWorkflowId">
+    <app-message-box *ngIf="candidate.candidateWorkflow!.percentComplete! === 0" type="info">
       <strong>{{ candidate.fullName }}</strong> is already assigned to the
       <strong>{{ candidate.candidateWorkflow?.workflow?.name }}</strong> workflow.
-        <ng-container *ngIf="candidate.candidateWorkflow?.percentComplete as percent; else notStarted">
-          Changing this will clear their current progress ({{ percent }}%) and they will begin under their new workflow
-          assignment.
-        </ng-container>
-        <ng-template #notStarted>
-          They have not started their current workflow, so there will not be a reset of any current progress.
-        </ng-template>
-    </span>
+      They have not started that workflow, so there will not be a reset of any current progress if you choose to
+      proceed.
+    </app-message-box>
+    <app-message-box *ngIf="candidate.candidateWorkflow!.percentComplete! > 0" type="warning">
+      <strong>{{ candidate.fullName }}</strong> is already assigned to the
+      <strong>{{ candidate.candidateWorkflow?.workflow?.name }}</strong> workflow.
+      If you proceed, their current progress ({{ candidate.candidateWorkflow?.percentComplete }}%) will be lost and they
+      will begin under their new workflow assignment.
+    </app-message-box>
   </div>
 
   <!-- Company -->
@@ -109,7 +116,7 @@
 
 <mat-dialog-actions align="end">
   <button mat-button type="button" (click)="cancel()">Cancel</button>
-  <button mat-raised-button color="primary" [disabled]="disableOnboarding" (click)="onboardCandidate()">
+  <button mat-raised-button color="primary" [disabled]="disableOnboarding || true" (click)="onboardCandidate()">
     Onboard <strong>{{ candidate.fullName }}</strong>
   </button>
 </mat-dialog-actions>
