@@ -29,9 +29,15 @@ export class InternalDashboardComponent implements OnInit {
 
   companies: Company[] = [];
   jobTitles: JobTitle[] = [];
+  filteredJobTitles: JobTitle[] = [];
   workflows: Workflow[] = [];
 
-  searchRequest: CandidateSearchRequest = {desc: false, limit: this.defaultPageSize, page: 0};
+  searchRequest: CandidateSearchRequest = {
+    candidateWorkflowStatus: CandidateWorkflowStatuses.Unassigned,
+    desc: false,
+    limit: this.defaultPageSize,
+    page: 0
+  };
 
   searchResponse?: SearchResponse<Candidate>;
 
@@ -46,7 +52,12 @@ export class InternalDashboardComponent implements OnInit {
     this.search();
 
     this.orgService.getCompanies().pipe(take(1)).subscribe(x => this.companies = x);
-    this.orgService.getJobTitles().pipe(take(1)).subscribe(x => this.jobTitles = x);
+
+    this.orgService.getJobTitles().pipe(take(1)).subscribe(x => {
+      this.jobTitles = x;
+      this.filterJobTitles();
+    });
+
     this.workflowService.get().pipe((take(1))).subscribe(x => this.workflows = x);
 
     this.candidateWorkflowStatusOptions = Object.keys(CandidateWorkflowStatuses)
@@ -57,9 +68,6 @@ export class InternalDashboardComponent implements OnInit {
       }));
   }
 
-  statusOptions: string[] = ['Invited - Active', 'Invited - Inactive', 'Pending'];
-  companyOptions: string[] = ['ViaQuest Day & Employment Services LLC'];
-  jobTitleOptions: string[] = [];
   candidateWorkflowStatusOptions: { label: string, value: number }[] = [];
 
   displayedColumns: string[] = [
@@ -128,5 +136,10 @@ export class InternalDashboardComponent implements OnInit {
         this.search();
       }
     });
+  }
+
+  filterJobTitles() {
+    this.filteredJobTitles = this.jobTitles
+      .filter(x => !this.searchRequest.companyId || x.company.id === this.searchRequest.companyId);
   }
 }

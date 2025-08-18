@@ -15,21 +15,16 @@ public class JobTitleService(IRepository<StepOneDbContext> repository)
 
     public async Task<IEnumerable<JobTitle>> IndexAsync(CancellationToken cancellationToken)
     {
-        return await repository.FilterWithChildren<JobTitle>(
-                x => x.EntityStatus == EntityStatuses.Active,
-                DefaultIncludes)
-            .OrderBy(x => x.DisplayTitle)
-            .ToArrayAsync(cancellationToken);
+        return await IndexAsync(null, cancellationToken);
     }
 
-    public async Task<IEnumerable<JobTitle>> IndexAsync(int companyId, CancellationToken cancellationToken)
+    public async Task<IEnumerable<JobTitle>> IndexAsync(int? companyId, CancellationToken cancellationToken)
     {
-        return await repository
+        return (await repository
             .FilterWithChildren<JobTitle>(
-                x => x.CompanyId == companyId && x.EntityStatus == EntityStatuses.Active,
+                x => (companyId == null || x.CompanyId == companyId) && x.EntityStatus == EntityStatuses.Active,
                 DefaultIncludes)
-            .OrderBy(x => x.Title)
-            .ToArrayAsync(cancellationToken);
+            .ToArrayAsync(cancellationToken)).OrderBy(x => x.DisplayTitleWithAbbr);
     }
 
     public async Task<JobTitle> ShowAsync(int jobTitleId, CancellationToken cancellationToken)

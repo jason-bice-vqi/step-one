@@ -57,7 +57,7 @@ public class InitializeCandidateEntityOperation : ICandidateImportOperation
                 options.CurrentRawCandidateDataRow["Job ID"]
                     .ToString()!),
             AtsJobTitle = options.CurrentRawCandidateDataRow["Job Title"]
-                .ToString()!,
+                .ToString()!.ToUpper(),
             PaycorCandidateId = options.CurrentRawCandidateDataRow["Candidate ID"]
                 .ToString()!,
             PhoneNumber = options.CurrentRawCandidateDataRow["Mobile Phone"]

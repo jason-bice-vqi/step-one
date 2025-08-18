@@ -261,6 +261,11 @@ a.urgent {
   text-decoration: none;
 }
 
+
+.small-options .mat-mdc-option .mdc-list-item__primary-text {
+  font-size: $font-size-med;
+}
+
 /* Slide toggle styles */
 
 .toggle-box {

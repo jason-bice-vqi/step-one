@@ -2,6 +2,7 @@
 
 public enum CandidateWorkflowStatus
 {
+    Offboarded = -1,
     Unassigned = 0,
     NotInvited = 1,
     NotStarted = 2,

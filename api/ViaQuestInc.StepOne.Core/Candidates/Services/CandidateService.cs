@@ -49,10 +49,9 @@ public class CandidateService(
 
         var rawCandidateDataRows = dataSet.Tables[0]
             .AsEnumerable()
-            .Where(
-                x => DateTime.Parse(
-                    x["Date Hired"]
-                        .ToString()!) >= hireDateBegin);
+            .Where(x => DateTime.Parse(
+                x["Date Hired"]
+                    .ToString()!) >= hireDateBegin);
 
         await candidateImportEngine.ImportAsync(rawCandidateDataRows, cancellationToken);
     }
@@ -79,8 +78,15 @@ public class CandidateService(
             .FilterWithChildren<Candidate>(
                 x =>
                     // Name
-                    (searchRequest.Name == null || x.FirstName.Contains(searchRequest.Name) ||
-                     x.LastName.Contains(searchRequest.Name) || x.FullName.Contains(searchRequest.Name)) &&
+                    (string.IsNullOrWhiteSpace(searchRequest.Name) || x.FullName.Contains($"{searchRequest.Name}")) &&
+                    // Company
+                    (searchRequest.CompanyId == null ||
+                     (x.JobTitleId != null && x.JobTitle!.CompanyId == searchRequest.CompanyId)) &&
+                    // Job Title
+                    (searchRequest.JobTitleId == null || x.JobTitleId == searchRequest.JobTitleId) &&
+                    // ATS Job Title
+                    (string.IsNullOrWhiteSpace(searchRequest.AtsJobTitle) ||
+                     x.AtsJobTitle.Contains($"{searchRequest.AtsJobTitle}")) &&
                     // Workflow Status
                     (searchRequest.CandidateWorkflowStatus == null ||
                      x.CandidateWorkflowStatus == searchRequest.CandidateWorkflowStatus),

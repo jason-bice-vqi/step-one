@@ -5,6 +5,7 @@ import {JobTitleAlias} from "./job-title-alias";
 export interface JobTitle {
   id: number;
   displayTitle: string;
+  displayTitleWithAbbr: string;
   company: Company;
   jobTitleAliases: JobTitleAlias[];
   workflowId?: number;

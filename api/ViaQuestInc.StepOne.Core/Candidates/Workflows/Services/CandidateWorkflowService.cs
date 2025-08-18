@@ -1,4 +1,7 @@
-﻿using Serilog;
+﻿using Microsoft.Extensions.Options;
+using Serilog;
+using Twilio.Rest.Api.V2010.Account;
+using ViaQuestInc.StepOne.Core.Auth.Otp.Services.TwilioOtp;
 using ViaQuestInc.StepOne.Core.Data;
 using ViaQuestInc.StepOne.Core.Data.Entity;
 using ViaQuestInc.StepOne.Core.Workflows;
@@ -6,7 +9,7 @@ using ViaQuestInc.StepOne.Core.Workflows.Steps;
 
 namespace ViaQuestInc.StepOne.Core.Candidates.Workflows.Services;
 
-public class CandidateWorkflowService(IRepository<StepOneDbContext> repository)
+public class CandidateWorkflowService(IRepository<StepOneDbContext> repository, IOptions<TwilioConfig> twilioConfigOptions)
 {
     private static readonly string[] DefaultIncludes =
     [
@@ -76,11 +79,24 @@ public class CandidateWorkflowService(IRepository<StepOneDbContext> repository)
             
             await repository.UpdateAsync(candidate, cancellationToken);
         }
+
+        try
+        {
+            var msg = await MessageResource.CreateAsync(
+                from: new(twilioConfigOptions.Value.SmsFrom),
+                to:   new("+16144588078"),  // TODO
+                //to: new($"+1{candidate.PhoneNumber}"),
+                body: "Welcome to ViaQuest! Please complete the onboarding process at www.viaquesting.com/onboarding"
+            );
         
-        // TODO
-        Log.Error(
-            "{method} not yet implemented. Need to determine onboarding invite mechanism.",
-            nameof(SendInviteAsync));
+            Log.Information("Candidate SMS Invite Status: {status}", msg.Status.ToString());
+        }
+        catch (Exception ex)
+        {
+            Log.Error(ex, "Candidate SMS Invite failed.");
+            
+            throw;
+        }
     }
 
     public async Task DeleteAsync(int candidateId, CancellationToken cancellationToken)

@@ -5,18 +5,34 @@
   </mat-form-field>
 
   <mat-form-field appearance="outline" class="search-field">
-    <mat-label>Status</mat-label>
-    <mat-select [(ngModel)]="searchRequest.candidateStatus" name="status">
+    <mat-label>Company</mat-label>
+    <mat-select [(ngModel)]="searchRequest.companyId" name="companyId" (ngModelChange)="filterJobTitles()"
+                [panelClass]="'small-options'">
       <mat-option value="">All</mat-option>
-      <mat-option *ngFor="let status of statusOptions" [value]="status">
-        {{ status }}
+      <mat-option *ngFor="let company of companies" [value]="company.id">
+        {{ company.name }}
       </mat-option>
     </mat-select>
   </mat-form-field>
 
   <mat-form-field appearance="outline" class="search-field">
-    <mat-label>Workflow Status</mat-label>
-    <mat-select [(ngModel)]="searchRequest.candidateWorkflowStatus" name="workflowStatus">
+    <mat-label>ViaQuest Job Title</mat-label>
+    <mat-select [(ngModel)]="searchRequest.jobTitleId" name="jobTitleId" [panelClass]="'small-options'">
+      <mat-option value="">Select a Job Title</mat-option>
+      <mat-option *ngFor="let jobTitle of filteredJobTitles" [value]="jobTitle.id">
+        {{ jobTitle.displayTitleWithAbbr }}
+      </mat-option>
+    </mat-select>
+  </mat-form-field>
+
+  <mat-form-field appearance="outline" class="search-field">
+    <mat-label>ATS Job Title</mat-label>
+    <input matInput [(ngModel)]="searchRequest.atsJobTitle" name="atsJobTitle" placeholder="Enter ATS Job Title"/>
+  </mat-form-field>
+
+  <mat-form-field appearance="outline" class="search-field">
+    <mat-label>Status</mat-label>
+    <mat-select [(ngModel)]="searchRequest.candidateWorkflowStatus" name="candidateWorkflowStatus">
       <mat-option [value]="null">All</mat-option>
       <mat-option *ngFor="let option of candidateWorkflowStatusOptions" [value]="option.value">
         {{ option.label | titleCasePipe }}
@@ -24,25 +40,6 @@
     </mat-select>
   </mat-form-field>
 
-  <mat-form-field appearance="outline" class="search-field">
-    <mat-label>Company</mat-label>
-    <mat-select [(ngModel)]="searchRequest.company" name="company">
-      <mat-option value="">All</mat-option>
-      <mat-option *ngFor="let company of companyOptions" [value]="company">
-        {{ company }}
-      </mat-option>
-    </mat-select>
-  </mat-form-field>
-
-  <mat-form-field appearance="outline" class="search-field">
-    <mat-label>Job Title</mat-label>
-    <mat-select [(ngModel)]="searchRequest.jobTitle" name="company" [disabled]="!searchRequest.company">
-      <mat-option value="">Select a Company</mat-option>
-      <mat-option *ngFor="let jobTitle of jobTitleOptions" [value]="jobTitle">
-        {{ jobTitle }}
-      </mat-option>
-    </mat-select>
-  </mat-form-field>
   <div class="button-container">
     <button mat-raised-button color="primary" (click)="search()">Apply</button>
     <button mat-raised-button color="accent" (click)="searchReset()">Reset</button>
@@ -64,8 +61,7 @@
       <th mat-header-cell *matHeaderCellDef mat-sort-header="jobTitle" class="sortable">Job Title</th>
       <td mat-cell *matCellDef="let element">
         <span *ngIf="element.candidateWorkflow" matTooltip="ATS Job Title: {{ element.atsJobTitle }}">
-          ({{element.jobTitle.company.abbreviation}})
-          {{ element.jobTitle.displayTitle }}<br>
+          {{ element.jobTitle.displayTitleWithAbbr }}<br>
           <small>
             {{element.candidateWorkflow.workflow?.name}}
           </small>
@@ -178,23 +174,24 @@
 
         <mat-menu #actionsMenu="matMenu">
           <button mat-menu-item color="primary" (click)="onboardCandidate(element)"
-                  [disabled]="!element.candidateWorkflowId">
+                  [disabled]="!element.candidateWorkflowId"
+                  [matTooltip]="!element.candidateWorkflowId ? 'This candidate has not been assigned to a workflow yet, so it cannot be edited.' : ''">
             <mat-icon>edit</mat-icon>
             <span>Edit Assignment</span>
           </button>
-          <button mat-menu-item color="primary" [disabled]="!element.stepsCompleted">
+          <button mat-menu-item color="primary" disabled matTooltip="Not yet implemeneted.">
             <mat-icon>visibility</mat-icon>
             <span>Review</span>
           </button>
-          <button mat-menu-item color="primary" [disabled]="!element.stepsCompleted">
+          <button mat-menu-item color="primary" disabled matTooltip="Not yet implemeneted.">
             <mat-icon>download</mat-icon>
             <span>Download All</span>
           </button>
-          <button mat-menu-item color="warn">
+          <button mat-menu-item color="warn" disabled matTooltip="Not yet implemeneted.">
             <mat-icon>logout</mat-icon>
             <span>Off-board</span>
           </button>
-          <button mat-menu-item color="primary">
+          <button mat-menu-item color="primary" disabled matTooltip="Not yet implemeneted.">
             <mat-icon *ngIf="element.status === 'Pending Invitation'">person_add</mat-icon>
             <mat-icon *ngIf="element.status !== 'Pending Invitation'">notifications</mat-icon>
             <span>{{ element.status === 'Pending Invitation' ? 'Invite' : 'Remind' }}</span>

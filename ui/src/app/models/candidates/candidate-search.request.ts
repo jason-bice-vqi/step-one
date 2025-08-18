@@ -5,11 +5,11 @@ import {CandidateWorkflowStatuses} from "./candidate-workflow.statuses";
 export interface CandidateSearchRequest extends SearchRequest {
   name?: string;
 
-  candidateStatus?: CandidateStatus;
-
   candidateWorkflowStatus?: CandidateWorkflowStatuses;
 
-  company?: any;
+  companyId?: number;
 
-  jobTitle?: any;
+  jobTitleId?: number;
+
+  atsJobTitle?: string;
 }

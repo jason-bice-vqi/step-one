@@ -2,9 +2,20 @@
 
 public class TwilioConfig
 {
+    /// <summary>
+    /// The account SSID.
+    /// </summary>
     public string AccountSid { get; set; }
 
+    /// <summary>
+    /// The Twilio account auth token / password.
+    /// </summary>
     public string AuthToken { get; set; }
+    
+    /// <summary>
+    /// The From address to be used for SMS messages.
+    /// </summary>
+    public string SmsFrom { get; set; }
 
     /// <summary>
     /// The Service SSID.

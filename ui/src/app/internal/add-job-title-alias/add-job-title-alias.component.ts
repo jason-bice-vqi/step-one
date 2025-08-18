@@ -93,8 +93,7 @@ export class AddJobTitleAliasComponent implements OnInit {
   }
 
   get disableOnboarding(): boolean {
-    return true;
-    // return !this.candidateOnboardingRequest.jobTitleId || !this.candidateOnboardingRequest.workflowId;
+    return !this.candidateOnboardingRequest.jobTitleId || !this.candidateOnboardingRequest.workflowId;
   }
 
   /**
@@ -164,7 +163,7 @@ export class AddJobTitleAliasComponent implements OnInit {
    */
   getJobTitlesFilteredByAtsJobTitle(): JobTitle[] {
     return this.jobTitles
-      .filter(x => x.jobTitleAliases.some(j => j.alias === this.candidate.atsJobTitle.toUpperCase()))
+      .filter(x => x.jobTitleAliases.some(j => j.alias === this.candidate.atsJobTitle))
       .sort((a, b) => a.displayTitle.localeCompare(b.displayTitle));
   }
 
