@@ -53,8 +53,12 @@ table {
   }
 
   mat-progress-bar {
-    height: 10px;
-    border-radius: 5px;
+    height: 12px;
+    border-radius: 6px;
+  }
+
+  .mdc-linear-progress {
+    --mdc-linear-progress-track-height: 12px;
   }
 
   tr:hover {

@@ -16,8 +16,11 @@ export interface Candidate {
   /** The candidate's last name. */
   lastName: string;
 
-  /** The candidate's full name (computed in C#, omitted in TypeScript). */
+  /** The candidate's full name, formatted as (last), (first). */
   fullName: string;
+
+  /** The candidate's full name, formatted as (first) (last). */
+  fullNameInformal: string
 
   /** The candidate's phone number, expected to be exactly 10 characters. */
   phoneNumber: string;

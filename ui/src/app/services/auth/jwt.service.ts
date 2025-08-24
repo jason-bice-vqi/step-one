@@ -75,6 +75,12 @@ export class JwtService {
     return decodedToken['name'];
   }
 
+  getGivenName(): string | null {
+    const decodedToken = this.decodeToken();
+
+    return decodedToken['given_name'];
+  }
+
   storeToken(token: string) {
     console.info('Storing Exchanged JWT', jwtDecode(token));
 

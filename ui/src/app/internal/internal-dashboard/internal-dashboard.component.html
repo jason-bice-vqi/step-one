@@ -18,7 +18,7 @@
   <mat-form-field appearance="outline" class="search-field">
     <mat-label>ViaQuest Job Title</mat-label>
     <mat-select [(ngModel)]="searchRequest.jobTitleId" name="jobTitleId" [panelClass]="'small-options'">
-      <mat-option value="">Select a Job Title</mat-option>
+      <mat-option value="">All</mat-option>
       <mat-option *ngFor="let jobTitle of filteredJobTitles" [value]="jobTitle.id">
         {{ jobTitle.displayTitleWithAbbr }}
       </mat-option>
@@ -33,7 +33,7 @@
   <mat-form-field appearance="outline" class="search-field">
     <mat-label>Status</mat-label>
     <mat-select [(ngModel)]="searchRequest.candidateWorkflowStatus" name="candidateWorkflowStatus">
-      <mat-option [value]="null">All</mat-option>
+      <mat-option value="">All</mat-option>
       <mat-option *ngFor="let option of candidateWorkflowStatusOptions" [value]="option.value">
         {{ option.label | titleCasePipe }}
       </mat-option>
@@ -107,11 +107,11 @@
     </ng-container>
 
     <ng-container matColumnDef="percentComplete">
-      <th mat-header-cell *matHeaderCellDef mat-sort-header="percentComplete" class="text-center sortable">% Complete
+      <th mat-header-cell *matHeaderCellDef mat-sort-header="percentComplete" class="text-center sortable">Progress
       </th>
       <td mat-cell *matCellDef="let element">
         <div *ngIf="element.jobTitle?.workflowId">
-          <mat-progress-bar [value]="element.percentComplete" color="primary"
+          <mat-progress-bar [value]="element.candidateWorkflow.percentComplete" color="primary"
                             matTooltip="{{element.candidateWorkflow.completedSteps}} of {{element.candidateWorkflow.candidateWorkflowSteps.length}} steps completed ({{element.candidateWorkflow.percentComplete}}%)">
           </mat-progress-bar>
         </div>

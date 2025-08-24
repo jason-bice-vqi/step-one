@@ -33,7 +33,7 @@ public class CandidateWorkflow
         {
             if (CandidateWorkflowSteps == null) return null;
 
-            return Convert.ToInt32(100 * Math.Round((double)CompletedSteps! / CandidateWorkflowSteps.Count, 0));
+            return Convert.ToInt32(100 * Math.Round((double)CompletedSteps! / CandidateWorkflowSteps.Count, 3));
         }
     } 
 }

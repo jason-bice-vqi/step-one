@@ -82,20 +82,21 @@ public class CandidateWorkflowService(IRepository<StepOneDbContext> repository, 
 
         try
         {
-            var msg = await MessageResource.CreateAsync(
-                from: new(twilioConfigOptions.Value.SmsFrom),
-                to:   new("+16144588078"),  // TODO
-                //to: new($"+1{candidate.PhoneNumber}"),
-                body: "Welcome to ViaQuest! Please complete the onboarding process at www.viaquesting.com/onboarding"
-            );
+            // var msg = await MessageResource.CreateAsync(
+            //     from: new(twilioConfigOptions.Value.SmsFrom),
+            //     to:   new("+16144588078"),  // TODO
+            //     //to: new($"+1{candidate.PhoneNumber}"),
+            //     body: "Welcome to ViaQuest! Please complete the onboarding process at www.viaquesting.com/onboarding"
+            // );
         
-            Log.Information("Candidate SMS Invite Status: {status}", msg.Status.ToString());
+            //Log.Information("Candidate SMS Invite Status: {status}", msg.Status.ToString());
+            Log.Warning("Candidate SMS Invite Process Not Implemented");
         }
         catch (Exception ex)
         {
             Log.Error(ex, "Candidate SMS Invite failed.");
             
-            throw;
+            //throw;
         }
     }
 

@@ -24,6 +24,8 @@ public class Candidate
     [MaxLength(255)]
     [Required]
     public required string FullName { get; set; }
+    
+    public string FullNameInformal => $"{FirstName} {LastName}";
 
     [MaxLength(255)]
     public string? Email { get; set; }
@@ -86,7 +88,8 @@ public class Candidate
 
     public required CandidateWorkflowStatus CandidateWorkflowStatus { get; set; }
 
-    public string CandidateWorkflowStatusDesc => CandidateWorkflowStatus.Humanize();
+    public string CandidateWorkflowStatusDesc => CandidateWorkflowStatus.Humanize()
+        .Titleize();
 
     public required EntityStatuses EntityStatus { get; set; }
 }

@@ -20,6 +20,10 @@ export class AppComponent implements OnInit {
     return this.jwtService.getFullName();
   }
 
+  get givenName() {
+    return this.jwtService.getGivenName();
+  }
+
   get role() {
     return this.jwtService.getRole();
   }

@@ -53,7 +53,7 @@ import {WorkflowAssignmentsComponent} from './internal/workflow-assignments/work
 import {MatTreeModule} from "@angular/material/tree";
 import {ProgressBarComponent} from "./shared/progress-bar/progress-bar.component";
 import {FileUploadComponent} from "./shared/file-upload/file-upload.component";
-import { AddJobTitleAliasComponent } from './internal/add-job-title-alias/add-job-title-alias.component';
+import { OnboardCandidateComponent } from './internal/onboard-candidate/onboard-candidate.component';
 import { TitleCasePipePipe } from './pipes/title-case-pipe.pipe';
 import { MessageBoxComponent } from './shared/message-box/message-box.component';
 
@@ -115,7 +115,7 @@ export function MSALInstanceFactory(): PublicClientApplication {
     JobTitlesComponent,
     HtmlSnackbarComponent,
     WorkflowAssignmentsComponent,
-    AddJobTitleAliasComponent,
+    OnboardCandidateComponent,
     TitleCasePipePipe,
     MessageBoxComponent
   ],

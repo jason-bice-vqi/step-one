@@ -3,7 +3,7 @@
   <div class="spacer"></div>
   <div class="app-info">Pre-Employment Checklist
     <div class="user-info" *ngIf="isAuthenticated">
-      Welcome, {{fullName}} ({{role}})<br>
+      Welcome, {{givenName ?? fullName}} ({{role}})<br>
       <a (click)="logout()">Log Out</a>
     </div>
   </div>

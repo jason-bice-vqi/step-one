@@ -11,11 +11,11 @@ import {copyToClipboard} from "../../functions/string.functions";
 import {NotificationService} from "../../services/notification.service";
 
 @Component({
-  selector: 'app-add-job-title-alias',
-  templateUrl: './add-job-title-alias.component.html',
-  styleUrls: ['./add-job-title-alias.component.scss']
+  selector: 'app-onboard-candidate',
+  templateUrl: './onboard-candidate.component.html',
+  styleUrls: ['./onboard-candidate.component.scss']
 })
-export class AddJobTitleAliasComponent implements OnInit {
+export class OnboardCandidateComponent implements OnInit {
 
   /**
    * The current candidate context, as passed in from the component that launched this one.
@@ -116,7 +116,7 @@ export class AddJobTitleAliasComponent implements OnInit {
 
   constructor(
     private candidateWorkflowService: CandidateWorkflowService,
-    public dialogRef: MatDialogRef<AddJobTitleAliasComponent>,
+    public dialogRef: MatDialogRef<OnboardCandidateComponent>,
     private notificationService: NotificationService,
     @Inject(MAT_DIALOG_DATA) public data: {
       candidate: Candidate,
@@ -187,6 +187,10 @@ export class AddJobTitleAliasComponent implements OnInit {
       this.filteredJobTitles = this.jobTitles
         .filter(x => x.company.id === this.selectedCompany!.id)
         .sort((a, b) => a.displayTitle.localeCompare(b.displayTitle));
+
+      this.atsMatchedJobTitlesExist = this.filteredJobTitles.some(x =>
+        x.jobTitleAliases.some(j => j.alias === this.candidate.atsJobTitle));
+      
     } else {
       this.showAtsMatchedJobTitles = true;
       this.selectedCompany = null;

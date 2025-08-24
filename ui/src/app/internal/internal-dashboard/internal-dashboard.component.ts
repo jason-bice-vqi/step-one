@@ -6,7 +6,7 @@ import {SearchResponse} from "../../models/search/search.response";
 import {MatPaginator, PageEvent} from "@angular/material/paginator";
 import {CandidateSearchRequest} from "../../models/candidates/candidate-search.request";
 import {Sort} from '@angular/material/sort';
-import {AddJobTitleAliasComponent} from "../add-job-title-alias/add-job-title-alias.component";
+import {OnboardCandidateComponent} from "../onboard-candidate/onboard-candidate.component";
 import {MatDialog} from "@angular/material/dialog";
 import {JobTitle} from "../../models/org/job-title";
 import {Company} from "../../models/org/company";
@@ -33,7 +33,7 @@ export class InternalDashboardComponent implements OnInit {
   workflows: Workflow[] = [];
 
   searchRequest: CandidateSearchRequest = {
-    candidateWorkflowStatus: CandidateWorkflowStatuses.Unassigned,
+    candidateWorkflowStatus: null,
     desc: false,
     limit: this.defaultPageSize,
     page: 0
@@ -117,7 +117,7 @@ export class InternalDashboardComponent implements OnInit {
   }
 
   onboardCandidate(candidate: Candidate) {
-    this.dialog.open(AddJobTitleAliasComponent, {
+    this.dialog.open(OnboardCandidateComponent, {
       minWidth: '750px',
       data: {
         candidate: candidate,
